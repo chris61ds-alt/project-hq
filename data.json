@@ -1,16 +1,151 @@
 {
   "projects": [
-    {"id":"juzy","name":"Juzy","meta":"Finance App · Google Play · Vasco da Soda","status":"active","deadline":null,"ideas":["Onboarding-Flow überarbeiten","Widget für Home Screen","Kategorien individuell anpassen lassen","App-Namen ändern für bessere SEO – \"Juzy\" schwer auffindbar?"],"todos":["v1.2 planen","App Store Screenshots aktualisieren","Review-Anfragen einbauen"],"done":[]},
-    {"id":"curveday","name":"CurveDay","meta":"Flutter App · Testing · Google Play","status":"active","deadline":"2026-06-08","ideas":["Alternative Store-Kategorie prüfen"],"todos":["⚡ Play Store Launch vorbereiten","Testing abschließen & Bugs dokumentieren","Store-Listing finalisieren","Compliance-Check vor Launch"],"done":[]},
-    {"id":"newsletter","name":"AI Newsletter","meta":"Google Apps Script · Automatisierung","status":"active","deadline":null,"ideas":["Nicht nur Artikel zusammenfassen – Reddit & Foren scrapen: was setzen Menschen wirklich um?","Subreddits: r/artificial, r/ChatGPT, r/MachineLearning, r/LocalLLaMA","Rubrik \"Aus der Community\" – Top-Threads der Woche mit Takeaways","Kurations-Agent für Content","LinkedIn-Cross-Post automatisieren"],"todos":["Reddit API / Scraping-Methode klären (PRAW vs. RSS)","Script finalisieren","Erste Ausgabe rausschicken","Subscriber-Liste aufbauen"],"done":[]},
-    {"id":"contentchallenge","name":"Content Challenge","meta":"Content · Social Media","status":"active","deadline":null,"ideas":[],"todos":[],"done":[]},
-    {"id":"openclaw","name":"OpenClaw Marketing","meta":"Birgit · Marketing · Brand aufbauen","status":"active","deadline":null,"ideas":["Was braucht Birgit zuerst – Positionierung, Website, Social?"],"todos":["Kickoff mit Birgit – Status quo & Ziele klären"],"done":[]},
-    {"id":"claudeboard","name":"Claude Management Board","meta":"PWA · Dieses Board · Schnellzugriff","status":"active","deadline":null,"ideas":["Als PWA bauen für Homescreen-Widget","Offline-fähig via Service Worker"],"todos":["GitHub Pages Hosting aufsetzen","PWA Manifest + Service Worker bauen","Auf Pixel Homescreen pinnen"],"done":[]},
-    {"id":"wedding","name":"Hochzeit","meta":"1-Tages-Event · München/Allgäu/Voralpen","status":"active","deadline":null,"ideas":["Boutique-Resort mit Bergblick","Family Style Dinner im Freien","Liveband vs. DJ"],"todos":["Location-Shortlist erstellen","Datum festlegen","Budget-Rahmen mit Caro besprechen"],"done":[]},
-    {"id":"dualshot","name":"DualShot","meta":"Dual-Kamera-App · Flutter · Vibe Coding","status":"idea","deadline":null,"ideas":["5 Modi: Dual, PiP (Overlay), Multi, Split, Single","BeReal-Style Daily Moments als Use Case","Zielgruppe: Travel Vlogger, Reaction Creator, Interviews","🎬 SMART DIRECTOR MODE: Blickerkennung (MediaPipe Face Mesh) → A-Roll/B-Roll Auto-Cut, EDL + ffmpeg_kit_flutter","Smart Director: Sync via UDP/WebSocket (NTP-Prinzip, ms-genau), Host/Client im WLAN","Smart Director: On-Device KI, kein Cloud-Upload"],"todos":["Flutter-Projekt aufsetzen (Vasco da Soda)","Kamera-Permission Flow planen","Dual-Stream Recording testen","UI für 5 Modi designen","Smart Director: MediaPipe Face Mesh Integration testen","Smart Director: WebSocket Sync prototypen","Smart Director: EDL + ffmpeg_kit_flutter testen","Play Store Listing vorbereiten","Monetarisierungs-Modell – Smart Director als Premium?"],"done":[]}
+    {
+      "id": "juzy",
+      "name": "Juzy",
+      "meta": "Finance App Â· Google Play Â· Vasco da Soda",
+      "status": "active",
+      "deadline": null,
+      "ideas": [
+        "Onboarding-Flow Ã¼berarbeiten",
+        "Widget fÃ¼r Home Screen",
+        "Kategorien individuell anpassen lassen",
+        "App-Namen Ã¤ndern fÃ¼r bessere SEO â \"Juzy\" schwer auffindbar?"
+      ],
+      "todos": [
+        "v1.2 planen",
+        "App Store Screenshots aktualisieren",
+        "Review-Anfragen einbauen"
+      ],
+      "done": []
+    },
+    {
+      "id": "curveday",
+      "name": "CurveDay",
+      "meta": "Flutter App Â· Testing Â· Google Play",
+      "status": "active",
+      "deadline": "2026-06-08",
+      "ideas": [
+        "Alternative Store-Kategorie prÃ¼fen"
+      ],
+      "todos": [
+        "â¡ Play Store Launch vorbereiten",
+        "Testing abschlieÃen & Bugs dokumentieren",
+        "Store-Listing finalisieren",
+        "Compliance-Check vor Launch"
+      ],
+      "done": []
+    },
+    {
+      "id": "newsletter",
+      "name": "AI Newsletter",
+      "meta": "Google Apps Script Â· Automatisierung",
+      "status": "active",
+      "deadline": null,
+      "ideas": [
+        "Nicht nur Artikel zusammenfassen â Reddit & Foren scrapen: was setzen Menschen wirklich um?",
+        "Subreddits: r/artificial, r/ChatGPT, r/MachineLearning, r/LocalLLaMA",
+        "Rubrik \"Aus der Community\" â Top-Threads der Woche mit Takeaways",
+        "Kurations-Agent fÃ¼r Content",
+        "LinkedIn-Cross-Post automatisieren"
+      ],
+      "todos": [
+        "Reddit API / Scraping-Methode klÃ¤ren (PRAW vs. RSS)",
+        "Script finalisieren",
+        "Erste Ausgabe rausschicken",
+        "Subscriber-Liste aufbauen"
+      ],
+      "done": []
+    },
+    {
+      "id": "contentchallenge",
+      "name": "Content Challenge",
+      "meta": "Content Â· Social Media",
+      "status": "active",
+      "deadline": null,
+      "ideas": [],
+      "todos": [],
+      "done": []
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw Marketing",
+      "meta": "Birgit Â· Marketing Â· Brand aufbauen",
+      "status": "active",
+      "deadline": null,
+      "ideas": [
+        "Was braucht Birgit zuerst â Positionierung, Website, Social?"
+      ],
+      "todos": [
+        "Kickoff mit Birgit â Status quo & Ziele klÃ¤ren"
+      ],
+      "done": []
+    },
+    {
+      "id": "claudeboard",
+      "name": "Claude Management Board",
+      "meta": "PWA Â· Dieses Board Â· Schnellzugriff",
+      "status": "active",
+      "deadline": null,
+      "ideas": [
+        "Als PWA bauen fÃ¼r Homescreen-Widget",
+        "Offline-fÃ¤hig via Service Worker"
+      ],
+      "todos": [
+        "GitHub Pages Hosting aufsetzen",
+        "PWA Manifest + Service Worker bauen",
+        "Auf Pixel Homescreen pinnen"
+      ],
+      "done": []
+    },
+    {
+      "id": "wedding",
+      "name": "Hochzeit",
+      "meta": "1-Tages-Event Â· MÃ¼nchen/AllgÃ¤u/Voralpen",
+      "status": "active",
+      "deadline": null,
+      "ideas": [
+        "Boutique-Resort mit Bergblick",
+        "Family Style Dinner im Freien",
+        "Liveband vs. DJ"
+      ],
+      "todos": [
+        "Location-Shortlist erstellen",
+        "Datum festlegen",
+        "Budget-Rahmen mit Caro besprechen"
+      ],
+      "done": []
+    },
+    {
+      "id": "dualshot",
+      "name": "DualShot",
+      "meta": "Dual-Kamera-App Â· Flutter Â· Vibe Coding",
+      "status": "idea",
+      "deadline": null,
+      "ideas": [
+        "5 Modi: Dual, PiP (Overlay), Multi, Split, Single",
+        "BeReal-Style Daily Moments als Use Case",
+        "Zielgruppe: Travel Vlogger, Reaction Creator, Interviews",
+        "ð¬ SMART DIRECTOR MODE: Blickerkennung (MediaPipe Face Mesh) â A-Roll/B-Roll Auto-Cut, EDL + ffmpeg_kit_flutter",
+        "Smart Director: Sync via UDP/WebSocket (NTP-Prinzip, ms-genau), Host/Client im WLAN",
+        "Smart Director: On-Device KI, kein Cloud-Upload"
+      ],
+      "todos": [
+        "Flutter-Projekt aufsetzen (Vasco da Soda)",
+        "Kamera-Permission Flow planen",
+        "Dual-Stream Recording testen",
+        "UI fÃ¼r 5 Modi designen",
+        "Smart Director: MediaPipe Face Mesh Integration testen",
+        "Smart Director: WebSocket Sync prototypen",
+        "Smart Director: EDL + ffmpeg_kit_flutter testen",
+        "Play Store Listing vorbereiten",
+        "Monetarisierungs-Modell â Smart Director als Premium?"
+      ],
+      "done": []
+    }
   ],
   "xp": 0,
   "streak": 0,
-  "lastActive": null,
-  "theme": "dark"
+  "lastActive": "Sun May 17 2026",
+  "theme": "light"
 }
