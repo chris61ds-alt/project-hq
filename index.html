@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Project HQ"/>
+<meta name="theme-color" content="#0a0a0c"/>
+<title>Project HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--trans:.2s;}
+[data-theme="dark"]{
+  --bg:#0a0a0c;--surface:#111116;--surface2:#18181f;--surface3:#20202a;
+  --border:#2a2a35;--border2:#3a3a48;
+  --text:#e8e8f0;--text2:#a0a0b8;--muted:#6b6b80;
+  --accent:#c8f060;--accent-dim:rgba(200,240,96,.12);--accent-border:rgba(200,240,96,.25);
+  --blue:#60c8f0;--blue-dim:rgba(96,200,240,.1);--blue-border:rgba(96,200,240,.2);
+  --warn:#f0a060;--warn-dim:rgba(240,160,96,.1);--warn-border:rgba(240,160,96,.2);
+  --red:#f06080;--red-dim:rgba(240,96,128,.1);
+  --green:#60f0a0;--green-dim:rgba(96,240,160,.1);--green-border:rgba(96,240,160,.2);
+  --xp:#a78bfa;--xp-dim:rgba(167,139,250,.12);
+  --shadow:0 2px 16px rgba(0,0,0,.4);
+}
+[data-theme="light"]{
+  --bg:#f2f2ee;--surface:#ffffff;--surface2:#f0f0ea;--surface3:#e8e8e2;
+  --border:#ddddd5;--border2:#c8c8be;
+  --text:#1a1a1e;--text2:#4a4a5a;--muted:#8a8a9a;
+  --accent:#4a8a00;--accent-dim:rgba(74,138,0,.08);--accent-border:rgba(74,138,0,.22);
+  --blue:#0080b0;--blue-dim:rgba(0,128,176,.08);--blue-border:rgba(0,128,176,.2);
+  --warn:#9a5000;--warn-dim:rgba(154,80,0,.08);--warn-border:rgba(154,80,0,.2);
+  --red:#b02040;--red-dim:rgba(176,32,64,.08);
+  --green:#006838;--green-dim:rgba(0,104,56,.08);--green-border:rgba(0,104,56,.2);
+  --xp:#5030a0;--xp-dim:rgba(80,48,160,.08);
+  --shadow:0 2px 12px rgba(0,0,0,.08);
+}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;padding-bottom:80px;transition:background var(--trans),color var(--trans);}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);}
+.topbar h1{font-size:15px;font-weight:800;letter-spacing:-.3px;flex-shrink:0;}
+.live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;display:inline-block;margin-right:5px;animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.quick-capture{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 11px;outline:none;min-width:0;transition:border-color var(--trans);}
+.quick-capture:focus{border-color:var(--border2);}
+.quick-capture::placeholder{color:var(--muted);}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;font-size:15px;padding:6px 10px;flex-shrink:0;transition:border-color var(--trans);}
+.icon-btn:hover{border-color:var(--border2);}
+
+/* SYNC STATUS */
+.sync-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:4px 16px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.sync-dot.ok{background:var(--accent);}
+.sync-dot.saving{background:var(--warn);animation:pulse .8s infinite;}
+.sync-dot.error{background:var(--red);}
+
+/* MAIN */
+.main{padding:14px 16px 0;}
+
+/* FOCUS CARD */
+.focus-card{background:var(--surface);border:1px solid var(--accent-border);border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:0 0 0 1px var(--accent-border);}
+.focus-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.focus-text{font-size:14px;font-weight:700;line-height:1.4;}
+.focus-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text2);margin-top:3px;}
+.focus-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.focus-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text2);}
+.focus-btn.primary{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+
+/* STATS */
+.stats-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;display:flex;flex-direction:column;gap:1px;flex:1;min-width:60px;}
+.stat-val{font-size:19px;font-weight:800;}
+.stat-key{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.xp-pill .stat-val{color:var(--xp);}
+.streak-pill .stat-val{color:var(--warn);}
+
+/* LEVEL BAR */
+.level-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;}
+.level-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.level-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text2);}
+.level-val{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--xp);}
+.bar-track{background:var(--surface2);border-radius:4px;height:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--xp),var(--blue));transition:width .6s ease;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:11px;}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color var(--trans);}
+.card:hover{border-color:var(--border2);}
+.card.stale{border-color:rgba(240,96,128,.3);}
+.card.hot{border-color:var(--accent-border);}
+.card.urgent{border-color:var(--warn-border);}
+.card-header{padding:12px 13px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:7px;}
+.card-title{font-size:13px;font-weight:700;letter-spacing:-.2px;}
+.card-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;}
+.card-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.toggle-arrow{color:var(--muted);font-size:10px;transition:transform .2s;margin-top:2px;}
+.toggle-arrow.open{transform:rotate(90deg);}
+
+/* PROGRESS */
+.card-progress{padding:7px 13px 0;}
+.progress-row{display:flex;justify-content:space-between;margin-bottom:3px;}
+.progress-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);}
+.progress-pct{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text2);}
+.prog-track{background:var(--surface2);border-radius:3px;height:4px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;background:var(--accent);transition:width .5s;}
+.prog-fill.complete{background:var(--green);}
+.card-spacer{height:8px;}
+
+/* BADGES */
+.badge{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;letter-spacing:.5px;}
+.badge-active{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);}
+.badge-paused{background:var(--warn-dim);color:var(--warn);border:1px solid var(--warn-border);}
+.badge-idea{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border);}
+.badge-done{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);}
+.badge-open{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+.badge-stale{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,96,128,.2);}
+.badge-urgent{background:var(--warn-dim);color:var(--warn);border:1px solid var(--warn-border);}
+
+/* CARD BODY */
+.card-body{padding:0 13px 12px;display:none;}
+.card-body.open{display:block;}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin:9px 0 4px;}
+.item{display:flex;align-items:flex-start;gap:7px;padding:4px 0;border-bottom:1px solid rgba(128,128,128,.06);font-size:11px;line-height:1.4;}
+.item:last-child{border-bottom:none;}
+.item-check{width:13px;height:13px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;margin-top:0px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:transparent;transition:all .15s;}
+.item-check:hover{border-color:var(--accent);color:var(--accent);}
+.item-dot{width:4px;height:4px;border-radius:50%;margin-top:4px;flex-shrink:0;background:var(--blue);}
+.item-text{flex:1;color:var(--text2);}
+.item-del{background:none;border:none;color:var(--border2);cursor:pointer;font-size:13px;padding:0 2px;line-height:1;}
+.item-del:hover{color:var(--red);}
+.item.done-item{opacity:.4;}
+.item.done-item .item-text{text-decoration:line-through;}
+.add-row{display:flex;gap:5px;margin-top:6px;}
+.add-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 8px;flex:1;outline:none;transition:border-color var(--trans);}
+.add-input:focus{border-color:var(--border2);}
+.add-input::placeholder{color:var(--muted);}
+.add-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:13px;padding:4px 9px;transition:all .15s;}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);}
+.divider{height:1px;background:var(--border);margin:7px 0;}
+.card-footer{display:flex;gap:5px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+.status-select{background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 5px;outline:none;cursor:pointer;}
+.del-btn{margin-left:auto;background:none;border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:3px 7px;}
+.del-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* NEW PROJECT */
+.new-proj-wrap{margin-top:18px;}
+.new-proj-toggle{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:11px 15px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);width:100%;text-align:left;}
+.new-proj-toggle:hover{border-color:var(--border2);color:var(--text2);}
+.new-proj-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:8px;display:none;}
+.new-proj-form.open{display:block;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.form-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:7px 9px;outline:none;width:100%;transition:border-color var(--trans);}
+.form-input:focus{border-color:var(--border2);}
+.form-input::placeholder{color:var(--muted);}
+.form-input.full{grid-column:1/-1;}
+.form-submit{background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:6px;color:var(--accent);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:8px;width:100%;margin-top:4px;}
+
+/* TOKEN MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:400px;width:100%;}
+.modal h2{font-size:16px;font-weight:800;margin-bottom:8px;}
+.modal p{font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.6;}
+.modal input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:9px 12px;width:100%;outline:none;margin-bottom:10px;}
+.modal button{background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:8px;color:var(--accent);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:9px;width:100%;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 13px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);opacity:0;transition:all .25s;pointer-events:none;z-index:998;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* XP POP */
+@keyframes xppop{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-28px) scale(1.3)}}
+.xp-pop{position:fixed;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--xp);pointer-events:none;z-index:1000;animation:xppop .8s ease-out forwards;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- TOKEN MODAL -->
+<div class="modal-overlay" id="tokenModal" style="display:none;">
+  <div class="modal">
+    <h2>🔑 GitHub Token</h2>
+    <p>Für Cross-Device-Sync wird dein GitHub Personal Access Token einmalig im Browser gespeichert. Es wird nur genutzt um <code>data.json</code> im Repo zu lesen und zu schreiben.</p>
+    <input id="tokenInput" type="password" placeholder="ghp_..."/>
+    <button onclick="saveToken()">Token speichern & laden</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="live-dot"></span>
+  <h1>Project HQ</h1>
+  <input class="quick-capture" id="quickCapture" placeholder="Projekt: Todo oder Idee – direkt tippen..." onkeydown="handleQuickCapture(event)"/>
+  <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+  <button class="icon-btn" onclick="syncNow()" title="Sync">↻</button>
+</div>
+
+<!-- SYNC BAR -->
+<div class="sync-bar">
+  <div class="sync-dot" id="syncDot"></div>
+  <span id="syncStatus">Verbinde...</span>
+</div>
+
+<div class="main">
+  <div class="focus-card" id="focusCard">
+    <div class="focus-label">⚡ Focus · Next Action</div>
+    <div class="focus-text" id="focusText">Lädt...</div>
+    <div class="focus-sub" id="focusSub"></div>
+    <div class="focus-actions">
+      <button class="focus-btn primary" onclick="markFocusDone()">✓ Erledigt (+15 XP)</button>
+      <button class="focus-btn" onclick="skipFocus()">↷ Überspringen</button>
+    </div>
+  </div>
+
+  <div class="stats-row" id="statsRow"></div>
+  <div class="level-bar" id="levelBar"></div>
+  <div class="grid" id="projectGrid"></div>
+
+  <div class="new-proj-wrap">
+    <button class="new-proj-toggle" onclick="document.getElementById('newProjForm').classList.toggle('open')">+ Neues Projekt anlegen</button>
+    <div class="new-proj-form" id="newProjForm">
+      <div class="form-grid">
+        <input class="form-input full" id="newName" placeholder="Projektname..."/>
+        <input class="form-input full" id="newMeta" placeholder="Kurzbeschreibung..."/>
+        <select class="form-input" id="newStatus">
+          <option value="active">AKTIV</option>
+          <option value="open">OFFEN</option>
+          <option value="idea">IDEE</option>
+          <option value="paused">PAUSIERT</option>
+          <option value="done">DONE</option>
+        </select>
+        <input class="form-input" id="newDeadline" type="date"/>
+      </div>
+      <button class="form-submit" onclick="addProject()">PROJEKT ANLEGEN →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ─────────────────────────────────
+const OWNER = 'chris61ds-alt';
+const REPO  = 'project-hq';
+const FILE  = 'data.json';
+const XP_DONE = 15;
+const XP_PER_LEVEL = 200;
+
+// ── STATE ──────────────────────────────────
+let data = { projects:[], xp:0, streak:0, lastActive:null, theme:'dark' };
+let fileSha = null;
+let openCards = new Set();
+let focusIdx = 0;
+let saveTimer = null;
+let theme = 'dark';
+
+// ── TOKEN ─────────────────────────────────
+function getToken() { return localStorage.getItem('phq_token') || ''; }
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) return;
+  localStorage.setItem('phq_token', t);
+  document.getElementById('tokenModal').style.display = 'none';
+  loadData();
+}
+
+// ── GITHUB API ────────────────────────────
+async function ghGet() {
+  const token = getToken();
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
+    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+  });
+  if (!r.ok) throw new Error('GET failed ' + r.status);
+  const j = await r.json();
+  fileSha = j.sha;
+  return JSON.parse(atob(j.content.replace(/\n/g,'')));
+}
+
+async function ghPut(payload) {
+  const token = getToken();
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+  const body = { message: 'Update dashboard data', content, sha: fileSha };
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
+    method: 'PUT',
+    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error('PUT failed ' + r.status);
+  const j = await r.json();
+  fileSha = j.content.sha;
+}
+
+// ── LOAD / SAVE ───────────────────────────
+async function loadData() {
+  setSyncStatus('saving', 'Lade...');
+  try {
+    data = await ghGet();
+    data.projects.forEach(p => { if (!p.done) p.done = []; if (p.deadline===undefined) p.deadline=null; });
+    if (data.theme) setTheme(data.theme);
+    updateStreak();
+    setSyncStatus('ok', 'Synchronisiert · ' + new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}));
+    render();
+  } catch(e) {
+    setSyncStatus('error', 'Fehler: ' + e.message);
+    // fallback to localStorage
+    const cached = localStorage.getItem('phq_cache');
+    if (cached) { data = JSON.parse(cached); render(); }
+  }
+}
+
+async function syncNow() { await loadData(); }
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  setSyncStatus('saving', 'Speichert...');
+  saveTimer = setTimeout(async () => {
+    try {
+      localStorage.setItem('phq_cache', JSON.stringify(data)); // cache locally
+      await ghPut(data);
+      setSyncStatus('ok', 'Synchronisiert · ' + new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}));
+    } catch(e) {
+      setSyncStatus('error', 'Sync-Fehler – lokal gespeichert');
+    }
+  }, 1200);
+}
+
+function setSyncStatus(state, msg) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot ' + state;
+  document.getElementById('syncStatus').textContent = msg;
+}
+
+// ── STREAK ────────────────────────────────
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (!data.lastActive) { data.lastActive = today; data.streak = data.streak||0; return; }
+  const diff = Math.floor((new Date() - new Date(data.lastActive)) / 86400000);
+  if (diff === 0) return;
+  if (diff <= 2) data.streak = (data.streak||0) + 1;
+  else data.streak = 0;
+  data.lastActive = today;
+}
+
+// ── THEME ─────────────────────────────────
+function setTheme(t) {
+  theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  document.querySelector('meta[name="theme-color"]').content = t === 'dark' ? '#0a0a0c' : '#f2f2ee';
+}
+function toggleTheme() {
+  const t = theme === 'dark' ? 'light' : 'dark';
+  setTheme(t); data.theme = t; scheduleSave();
+}
+
+// ── MOMENTUM ──────────────────────────────
+function momentum(proj) {
+  if (!proj.lastTouched) return 'normal';
+  const days = Math.floor((Date.now() - proj.lastTouched) / 86400000);
+  if (proj.status === 'active' && proj.todos.length > 0 && days > 7) return 'stale';
+  if (days < 2) return 'hot';
+  return 'normal';
+}
+function deadlineDays(proj) {
+  if (!proj.deadline) return null;
+  return Math.floor((new Date(proj.deadline) - new Date()) / 86400000);
+}
+
+// ── FOCUS ─────────────────────────────────
+function buildFocusItems() {
+  const items = [];
+  const add = (p, t, urgency, extra={}) => items.push({proj:p, todo:t, urgency, ...extra});
+  data.projects.forEach(p => {
+    if (p.status !== 'active') return;
+    const dd = deadlineDays(p);
+    if (dd !== null && dd <= 14) p.todos.slice(0,1).forEach(t => add(p,t,'deadline',{days:dd}));
+  });
+  data.projects.forEach(p => {
+    if (p.status !== 'active') return;
+    if (momentum(p) === 'stale') p.todos.slice(0,1).forEach(t => { if (!items.find(i=>i.todo===t&&i.proj===p)) add(p,t,'stale'); });
+  });
+  data.projects.forEach(p => {
+    if (p.status !== 'active') return;
+    p.todos.slice(0,1).forEach(t => { if (!items.find(i=>i.todo===t&&i.proj===p)) add(p,t,'normal'); });
+  });
+  return items;
+}
+
+function renderFocus() {
+  const items = buildFocusItems();
+  if (!items.length) {
+    document.getElementById('focusText').textContent = 'Keine offenen Todos – 🎉';
+    document.getElementById('focusSub').textContent = 'Füge neue Todos hinzu.';
+    return;
+  }
+  const item = items[focusIdx % items.length];
+  document.getElementById('focusText').textContent = item.todo;
+  let sub = `📁 ${item.proj.name}`;
+  if (item.urgency === 'deadline') sub += `  ·  ⚠️ Deadline in ${item.days} Tagen`;
+  if (item.urgency === 'stale') sub += `  ·  💤 Braucht Aufmerksamkeit`;
+  document.getElementById('focusSub').textContent = sub;
+}
+
+function markFocusDone() {
+  const items = buildFocusItems();
+  if (!items.length) return;
+  const item = items[focusIdx % items.length];
+  const proj = data.projects.find(p => p.id === item.proj.id);
+  if (!proj) return;
+  const ti = proj.todos.indexOf(item.todo);
+  if (ti > -1) {
+    proj.todos.splice(ti, 1);
+    proj.done.push(item.todo);
+    proj.lastTouched = Date.now();
+    data.xp = (data.xp||0) + XP_DONE;
+    data.lastActive = new Date().toDateString();
+    showXPPop(XP_DONE);
+    scheduleSave(); render();
+  }
+}
+function skipFocus() {
+  const items = buildFocusItems();
+  focusIdx = (focusIdx + 1) % Math.max(items.length, 1);
+  renderFocus();
+}
+
+// ── XP ────────────────────────────────────
+function xpLevel() {
+  const xp = data.xp||0;
+  return { level: Math.floor(xp/XP_PER_LEVEL)+1, progress: ((xp%XP_PER_LEVEL)/XP_PER_LEVEL)*100, xpToNext: XP_PER_LEVEL-(xp%XP_PER_LEVEL), xp };
+}
+function showXPPop(n) {
+  const el = document.createElement('div');
+  el.className = 'xp-pop';
+  el.textContent = `+${n} XP`;
+  el.style.cssText = 'left:50%;top:80px;transform:translateX(-50%)';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 900);
+}
+
+// ── QUICK CAPTURE ─────────────────────────
+function handleQuickCapture(e) {
+  if (e.key !== 'Enter') return;
+  const val = e.target.value.trim(); if (!val) return;
+  let routed = false;
+  for (const proj of data.projects) {
+    if (val.toLowerCase().startsWith(proj.name.toLowerCase()+':') || val.toLowerCase().startsWith(proj.id.toLowerCase()+':')) {
+      let content = val.slice(val.indexOf(':')+1).trim();
+      const isIdea = /^idee[:\s]/i.test(content);
+      if (isIdea) content = content.replace(/^idee[:\s]/i,'').trim();
+      if (isIdea) proj.ideas.push(content); else { proj.todos.push(content); proj.lastTouched=Date.now(); }
+      openCards.add(proj.id);
+      showToast(`✓ → ${proj.name}`);
+      routed = true; break;
+    }
+  }
+  if (!routed) {
+    const first = data.projects.find(p=>p.status==='active');
+    if (first) { first.todos.push(val); first.lastTouched=Date.now(); openCards.add(first.id); showToast(`→ ${first.name} (kein Match)`); }
+  }
+  e.target.value = '';
+  scheduleSave(); render();
+}
+
+// ── RENDER ────────────────────────────────
+const SM = {active:{l:'AKTIV',c:'badge-active'},paused:{l:'PAUSIERT',c:'badge-paused'},idea:{l:'IDEE',c:'badge-idea'},done:{l:'DONE',c:'badge-done'},open:{l:'OFFEN',c:'badge-open'}};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function render() {
+  // Stats
+  const p = data.projects;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-pill"><span class="stat-val">${p.length}</span><span class="stat-key">Projekte</span></div>
+    <div class="stat-pill"><span class="stat-val">${p.filter(x=>x.status==='active').length}</span><span class="stat-key">Aktiv</span></div>
+    <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+x.todos.length,0)}</span><span class="stat-key">Todos</span></div>
+    <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+(x.done||[]).length,0)}</span><span class="stat-key">Erledigt</span></div>
+    <div class="stat-pill xp-pill"><span class="stat-val">${data.xp||0}</span><span class="stat-key">XP</span></div>
+    <div class="stat-pill streak-pill"><span class="stat-val">${data.streak||0}🔥</span><span class="stat-key">Streak</span></div>
+  `;
+  // Level
+  const l = xpLevel();
+  document.getElementById('levelBar').innerHTML = `
+    <div class="level-row"><span class="level-label">Level ${l.level} · ${l.xp} XP</span><span class="level-val">${l.xpToNext} XP bis Level ${l.level+1}</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${l.progress}%"></div></div>
+  `;
+  // Focus
+  renderFocus();
+  // Grid
+  const grid = document.getElementById('projectGrid');
+  grid.innerHTML = '';
+  const order = {active:0,open:1,idea:2,paused:3,done:4};
+  [...data.projects].sort((a,b)=>(order[a.status]||5)-(order[b.status]||5)).forEach(proj => {
+    const s = SM[proj.status]||SM.open;
+    const isOpen = openCards.has(proj.id);
+    const mom = momentum(proj);
+    const total = proj.todos.length + (proj.done||[]).length;
+    const doneCount = (proj.done||[]).length;
+    const pct = total > 0 ? Math.round(doneCount/total*100) : 0;
+    const dd = deadlineDays(proj);
+    let cls = 'card';
+    if (mom==='stale') cls+=' stale';
+    else if (mom==='hot') cls+=' hot';
+    if (dd!==null && dd<=7) cls+=' urgent';
+    const card = document.createElement('div');
+    card.className = cls;
+    card.innerHTML = `
+      <div class="card-header" onclick="toggle('${proj.id}')">
+        <div style="flex:1;min-width:0">
+          <div class="card-title">${esc(proj.name)} ${mom==='stale'?'<span class="badge badge-stale">STALE</span>':''} ${mom==='hot'?'🔥':''}</div>
+          <div class="card-meta">${esc(proj.meta)}${dd!==null?` · 📅 ${dd}d`:''}</div>
+        </div>
+        <div class="card-badges">
+          <span class="badge ${s.c}">${s.l}</span>
+          <span class="toggle-arrow ${isOpen?'open':''}">▶</span>
+        </div>
+      </div>
+      ${total>0?`<div class="card-progress"><div class="progress-row"><span class="progress-label">${doneCount}/${total} erledigt</span><span class="progress-pct">${pct}%</span></div><div class="prog-track"><div class="prog-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div></div>`:'<div class="card-spacer"></div>'}
+      <div class="card-body ${isOpen?'open':''}">
+        <div class="section-label">💡 Ideen (${proj.ideas.length})</div>
+        ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
+        <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
+        <div class="divider"></div>
+        <div class="section-label">☑ Todos (${proj.todos.length})</div>
+        ${proj.todos.map((x,i)=>`<div class="item"><div class="item-check" onclick="completeTodo('${proj.id}',${i})">✓</div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','todos',${i})">×</button></div>`).join('')}
+        ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">✓ Done (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
+        <div class="add-row"><input class="add-input" id="ti-${proj.id}" placeholder="Todo..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','todos')"/><button class="add-btn" onclick="addItem('${proj.id}','todos')">+</button></div>
+        <div class="card-footer">
+          <select class="status-select" onchange="chStatus('${proj.id}',this.value)">${Object.entries(SM).map(([k,v])=>`<option value="${k}" ${proj.status===k?'selected':''}>${v.l}</option>`).join('')}</select>
+          ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">📅 ${dd}d</span>`:''}
+          <button class="del-btn" onclick="rmProject('${proj.id}')">löschen</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── INTERACTIONS ──────────────────────────
+function toggle(id){if(openCards.has(id))openCards.delete(id);else openCards.add(id);render();}
+
+function completeTodo(pid,idx){
+  const p=data.projects.find(x=>x.id===pid);if(!p)return;
+  const[done]=p.todos.splice(idx,1);
+  p.done.push(done);p.lastTouched=Date.now();
+  data.xp=(data.xp||0)+XP_DONE;data.lastActive=new Date().toDateString();
+  showXPPop(XP_DONE);openCards.add(pid);scheduleSave();render();
+}
+function undoTodo(pid,idx){
+  const p=data.projects.find(x=>x.id===pid);if(!p||!p.done)return;
+  const[t]=p.done.splice(idx,1);p.todos.push(t);
+  data.xp=Math.max(0,(data.xp||0)-XP_DONE);
+  openCards.add(pid);scheduleSave();render();
+}
+function addItem(pid,type){
+  const inp=document.getElementById((type==='ideas'?'ii':'ti')+'-'+pid);
+  const v=inp.value.trim();if(!v)return;
+  const p=data.projects.find(x=>x.id===pid);if(!p)return;
+  p[type].push(v);if(type==='todos')p.lastTouched=Date.now();
+  inp.value='';openCards.add(pid);scheduleSave();render();
+}
+function rmItem(pid,type,idx){
+  const p=data.projects.find(x=>x.id===pid);if(!p)return;
+  p[type].splice(idx,1);openCards.add(pid);scheduleSave();render();
+}
+function chStatus(pid,status){
+  const p=data.projects.find(x=>x.id===pid);if(!p)return;
+  p.status=status;p.lastTouched=Date.now();openCards.add(pid);scheduleSave();render();
+}
+function rmProject(pid){
+  if(!confirm('Projekt löschen?'))return;
+  data.projects=data.projects.filter(x=>x.id!==pid);
+  openCards.delete(pid);scheduleSave();render();
+}
+function addProject(){
+  const name=document.getElementById('newName').value.trim();
+  const meta=document.getElementById('newMeta').value.trim();
+  const status=document.getElementById('newStatus').value;
+  const deadline=document.getElementById('newDeadline').value||null;
+  if(!name)return;
+  const id='p'+Date.now();
+  data.projects.push({id,name,meta,status,deadline,ideas:[],todos:[],done:[],lastTouched:Date.now()});
+  document.getElementById('newName').value='';document.getElementById('newMeta').value='';
+  document.getElementById('newDeadline').value='';
+  document.getElementById('newProjForm').classList.remove('open');
+  openCards.add(id);scheduleSave();render();
+}
+
+// ── TOAST ─────────────────────────────────
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// ── INIT ──────────────────────────────────
+(function init() {
+  const token = getToken();
+  if (!token) {
+    document.getElementById('tokenModal').style.display = 'flex';
+    setSyncStatus('error', 'Kein Token – bitte einrichten');
+  } else {
+    loadData();
+  }
+})();
+</script>
+</body>
+</html>
