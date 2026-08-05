@@ -8,11 +8,13 @@
       "deadline": null,
       "ideas": [],
       "todos": [
-        "Recherchieren: Wohnung kaufen",
+        "Odyssey-Test machen",
         "Recherchieren: Cloud bei Kleinunternehmen einsetzen",
         "Recherchieren: 30 Tage Instagram Challenge"
       ],
-      "done": []
+      "done": [
+        "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
+      ]
     },
     {
       "id": "juzy",
