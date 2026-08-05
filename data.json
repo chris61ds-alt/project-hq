@@ -1,6 +1,20 @@
 {
   "projects": [
     {
+      "id": "ideenliste",
+      "name": "Ideenliste",
+      "meta": "Quick Capture · Recherche",
+      "status": "idea",
+      "deadline": null,
+      "ideas": [],
+      "todos": [
+        "Recherchieren: Wohnung kaufen",
+        "Recherchieren: Cloud bei Kleinunternehmen einsetzen",
+        "Recherchieren: 30 Tage Instagram Challenge"
+      ],
+      "done": []
+    },
+    {
       "id": "juzy",
       "name": "Juzy",
       "meta": "Finance App Â· Google Play Â· Vasco da Soda",
