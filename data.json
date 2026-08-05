@@ -10,7 +10,7 @@
       "todos": [
         "Odyssey-Test machen",
         "Recherchieren: Cloud bei Kleinunternehmen einsetzen",
-        "Recherchieren: 30 Tage Instagram Challenge"
+        "60 Tage Instagram Challenge — 60s Videos, Thema: 'Was macht mich besonders', sehr ehrlich, Post & Forget"
       ],
       "done": [
         "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
@@ -76,10 +76,12 @@
     {
       "id": "contentchallenge",
       "name": "Content Challenge",
-      "meta": "Content Â· Social Media",
+      "meta": "60 Tage · 60s Videos · Post & Forget",
       "status": "active",
       "deadline": null,
-      "ideas": [],
+      "ideas": [
+        "Thema: 'Was macht mich besonders' — sehr ehrlich"
+      ],
       "todos": [],
       "done": []
     },
