@@ -184,15 +184,42 @@ body{
 .plan-edit:hover{color:var(--text);background:var(--surface2);}
 
 
-/* ── MEILENSTEIN + NEBEN-TASKS ── */
-.milestone{
-  display:flex;align-items:baseline;gap:10px;margin-bottom:16px;padding:11px 18px;
-  background:var(--surface2);border-radius:999px;font-size:13px;color:var(--text2);
+/* ── QUEST: MEILENSTEIN ── */
+.quest-card{
+  position:relative;display:flex;align-items:center;gap:16px;
+  padding:16px 18px;border-radius:var(--r-lg);margin-bottom:18px;overflow:hidden;
+  background:
+    radial-gradient(120% 160% at 0% 0%,var(--tier-glow,var(--accent-dim)),transparent 65%),
+    var(--surface);
+  box-shadow:var(--shadow);
 }
-.ms-key{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
-.ms-body{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.milestone strong{color:var(--text);font-weight:500;}
-.milestone .ms-days{margin-left:auto;color:var(--warn);white-space:nowrap;font-size:12px;}
+.quest-card.tier-safe{--tier-glow:var(--blue-dim);}
+.quest-card.tier-warn{--tier-glow:var(--warn-dim);}
+.quest-card.tier-crit{--tier-glow:var(--red-dim);animation:questPulse 2.2s ease-in-out infinite;}
+@keyframes questPulse{0%,100%{box-shadow:var(--shadow);}50%{box-shadow:var(--shadow),0 0 0 1px var(--red-dim);}}
+
+.quest-ring{position:relative;width:64px;height:64px;flex-shrink:0;}
+.quest-ring svg{transform:rotate(-90deg);width:64px;height:64px;}
+.quest-ring circle{fill:none;stroke-width:5;}
+.quest-ring .track{stroke:var(--surface3);}
+.quest-ring .fill{stroke-linecap:round;transition:stroke-dashoffset .8s var(--ease),stroke .3s;}
+.quest-ring-num{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.quest-ring-num b{font-size:19px;font-weight:700;line-height:1;letter-spacing:-.5px;}
+.quest-ring-num span{font-size:8px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:1px;}
+
+.quest-body{flex:1;min-width:0;}
+.quest-eyebrow{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.quest-eyebrow-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.quest-tier-chip{font-size:9px;font-weight:700;letter-spacing:.6px;padding:2px 7px;border-radius:999px;text-transform:uppercase;}
+.tier-safe .quest-tier-chip{background:var(--blue-dim);color:var(--blue);}
+.tier-warn .quest-tier-chip{background:var(--warn-dim);color:var(--warn);}
+.tier-crit .quest-tier-chip{background:var(--red-dim);color:var(--red);}
+.quest-title{font-size:16px;font-weight:500;letter-spacing:-.2px;margin-bottom:2px;}
+.quest-date{font-size:11.5px;color:var(--text2);}
+
+/* ── NEBEN-TASKS ── */
 .also{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
 .also-label{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:8px;}
 .also-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.5px;line-height:1.45;color:var(--text2);}
@@ -475,7 +502,6 @@ body{
     </div>
   </div>
 
-  <div class="stats-row" id="statsRow"></div>
   <div class="trend-card" id="trendCard"></div>
   <div class="level-bar" id="levelBar"></div>
 
@@ -770,8 +796,37 @@ function renderMilestone(){
   if(!el) return;
   const m = nextMilestone();
   if(!m){ el.innerHTML = ''; return; }
-  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
-  el.innerHTML = `<div class="milestone"><span class="ms-key">Meilenstein</span><span class="ms-body"><strong>${esc(m.p.name)}</strong> · ${d}</span><span class="ms-days">${m.days} T</span></div>`;
+  const days = m.days;
+  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+
+  // Tier: game-artige Zonen statt linearer Zahl
+  let tier, tierLabel, ringMax;
+  if(days <= 7){ tier='crit'; tierLabel='Kritisch'; ringMax=7; }
+  else if(days <= 30){ tier='warn'; tierLabel='Nah'; ringMax=30; }
+  else { tier='safe'; tierLabel='Sicher'; ringMax=90; }
+  const frac = Math.max(0, Math.min(1, 1 - days/ringMax)); // fuellt sich, je naeher der Termin
+  const R = 27, C = 2*Math.PI*R;
+  const dash = C * frac;
+  const ringColor = tier==='crit' ? 'var(--red)' : tier==='warn' ? 'var(--warn)' : 'var(--accent)';
+
+  el.innerHTML = `<div class="quest-card tier-${tier}">
+    <div class="quest-ring">
+      <svg viewBox="0 0 64 64">
+        <circle class="track" cx="32" cy="32" r="${R}"/>
+        <circle class="fill" cx="32" cy="32" r="${R}" stroke="${ringColor}"
+          stroke-dasharray="${C}" stroke-dashoffset="${C-dash}"/>
+      </svg>
+      <div class="quest-ring-num"><b>${days}</b><span>Tage</span></div>
+    </div>
+    <div class="quest-body">
+      <div class="quest-eyebrow">
+        <span class="quest-eyebrow-label">Meilenstein</span>
+        <span class="quest-tier-chip">${tierLabel}</span>
+      </div>
+      <div class="quest-title">${esc(m.p.name)}</div>
+      <div class="quest-date">${d}</div>
+    </div>
+  </div>`;
 }
 
 // ── WEITERE KLEINE TASKS ──────────────────
@@ -1085,15 +1140,6 @@ const SM = {active:{l:'AKTIV',c:'badge-active'},paused:{l:'PAUSIERT',c:'badge-pa
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function render() {
-  // Stats: nur das aktive Projekt
-  const ap = activeProject();
-  const otherCt = data.projects.filter(x => !ap || x.id !== ap.id).length;
-  document.getElementById('statsRow').innerHTML = ap ? `
-    <div class="stat-pill"><span class="stat-val">${ap.todos.length}</span><span class="stat-key">Offen</span></div>
-    <div class="stat-pill"><span class="stat-val">${(ap.done||[]).length}</span><span class="stat-key">Erledigt</span></div>
-    <div class="stat-pill"><span class="stat-val">${ap.ideas.length}</span><span class="stat-key">Ideen</span></div>
-    <div class="stat-pill"><span class="stat-val">${otherCt}</span><span class="stat-key">Andere</span></div>
-  ` : `<div class="stat-pill" style="grid-column:1/-1"><span class="stat-key">Kein Projekt aktiv</span></div>`;
   // Level
   const l = xpLevel();
   document.getElementById('levelBar').innerHTML = `
