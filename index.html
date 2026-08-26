@@ -426,9 +426,9 @@ body{
     <div id="planSlot"></div>
     <div id="alsoSlot"></div>
     <div class="focus-actions">
-      <button class="focus-btn primary" onclick="markFocusDone()">Erledigt</button>
-      <button class="focus-btn" onclick="markLazy()">Drangewesen</button>
-      <button class="focus-btn" onclick="skipFocus()">Anderes</button>
+      <button class="focus-btn primary" onclick="markFocusDone()">Abhaken</button>
+      <button class="focus-btn" onclick="markLazy()">War dran</button>
+      <button class="focus-btn" onclick="skipFocus()">Andere Aufgabe</button>
     </div>
   </div>
 
@@ -644,8 +644,8 @@ function renderPlan(){
     slot.innerHTML = `<div class="plan-set">${esc(plan)}<button class="plan-edit" onclick="clearPlan()">ändern</button></div>`;
   } else {
     slot.innerHTML = `<div class="plan-row">
-      <input class="plan-input" id="planInput" placeholder="Wann & wo? z.B. 19 Uhr, Küchentisch" onkeydown="if(event.key==='Enter')savePlan()"/>
-      <button class="focus-btn" onclick="savePlan()">Setzen</button>
+      <input class="plan-input" id="planInput" placeholder="Wann &amp; wo willst du das machen?" onkeydown="if(event.key==='Enter')savePlan()"/>
+      <button class="focus-btn" onclick="savePlan()">Merken</button>
     </div>`;
   }
 }
@@ -656,7 +656,7 @@ function savePlan(){
   if(!v) return;
   if(!data.plans) data.plans = {};
   data.plans[dayKey()] = v;
-  scheduleSave(); renderPlan(); showToast('Vorsatz gesetzt');
+  scheduleSave(); renderPlan(); showToast('Vorgemerkt');
 }
 function clearPlan(){
   if(data.plans) delete data.plans[dayKey()];
@@ -669,7 +669,7 @@ function markLazy(){
   data.xp = (data.xp||0) + XP_SHOW_UP;
   showXPPop(XP_SHOW_UP);
   scheduleSave(); render();
-  showToast('Zählt trotzdem');
+  showToast('Zählt auch');
 }
 
 
