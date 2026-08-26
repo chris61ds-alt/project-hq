@@ -188,6 +188,20 @@ body{
 .plan-edit{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:999px;font-family:inherit;}
 .plan-edit:hover{color:var(--text);background:var(--surface2);}
 
+
+/* ── MEILENSTEIN + NEBEN-TASKS ── */
+.milestone{
+  display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:9px 14px;
+  background:var(--surface2);border-radius:999px;font-size:12.5px;color:var(--text2);
+}
+.milestone strong{color:var(--text);font-weight:500;}
+.milestone .ms-days{margin-left:auto;color:var(--warn);white-space:nowrap;font-size:12px;}
+.also{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.also-label{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:8px;}
+.also-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.5px;line-height:1.45;color:var(--text2);}
+.also-item .item-check{width:19px;height:19px;border-radius:6px;}
+.also-proj{font-size:11px;color:var(--muted);display:block;margin-top:2px;}
+
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .stat-pill{
@@ -399,11 +413,13 @@ body{
     <div class="quote-dots" id="quoteDots"></div>
   </div>
 
+  <div id="milestoneSlot"></div>
   <div class="focus-card" id="focusCard">
     <div class="focus-label">⚡ Focus · Next Action</div>
     <div class="focus-text" id="focusText">Lädt...</div>
     <div class="focus-sub" id="focusSub"></div>
     <div id="planSlot"></div>
+    <div id="alsoSlot"></div>
     <div class="focus-actions">
       <button class="focus-btn primary" onclick="markFocusDone()">✓ Erledigt</button>
       <button class="focus-btn" onclick="markLazy()">◐ Drangewesen</button>
@@ -473,12 +489,19 @@ async function ghGet() {
   if (!r.ok) throw new Error('GET failed ' + r.status);
   const j = await r.json();
   fileSha = j.sha;
-  return JSON.parse(atob(j.content.replace(/\n/g,'')));
+  // UTF-8-sicher dekodieren: atob() liefert Bytes, kein UTF-8.
+  const bin = atob(j.content.replace(/\n/g,''));
+  const bytes = Uint8Array.from(bin, ch => ch.charCodeAt(0));
+  return JSON.parse(new TextDecoder('utf-8').decode(bytes));
 }
 
 async function ghPut(payload) {
   const token = getToken();
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+  // UTF-8-sicher kodieren
+  const bytes = new TextEncoder().encode(JSON.stringify(payload, null, 2));
+  let bin = '';
+  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  const content = btoa(bin);
   const body = { message: 'Update dashboard data', content, sha: fileSha };
   const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
     method: 'PUT',
@@ -643,6 +666,54 @@ function markLazy(){
   showToast('Zählt trotzdem');
 }
 
+
+// ── MEILENSTEIN ───────────────────────────
+function nextMilestone(){
+  const cands = data.projects
+    .filter(p => p.deadline && p.status !== 'done')
+    .map(p => ({p, days: deadlineDays(p)}))
+    .filter(x => x.days !== null && x.days >= 0)
+    .sort((a,b) => a.days - b.days);
+  return cands[0] || null;
+}
+function renderMilestone(){
+  const el = document.getElementById('milestoneSlot');
+  if(!el) return;
+  const m = nextMilestone();
+  if(!m){ el.innerHTML = ''; return; }
+  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'});
+  el.innerHTML = `<div class="milestone">🚩 <span>Nächster Meilenstein: <strong>${esc(m.p.name)}</strong> · ${d}</span><span class="ms-days">${m.days} T</span></div>`;
+}
+
+// ── WEITERE KLEINE TASKS ──────────────────
+function renderAlso(){
+  const el = document.getElementById('alsoSlot');
+  if(!el) return;
+  const items = buildFocusItems();
+  const rest = items.filter((_,i) => i !== (focusIdx % Math.max(items.length,1))).slice(0,3);
+  if(!rest.length){ el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="also">
+    <div class="also-label">Auch klein machbar</div>
+    ${rest.map(it => `<div class="also-item">
+        <div class="item-check" onclick="quickDone('${it.proj.id}',this.dataset.t)" data-t="${esc(it.todo).replace(/"/g,'&quot;')}">✓</div>
+        <div>${esc(it.todo)}<span class="also-proj">${esc(it.proj.name)}</span></div>
+      </div>`).join('')}
+  </div>`;
+}
+function quickDone(pid, todo){
+  const p = data.projects.find(x => x.id === pid);
+  if(!p) return;
+  const i = p.todos.indexOf(todo);
+  if(i < 0) return;
+  p.todos.splice(i,1);
+  p.done.push(todo);
+  p.lastTouched = Date.now();
+  data.xp = (data.xp||0) + XP_DONE;
+  markDay('full');
+  showXPPop(XP_DONE);
+  scheduleSave(); render();
+}
+
 // ── THEME ─────────────────────────────────
 function setTheme(t) {
   theme = t;
@@ -783,7 +854,8 @@ function render() {
     <div class="level-row"><span class="level-label">Level ${l.level} · ${l.xp} XP</span><span class="level-val">${l.xpToNext} XP bis Level ${l.level+1}</span></div>
     <div class="bar-track"><div class="bar-fill" style="width:${l.progress}%"></div></div>
   `;
-  // Trend + Plan
+  // Meilenstein, Trend, Plan
+  renderMilestone();
   renderTrend();
   renderPlan();
   // Quotes
@@ -791,6 +863,7 @@ function render() {
   restartQuoteTimer();
   // Focus
   renderFocus();
+  renderAlso();
   // Grid
   const grid = document.getElementById('projectGrid');
   grid.innerHTML = '';
