@@ -16,9 +16,11 @@
         "Many people don't get so much older after 30 - if you only remember one day, do you keep living?"
       ],
       "todos": [
-        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
-        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
-        "Trag ein Startdatum ein – irgendeins, es muss nicht der perfekte Montag sein",
+        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
+        "Schreib 5 Hooks für dasselbe Thema, nimm den unbequemsten",
+        "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg",
+        "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum",
+        "Kürz dein längstes Video auf unter 30 Sekunden",
         "Poste dein erstes Video – und schau danach nicht mehr rein"
       ],
       "done": [
@@ -32,7 +34,71 @@
         "recordDays": [
           "2026-08-26"
         ],
-        "postDays": []
+        "postDays": [],
+        "quests": [
+          {
+            "id": "q_hook",
+            "label": "Hook-Labor",
+            "desc": "3 Videos, 3 verschiedene Einstiege zum selben Thema",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_short",
+            "label": "Kurz halten",
+            "desc": "5 Videos unter 30 Sekunden",
+            "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_ugly",
+            "label": "Unbequem",
+            "desc": "3 Videos über etwas, das dir peinlich ist",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_swipe",
+            "label": "Swipe-File",
+            "desc": "10 fremde Hooks gesammelt und notiert",
+            "target": 10,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_oneidea",
+            "label": "Eine Aussage",
+            "desc": "5 Videos mit exakt einer Kernaussage",
+            "target": 5,
+            "count": 0,
+            "active": false
+          }
+        ],
+        "skillStages": [
+          {
+            "label": "Roh",
+            "at": 0,
+            "desc": "Einfach aufnehmen"
+          },
+          {
+            "label": "Gewohnheit",
+            "at": 7,
+            "desc": "Es passiert von selbst"
+          },
+          {
+            "label": "Handwerk",
+            "at": 21,
+            "desc": "Hooks bewusst bauen"
+          },
+          {
+            "label": "Stimme",
+            "at": 45,
+            "desc": "Es klingt nach dir"
+          }
+        ]
       },
       "milestones": [
         {
