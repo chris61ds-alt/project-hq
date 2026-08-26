@@ -3,27 +3,27 @@
     {
       "id": "ideenliste",
       "name": "Ideenliste",
-      "meta": "Quick Capture · Recherche",
+      "meta": "Quick Capture Â· Recherche",
       "status": "idea",
       "deadline": null,
       "ideas": [],
       "todos": [
-        "Odyssey-Plan machen (Designing Your Life — 3 Zukunftsentwürfe für 5 Jahre)",
+        "Odyssey-Plan machen (Designing Your Life â 3 ZukunftsentwÃ¼rfe fÃ¼r 5 Jahre)",
         "Recherchieren: Cloud bei Kleinunternehmen einsetzen",
-        "60 Tage Instagram Challenge — 60s Videos, Thema: 'Worin bin ich nicht gut und wie arbeite ich daran', Post & Forget"
+        "60 Tage Instagram Challenge â 60s Videos, Thema: 'Worin bin ich nicht gut und wie arbeite ich daran', Post & Forget"
       ],
       "done": [
-        "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
+        "Recherchieren: Wohnung kaufen â Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
       ]
     },
     {
       "id": "contentchallenge",
       "name": "Content Challenge",
-      "meta": "60 Tage · 60s Videos · Post & Forget",
+      "meta": "60 Tage Â· 60s Videos Â· Post & Forget",
       "status": "idea",
       "deadline": null,
       "ideas": [
-        "Thema: 'Was macht mich besonders' — sehr ehrlich"
+        "Thema: 'Was macht mich besonders' â sehr ehrlich"
       ],
       "todos": [],
       "done": []
@@ -31,24 +31,25 @@
     {
       "id": "claudeboard",
       "name": "Project HQ",
-      "meta": "Dieses Board · PWA · Momentum Coach",
-      "status": "active",
+      "meta": "Dieses Board Â· PWA Â· Momentum Coach",
+      "status": "done",
       "deadline": null,
       "ideas": [
-        "Als PWA bauen fÃ¼r Homescreen-Widget",
-        "Offline-fÃ¤hig via Service Worker"
+        "Als PWA bauen fÃÂ¼r Homescreen-Widget",
+        "Offline-fÃÂ¤hig via Service Worker"
       ],
       "todos": [
         "GitHub Pages Hosting aufsetzen",
         "PWA Manifest + Service Worker bauen",
         "Auf Pixel Homescreen pinnen"
       ],
-      "done": []
+      "done": [],
+      "lastTouched": 1787738854394
     },
     {
       "id": "wedding",
       "name": "Hochzeit",
-      "meta": "1-Tages-Event Â· MÃ¼nchen/AllgÃ¤u/Voralpen",
+      "meta": "1-Tages-Event ÃÂ· MÃÂ¼nchen/AllgÃÂ¤u/Voralpen",
       "status": "active",
       "deadline": null,
       "ideas": [
@@ -70,5 +71,7 @@
   "theme": "light",
   "quotes": [
     "You only have one life!"
-  ]
+  ],
+  "log": {},
+  "plans": {}
 }
