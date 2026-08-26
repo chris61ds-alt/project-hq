@@ -227,6 +227,28 @@ body{
 .chal-btn:hover{background:var(--surface3);}
 .chal-btn.done-today{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
 
+
+/* ── AKTIVES PROJEKT (Board-Fokus) ── */
+.active-proj-head{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px;}
+.switch-link{background:none;border:none;color:var(--accent);font-family:inherit;font-size:12.5px;cursor:pointer;padding:4px 2px;}
+.switch-link:hover{text-decoration:underline;}
+.active-card{background:var(--surface);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
+
+/* ── ÜBERSICHT-OVERLAY ── */
+.overview-overlay{
+  position:fixed;inset:0;z-index:500;background:var(--bg);
+  transform:translateX(100%);transition:transform .28s var(--ease);
+  overflow-y:auto;
+}
+.overview-overlay.open{transform:translateX(0);}
+.overview-topbar{
+  position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+}
+.overview-topbar h1{font-size:16px;font-weight:500;}
+.overview-body{padding:14px 18px 40px;max-width:880px;margin:0 auto;}
+
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .stat-pill{
@@ -421,6 +443,7 @@ body{
   <h1>Project HQ</h1>
   <input class="quick-capture" id="quickCapture" placeholder="Projekt: Todo oder Idee – direkt tippen..." onkeydown="handleQuickCapture(event)"/>
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☾</button>
+  <button class="icon-btn" onclick="openOverview()" title="Projekte">▤</button>
   <button class="icon-btn" onclick="syncNow()" title="Sync">↻</button>
 </div>
 
@@ -455,7 +478,22 @@ body{
   <div class="stats-row" id="statsRow"></div>
   <div class="trend-card" id="trendCard"></div>
   <div class="level-bar" id="levelBar"></div>
-  <div class="drag-hint">Lange auf eine Karte tippen, um sie zu verschieben</div>
+
+  <div class="active-proj-head">
+    <div class="section-label" style="margin:0">Dieses Projekt</div>
+    <button class="switch-link" onclick="openOverview()">Wechseln ›</button>
+  </div>
+  <div id="activeProjectSlot"></div>
+</div>
+
+<!-- ÜBERSICHT (separate Ansicht, alle Projekte) -->
+<div class="overview-overlay" id="overviewOverlay">
+  <div class="overview-topbar">
+    <button class="icon-btn" onclick="closeOverview()">‹</button>
+    <h1>Alle Projekte</h1>
+  </div>
+  <div class="overview-body">
+  <div class="drag-hint">Tippen = wechseln · lange tippen = verschieben</div>
   <div class="grid" id="projectGrid"></div>
 
   <div class="new-proj-wrap">
@@ -475,6 +513,7 @@ body{
       </div>
       <button class="form-submit" onclick="addProject()">PROJEKT ANLEGEN →</button>
     </div>
+  </div>
   </div>
 </div>
 
@@ -693,14 +732,38 @@ function markLazy(){
 }
 
 
+
+
+// ── ÜBERSICHT (Projekt wechseln) ──────────
+function openOverview(){
+  document.getElementById('overviewOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeOverview(){
+  document.getElementById('overviewOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── AKTIVES PROJEKT (Fokus des gesamten Boards) ──
+function activeProject(){
+  let p = data.projects.find(x => x.id === data.activeProjectId);
+  if(!p || p.status === 'done') p = data.projects.find(x => x.status === 'active');
+  return p || null;
+}
+function setActiveProject(id){
+  data.activeProjectId = id;
+  scheduleSave();
+  closeOverview();
+  render();
+}
+
 // ── MEILENSTEIN ───────────────────────────
 function nextMilestone(){
-  const cands = data.projects
-    .filter(p => p.deadline && p.status === 'active')
-    .map(p => ({p, days: deadlineDays(p)}))
-    .filter(x => x.days !== null && x.days >= 0)
-    .sort((a,b) => a.days - b.days);
-  return cands[0] || null;
+  const p = activeProject();
+  if(!p || !p.deadline) return null;
+  const days = deadlineDays(p);
+  if(days === null || days < 0) return null;
+  return {p, days};
 }
 function renderMilestone(){
   const el = document.getElementById('milestoneSlot');
@@ -927,19 +990,12 @@ function deadlineDays(proj) {
 function buildFocusItems() {
   const items = [];
   const add = (p, t, urgency, extra={}) => items.push({proj:p, todo:t, urgency, ...extra});
-  data.projects.forEach(p => {
-    if (p.status !== 'active') return;
-    const dd = deadlineDays(p);
-    if (dd !== null && dd <= 14) p.todos.slice(0,1).forEach(t => add(p,t,'deadline',{days:dd}));
-  });
-  data.projects.forEach(p => {
-    if (p.status !== 'active') return;
-    if (momentum(p) === 'stale') p.todos.slice(0,1).forEach(t => { if (!items.find(i=>i.todo===t&&i.proj===p)) add(p,t,'stale'); });
-  });
-  data.projects.forEach(p => {
-    if (p.status !== 'active') return;
-    p.todos.slice(0,1).forEach(t => { if (!items.find(i=>i.todo===t&&i.proj===p)) add(p,t,'normal'); });
-  });
+  const p = activeProject();
+  if(!p) return items;
+  const dd = deadlineDays(p);
+  if (dd !== null && dd <= 14) p.todos.slice(0,3).forEach(t => add(p,t,'deadline',{days:dd}));
+  if (momentum(p) === 'stale') p.todos.slice(0,3).forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'stale'); });
+  p.todos.slice(0,4).forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'normal'); });
   return items;
 }
 
@@ -1029,16 +1085,15 @@ const SM = {active:{l:'AKTIV',c:'badge-active'},paused:{l:'PAUSIERT',c:'badge-pa
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function render() {
-  // Stats
-  const p = data.projects;
-  const act = p.filter(x => x.status === 'active');
-  const parked = p.filter(x => x.status !== 'active' && x.status !== 'done');
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-pill"><span class="stat-val">${act.length}</span><span class="stat-key">Aktiv</span></div>
-    <div class="stat-pill"><span class="stat-val">${act.reduce((s,x)=>s+x.todos.length,0)}</span><span class="stat-key">Offen</span></div>
-    <div class="stat-pill"><span class="stat-val">${act.reduce((s,x)=>s+(x.done||[]).length,0)}</span><span class="stat-key">Erledigt</span></div>
-    <div class="stat-pill"><span class="stat-val">${parked.length}</span><span class="stat-key">Pausiert</span></div>
-  `;
+  // Stats: nur das aktive Projekt
+  const ap = activeProject();
+  const otherCt = data.projects.filter(x => !ap || x.id !== ap.id).length;
+  document.getElementById('statsRow').innerHTML = ap ? `
+    <div class="stat-pill"><span class="stat-val">${ap.todos.length}</span><span class="stat-key">Offen</span></div>
+    <div class="stat-pill"><span class="stat-val">${(ap.done||[]).length}</span><span class="stat-key">Erledigt</span></div>
+    <div class="stat-pill"><span class="stat-val">${ap.ideas.length}</span><span class="stat-key">Ideen</span></div>
+    <div class="stat-pill"><span class="stat-val">${otherCt}</span><span class="stat-key">Andere</span></div>
+  ` : `<div class="stat-pill" style="grid-column:1/-1"><span class="stat-key">Kein Projekt aktiv</span></div>`;
   // Level
   const l = xpLevel();
   document.getElementById('levelBar').innerHTML = `
@@ -1055,6 +1110,7 @@ function render() {
   // Focus
   renderFocus();
   renderAlso();
+  renderActiveProjectPanel();
   // Grid
   const grid = document.getElementById('projectGrid');
   grid.innerHTML = '';
@@ -1065,7 +1121,7 @@ function render() {
     : [...data.projects].sort((a,b)=>(order[a.status]||5)-(order[b.status]||5));
   list.forEach(proj => {
     const s = SM[proj.status]||SM.open;
-    const isOpen = openCards.has(proj.id);
+    const isOpen = false; // in der Übersicht klappt nichts auf – Tippen wechselt direkt
     const mom = momentum(proj);
     const total = proj.todos.length + (proj.done||[]).length;
     const doneCount = (proj.done||[]).length;
@@ -1081,7 +1137,7 @@ function render() {
     card.dataset.pid = proj.id;
     card.innerHTML = `
       ${genArt(proj)}
-      <div class="card-header" onclick="toggle('${proj.id}')">
+      <div class="card-header" onclick="setActiveProject('${proj.id}')">
         <div style="flex:1;min-width:0">
           <div class="card-title">${esc(proj.name)}${mom==='stale'?' <span class="badge badge-stale">RUHT</span>':''}</div>
           <div class="card-meta">${esc(proj.meta)}</div>
@@ -1089,26 +1145,11 @@ function render() {
         </div>
         <div class="card-badges">
           <span class="badge ${s.c}">${s.l}</span>
-          <span class="toggle-arrow ${isOpen?'open':''}">▶</span>
+          <span class="toggle-arrow">${proj.id===data.activeProjectId?"●":"›"}</span>
         </div>
       </div>
       ${total>0?`<div class="card-progress"><div class="progress-row"><span class="progress-label">${doneCount}/${total} erledigt</span><span class="progress-pct">${pct}%</span></div><div class="prog-track"><div class="prog-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div></div>`:'<div class="card-spacer"></div>'}
-      <div class="card-body ${isOpen?'open':''}">
-        <div class="section-label">Ideen (${proj.ideas.length})</div>
-        ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
-        <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
-        <div class="divider"></div>
-        <div class="section-label">Todos (${proj.todos.length})</div>
-        ${proj.todos.map((x,i)=>`<div class="item"><div class="item-check" onclick="completeTodo('${proj.id}',${i})">✓</div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','todos',${i})">×</button></div>`).join('')}
-        ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">Erledigt (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
-        <div class="add-row"><input class="add-input" id="ti-${proj.id}" placeholder="Todo..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','todos')"/><button class="add-btn" onclick="addItem('${proj.id}','todos')">+</button></div>
-        <div class="card-footer">
-          <select class="status-select" onchange="chStatus('${proj.id}',this.value)">${Object.entries(SM).map(([k,v])=>`<option value="${k}" ${proj.status===k?'selected':''}>${v.l}</option>`).join('')}</select>
-          ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">${dd} Tage</span>`:''}
-          <button class="del-btn" onclick="rmProject('${proj.id}')">löschen</button>
-        </div>
-      </div>
-    `;
+        `;
     initDrag(card, proj.id);
     card.style.animationDelay = Math.min(gridIdx*45,320)+'ms';
     gridIdx++;
@@ -1117,6 +1158,49 @@ function render() {
 }
 
 
+
+
+function projectBodyHTML(proj, dd){
+  return `
+    <div class="section-label">Ideen (${proj.ideas.length})</div>
+    ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
+    <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
+    <div class="divider"></div>
+    <div class="section-label">Todos (${proj.todos.length})</div>
+    ${proj.todos.map((x,i)=>`<div class="item"><div class="item-check" onclick="completeTodo('${proj.id}',${i})">✓</div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','todos',${i})">×</button></div>`).join('')}
+    ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">Erledigt (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
+    <div class="add-row"><input class="add-input" id="ti-${proj.id}" placeholder="Todo..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','todos')"/><button class="add-btn" onclick="addItem('${proj.id}','todos')">+</button></div>
+    <div class="card-footer">
+      <select class="status-select" onchange="chStatus('${proj.id}',this.value)">${Object.entries(SM).map(([k,v])=>`<option value="${k}" ${proj.status===k?'selected':''}>${v.l}</option>`).join('')}</select>
+      ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">${dd} Tage</span>`:''}
+      <button class="del-btn" onclick="rmProject('${proj.id}')">löschen</button>
+    </div>`;
+}
+function renderActiveProjectPanel(){
+  const slot = document.getElementById('activeProjectSlot');
+  if(!slot) return;
+  const proj = activeProject();
+  if(!proj){
+    slot.innerHTML = `<div class="active-card" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Kein aktives Projekt. <button class="switch-link" onclick="openOverview()">Eins auswählen ›</button></div>`;
+    return;
+  }
+  const s = SM[proj.status]||SM.open;
+  const dd = deadlineDays(proj);
+  slot.innerHTML = `<div class="active-card">
+    ${genArt(proj)}
+    <div class="card-header" style="cursor:default">
+      <div style="flex:1;min-width:0">
+        <div class="card-title">${esc(proj.name)}</div>
+        <div class="card-meta">${esc(proj.meta)}</div>
+        ${renderChallengeStrip(proj)}
+      </div>
+      <div class="card-badges"><span class="badge ${s.c}">${s.l}</span></div>
+    </div>
+    <div class="card-body open">
+      ${projectBodyHTML(proj, dd)}
+    </div>
+  </div>`;
+}
 
 // ── QUOTE SLIDER ──────────────────────────
 const FALLBACK_QUOTES = ["You only have one life!"];
