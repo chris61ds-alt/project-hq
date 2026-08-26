@@ -98,6 +98,20 @@ body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;min-
 .card.hot{border-color:var(--accent-border);}
 .card.urgent{border-color:var(--warn-border);}
 
+
+/* QUOTE SLIDER */
+.quote-strip{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 46px;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);min-height:72px;display:flex;align-items:center;justify-content:center;}
+.quote-strip::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,var(--accent-dim),transparent 55%,var(--xp-dim));pointer-events:none;}
+.quote-text{font-family:'Roboto',sans-serif;font-size:15px;font-weight:500;line-height:1.45;text-align:center;color:var(--text);position:relative;z-index:1;transition:opacity .35s ease,transform .35s ease;}
+.quote-text.fade{opacity:0;transform:translateY(6px);}
+.quote-nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:6px 10px;z-index:2;line-height:1;border-radius:999px;}
+.quote-nav:hover{color:var(--accent);}
+.quote-nav.prev{left:2px;}
+.quote-nav.next{right:2px;}
+.quote-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2;}
+.quote-dot{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:background .2s;}
+.quote-dot.on{background:var(--accent);}
+
 /* GENERATIVE ART HEADER */
 .card-art{height:74px;width:100%;display:block;position:relative;overflow:hidden;background:var(--surface2);}
 .card-art svg{display:block;width:100%;height:100%;}
@@ -217,6 +231,13 @@ body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;min-
 </div>
 
 <div class="main">
+  <div class="quote-strip" id="quoteStrip">
+    <button class="quote-nav prev" onclick="shiftQuote(-1)">‹</button>
+    <div class="quote-text" id="quoteText">…</div>
+    <button class="quote-nav next" onclick="shiftQuote(1)">›</button>
+    <div class="quote-dots" id="quoteDots"></div>
+  </div>
+
   <div class="focus-card" id="focusCard">
     <div class="focus-label">⚡ Focus · Next Action</div>
     <div class="focus-text" id="focusText">Lädt...</div>
@@ -498,6 +519,9 @@ function render() {
     <div class="level-row"><span class="level-label">Level ${l.level} · ${l.xp} XP</span><span class="level-val">${l.xpToNext} XP bis Level ${l.level+1}</span></div>
     <div class="bar-track"><div class="bar-fill" style="width:${l.progress}%"></div></div>
   `;
+  // Quotes
+  renderQuote();
+  restartQuoteTimer();
   // Focus
   renderFocus();
   // Grid
@@ -551,6 +575,48 @@ function render() {
   });
 }
 
+
+
+// ── QUOTE SLIDER ──────────────────────────
+const FALLBACK_QUOTES = ["You only have one life!"];
+let quoteIdx = 0, quoteTimer = null;
+
+function quotes(){
+  const q = (data && Array.isArray(data.quotes) && data.quotes.length) ? data.quotes : FALLBACK_QUOTES;
+  return q;
+}
+function renderQuote(){
+  const q = quotes();
+  if(quoteIdx >= q.length) quoteIdx = 0;
+  const el = document.getElementById('quoteText');
+  if(!el) return;
+  el.classList.add('fade');
+  setTimeout(()=>{
+    el.textContent = q[quoteIdx];
+    el.classList.remove('fade');
+  }, 180);
+  const dots = document.getElementById('quoteDots');
+  dots.innerHTML = q.length > 1
+    ? q.map((_,i)=>`<div class="quote-dot ${i===quoteIdx?'on':''}"></div>`).join('')
+    : '';
+  const showNav = q.length > 1 ? '' : 'none';
+  document.querySelectorAll('.quote-nav').forEach(b=>b.style.display=showNav);
+}
+function shiftQuote(dir){
+  const q = quotes();
+  quoteIdx = (quoteIdx + dir + q.length) % q.length;
+  renderQuote();
+  restartQuoteTimer();
+}
+function restartQuoteTimer(){
+  clearInterval(quoteTimer);
+  if(quotes().length > 1) quoteTimer = setInterval(()=>shiftQuoteAuto(), 9000);
+}
+function shiftQuoteAuto(){
+  const q = quotes();
+  quoteIdx = (quoteIdx + 1) % q.length;
+  renderQuote();
+}
 
 // ── GENERATIVE ART ────────────────────────
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
