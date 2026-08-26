@@ -97,7 +97,13 @@ body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;min-
 .card.stale{border-color:rgba(240,96,128,.3);}
 .card.hot{border-color:var(--accent-border);}
 .card.urgent{border-color:var(--warn-border);}
-.card-header{padding:12px 13px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:7px;}
+
+/* GENERATIVE ART HEADER */
+.card-art{height:74px;width:100%;display:block;position:relative;overflow:hidden;background:var(--surface2);}
+.card-art svg{display:block;width:100%;height:100%;}
+.card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,var(--surface) 100%);pointer-events:none;}
+.card.done-card .card-art{filter:saturate(.35);}
+.card-header{padding:11px 13px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:7px;}
 .card-title{font-size:15px;font-weight:700;letter-spacing:-.2px;}
 .card-meta{font-family:'Roboto Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;}
 .card-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
@@ -513,6 +519,7 @@ function render() {
     const card = document.createElement('div');
     card.className = cls;
     card.innerHTML = `
+      ${genArt(proj)}
       <div class="card-header" onclick="toggle('${proj.id}')">
         <div style="flex:1;min-width:0">
           <div class="card-title">${esc(proj.name)} ${mom==='stale'?'<span class="badge badge-stale">STALE</span>':''} ${mom==='hot'?'🔥':''}</div>
@@ -542,6 +549,65 @@ function render() {
     `;
     grid.appendChild(card);
   });
+}
+
+
+// ── GENERATIVE ART ────────────────────────
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rngFrom(seed){let s=seed>>>0;return()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
+
+const ART_PALETTES = {
+  active:  [['#c8f060','#3ea77a','#1b2a24'],['#a8e05f','#2f8f8f','#151f26']],
+  open:    [['#60c8f0','#4a6fd0','#141a2a'],['#7ad4f0','#3f5fbf','#101826']],
+  idea:    [['#60c8f0','#a78bfa','#161428'],['#8ab4f8','#c58af9','#161226']],
+  paused:  [['#f0a060','#b06a3a','#241a14'],['#e8a878','#8a5a34','#201812']],
+  done:    [['#60f0a0','#2f9a70','#132420'],['#84f0b8','#3aa77e','#10201c']],
+  onhold:  [['#f0a060','#8a6a9a','#221a24'],['#d9a06a','#7a5f8f','#1e1822']]
+};
+
+function genArt(proj){
+  const seed = hashStr(proj.id + '|' + proj.name);
+  const rnd = rngFrom(seed);
+  const pool = ART_PALETTES[proj.status] || ART_PALETTES.open;
+  const pal = pool[Math.floor(rnd()*pool.length)];
+  const [c1,c2,bg] = pal;
+  const gid = 'g'+seed.toString(36);
+  const W=400,H=74;
+  let shapes='';
+  const mode = Math.floor(rnd()*3);
+
+  if(mode===0){ // flowing arcs
+    for(let i=0;i<5;i++){
+      const y = 12+rnd()*60, amp = 14+rnd()*30, sw = 1.2+rnd()*2.4;
+      const col = i%2 ? c1 : c2, op = (0.25+rnd()*0.5).toFixed(2);
+      shapes += `<path d="M-20 ${y.toFixed(1)} Q ${(W*0.3).toFixed(0)} ${(y-amp).toFixed(1)}, ${(W*0.55).toFixed(0)} ${y.toFixed(1)} T ${W+20} ${(y+amp*0.4).toFixed(1)}" fill="none" stroke="${col}" stroke-width="${sw.toFixed(1)}" opacity="${op}"/>`;
+    }
+  } else if(mode===1){ // orbital circles
+    for(let i=0;i<7;i++){
+      const cx = rnd()*W, cy = rnd()*H, r = 6+rnd()*32;
+      const col = i%3===0 ? c1 : c2, op=(0.18+rnd()*0.42).toFixed(2);
+      const filled = rnd()>0.55;
+      shapes += filled
+        ? `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="${col}" opacity="${op}"/>`
+        : `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="none" stroke="${col}" stroke-width="1.4" opacity="${op}"/>`;
+    }
+  } else { // vertical rhythm bars
+    let x=-4;
+    while(x<W){
+      const w = 5+rnd()*22, h = 12+rnd()*62, y = H-h;
+      const col = rnd()>0.5 ? c1 : c2, op=(0.16+rnd()*0.5).toFixed(2);
+      shapes += `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="3" fill="${col}" opacity="${op}"/>`;
+      x += w + 3 + rnd()*13;
+    }
+  }
+
+  const ang = Math.floor(rnd()*360);
+  return `<div class="card-art"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="${gid}" gradientTransform="rotate(${ang} .5 .5)">
+      <stop offset="0%" stop-color="${bg}"/><stop offset="100%" stop-color="${c2}" stop-opacity="0.28"/>
+    </linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#${gid})"/>${shapes}
+  </svg></div>`;
 }
 
 // ── INTERACTIONS ──────────────────────────
