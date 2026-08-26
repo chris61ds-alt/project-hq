@@ -3,27 +3,27 @@
     {
       "id": "ideenliste",
       "name": "Ideenliste",
-      "meta": "Quick Capture Â· Recherche",
+      "meta": "Quick Capture · Recherche",
       "status": "idea",
       "deadline": null,
       "ideas": [],
       "todos": [
-        "Odyssey-Plan machen (Designing Your Life â 3 ZukunftsentwÃ¼rfe fÃ¼r 5 Jahre)",
+        "Odyssey-Plan machen (Designing Your Life — 3 Zukunftsentwürfe für 5 Jahre)",
         "Recherchieren: Cloud bei Kleinunternehmen einsetzen",
-        "60 Tage Instagram Challenge â 60s Videos, Thema: 'Worin bin ich nicht gut und wie arbeite ich daran', Post & Forget"
+        "60 Tage Instagram Challenge — 60s Videos, Thema: 'Worin bin ich nicht gut und wie arbeite ich daran', Post & Forget"
       ],
       "done": [
-        "Recherchieren: Wohnung kaufen â Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
+        "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
       ]
     },
     {
       "id": "contentchallenge",
       "name": "Content Challenge",
-      "meta": "60 Tage Â· 60s Videos Â· Post & Forget",
+      "meta": "60 Tage · 60s Videos · Post & Forget",
       "status": "active",
       "deadline": null,
       "ideas": [
-        "Thema: 'Was macht mich besonders' â sehr ehrlich"
+        "Thema: 'Was macht mich besonders' — sehr ehrlich"
       ],
       "todos": [],
       "done": [],
@@ -32,12 +32,12 @@
     {
       "id": "claudeboard",
       "name": "Project HQ",
-      "meta": "Dieses Board Â· PWA Â· Momentum Coach",
+      "meta": "Dieses Board · PWA · Momentum Coach",
       "status": "done",
       "deadline": null,
       "ideas": [
-        "Als PWA bauen fÃÂ¼r Homescreen-Widget",
-        "Offline-fÃÂ¤hig via Service Worker"
+        "Als PWA bauen für Homescreen-Widget",
+        "Offline-fähig via Service Worker"
       ],
       "todos": [
         "GitHub Pages Hosting aufsetzen",
@@ -50,7 +50,7 @@
     {
       "id": "wedding",
       "name": "Hochzeit",
-      "meta": "1-Tages-Event ÃÂ· MÃÂ¼nchen/AllgÃÂ¤u/Voralpen",
+      "meta": "1-Tages-Event · München/Allgäu/Voralpen",
       "status": "paused",
       "deadline": null,
       "ideas": [
