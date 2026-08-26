@@ -54,7 +54,7 @@
       "id": "wedding",
       "name": "Hochzeit",
       "meta": "1-Tages-Event · München/Allgäu/Voralpen",
-      "status": "paused",
+      "status": "done",
       "deadline": null,
       "ideas": [
         "Boutique-Resort mit Bergblick",
@@ -68,7 +68,7 @@
         "Location gefunden: Grandsberger Hof",
         "Datum steht: 16.09.2027"
       ],
-      "lastTouched": 1787738874788
+      "lastTouched": 1787775238009
     }
   ],
   "xp": 20,
