@@ -30,24 +30,6 @@
       "lastTouched": 1787738889785
     },
     {
-      "id": "claudeboard",
-      "name": "Project HQ",
-      "meta": "Dieses Board · PWA · Momentum Coach",
-      "status": "done",
-      "deadline": null,
-      "ideas": [
-        "Als PWA bauen für Homescreen-Widget",
-        "Offline-fähig via Service Worker"
-      ],
-      "todos": [
-        "GitHub Pages Hosting aufsetzen",
-        "PWA Manifest + Service Worker bauen",
-        "Auf Pixel Homescreen pinnen"
-      ],
-      "done": [],
-      "lastTouched": 1787738854394
-    },
-    {
       "id": "wedding",
       "name": "Hochzeit",
       "meta": "1-Tages-Event · München/Allgäu/Voralpen",
