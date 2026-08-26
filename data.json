@@ -59,7 +59,16 @@
       "done": [
         "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst"
       ],
-      "lastTouched": 1787766106958
+      "lastTouched": 1787766106958,
+      "challenge": {
+        "startDate": "2026-08-26",
+        "switchAfterDays": 7,
+        "totalDays": 60,
+        "recordDays": [
+          "2026-08-26"
+        ],
+        "postDays": []
+      }
     }
   ],
   "xp": 20,
