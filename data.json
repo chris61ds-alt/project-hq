@@ -20,7 +20,7 @@
       "id": "juzy",
       "name": "Juzy",
       "meta": "Finance App Â· Google Play Â· Vasco da Soda",
-      "status": "active",
+      "status": "onhold",
       "deadline": null,
       "ideas": [
         "Onboarding-Flow Ã¼berarbeiten",
@@ -39,7 +39,7 @@
       "id": "curveday",
       "name": "CurveDay",
       "meta": "Flutter App Â· Testing Â· Google Play",
-      "status": "active",
+      "status": "onhold",
       "deadline": "2026-06-08",
       "ideas": [
         "Alternative Store-Kategorie prÃ¼fen"
@@ -77,7 +77,7 @@
       "id": "contentchallenge",
       "name": "Content Challenge",
       "meta": "60 Tage · 60s Videos · Post & Forget",
-      "status": "active",
+      "status": "idea",
       "deadline": null,
       "ideas": [
         "Thema: 'Was macht mich besonders' — sehr ehrlich"
@@ -89,7 +89,7 @@
       "id": "openclaw",
       "name": "OpenClaw Marketing",
       "meta": "Birgit Â· Marketing Â· Brand aufbauen",
-      "status": "active",
+      "status": "onhold",
       "deadline": null,
       "ideas": [
         "Was braucht Birgit zuerst â Positionierung, Website, Social?"
