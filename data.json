@@ -160,6 +160,27 @@
         "Monetarisierungs-Modell â Smart Director als Premium?"
       ],
       "done": []
+    },
+    {
+      "id": "momentumcoach",
+      "name": "Momentum Coach",
+      "meta": "Coaching-Dashboard · Android Widget-Konzept",
+      "status": "idea",
+      "deadline": null,
+      "ideas": [
+        "Fokus-Frage des Tages statt Projektverwaltung",
+        "Momentum-Score pro aktivem Projekt statt nur Status",
+        "Streak-Tracker fürs Dranbleiben (nicht fürs Fertigwerden)",
+        "Kurzer Abend-Reflexions-Prompt (1 Satz)",
+        "Android: PWA + Add-to-Homescreen als Startpunkt",
+        "Später: KWGT + JSON-Feed für echtes Homescreen-Widget"
+      ],
+      "todos": [
+        "PWA-Grundgerüst bauen (nutzt bestehende GitHub/data.json-Struktur)",
+        "Fokus-Frage-Logik definieren",
+        "Momentum-Score-Berechnung entwerfen"
+      ],
+      "done": []
     }
   ],
   "xp": 0,
