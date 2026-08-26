@@ -184,47 +184,53 @@ body{
 .plan-edit:hover{color:var(--text);background:var(--surface2);}
 
 
-/* ── QUEST: MEILENSTEIN ── */
-.quest-card{
-  position:relative;display:flex;align-items:center;gap:16px;
-  padding:16px 18px;border-radius:var(--r-lg);margin-bottom:18px;overflow:hidden;
-  background:
-    radial-gradient(120% 160% at 0% 0%,var(--tier-glow,var(--accent-dim)),transparent 65%),
-    var(--surface);
-  box-shadow:var(--shadow);
+/* ── JOURNEY: MEILENSTEIN ── */
+.journey-card{
+  position:relative;padding:18px 18px 16px;border-radius:var(--r-lg);margin-bottom:18px;
+  background:var(--surface);box-shadow:var(--shadow);overflow:hidden;
 }
-.quest-card.tier-safe{--tier-glow:var(--blue-dim);}
-.quest-card.tier-warn{--tier-glow:var(--warn-dim);}
-.quest-card.tier-crit{--tier-glow:var(--red-dim);animation:questPulse 2.2s ease-in-out infinite;}
+.journey-card.tier-crit{animation:questPulse 2.2s ease-in-out infinite;}
 @keyframes questPulse{0%,100%{box-shadow:var(--shadow);}50%{box-shadow:var(--shadow),0 0 0 1px var(--red-dim);}}
-
-.quest-ring{position:relative;width:64px;height:64px;flex-shrink:0;}
-.quest-ring svg{transform:rotate(-90deg);width:64px;height:64px;}
-.quest-ring circle{fill:none;stroke-width:5;}
-.quest-ring .track{stroke:var(--surface3);}
-.quest-ring .fill{stroke-linecap:round;transition:stroke-dashoffset .8s var(--ease),stroke .3s;}
-.quest-ring-num{
-  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+.journey-eyebrow{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:2px;}
+.journey-title{font-size:16px;font-weight:500;letter-spacing:-.2px;margin-bottom:16px;}
+.journey-track{display:flex;align-items:flex-start;position:relative;margin-bottom:6px;}
+.journey-node-wrap{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;}
+.journey-line{position:absolute;top:15px;left:50%;width:100%;height:2px;z-index:0;}
+.journey-node-wrap:first-child .journey-line{display:none;}
+.journey-line.done{background:var(--jc,var(--accent));}
+.journey-line.locked{background:repeating-linear-gradient(to right,var(--border2) 0 4px,transparent 4px 8px);}
+.journey-dot{
+  width:30px;height:30px;border-radius:50%;position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:var(--surface2);border:2px solid var(--border2);transition:all var(--trans);
 }
-.quest-ring-num b{font-size:19px;font-weight:700;line-height:1;letter-spacing:-.5px;}
-.quest-ring-num span{font-size:8px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:1px;}
-
-.quest-body{flex:1;min-width:0;}
-.quest-eyebrow{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
-.quest-eyebrow-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:500;}
-.quest-tier-chip{font-size:9px;font-weight:700;letter-spacing:.6px;padding:2px 7px;border-radius:999px;text-transform:uppercase;}
-.tier-safe .quest-tier-chip{background:var(--blue-dim);color:var(--blue);}
-.tier-warn .quest-tier-chip{background:var(--warn-dim);color:var(--warn);}
-.tier-crit .quest-tier-chip{background:var(--red-dim);color:var(--red);}
-.quest-title{font-size:16px;font-weight:500;letter-spacing:-.2px;margin-bottom:2px;}
-.quest-date{font-size:11.5px;color:var(--text2);}
-
-/* ── NEBEN-TASKS ── */
-.also{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
-.also-label{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;font-weight:500;margin-bottom:8px;}
-.also-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;font-size:13.5px;line-height:1.45;color:var(--text2);}
-.also-item .item-check{width:19px;height:19px;border-radius:6px;}
-.also-proj{font-size:11px;color:var(--muted);display:block;margin-top:2px;}
+.journey-dot.done{background:var(--jc,var(--accent));border-color:var(--jc,var(--accent));color:var(--bg);}
+.journey-dot.current{
+  background:var(--surface);border-color:var(--jc,var(--accent));
+  box-shadow:0 0 0 4px var(--jc-dim,var(--accent-dim)),0 0 14px var(--jc-glow,var(--accent-border));
+}
+.journey-dot.current .journey-dot-core{width:10px;height:10px;border-radius:50%;background:var(--jc,var(--accent));}
+.journey-dot.locked{opacity:.55;}
+.journey-dot svg{width:13px;height:13px;}
+.journey-here{
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--jc-dim,var(--accent-dim));color:var(--jc,var(--accent));
+  font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;white-space:nowrap;
+}
+.journey-label{font-size:10.5px;margin-top:8px;color:var(--muted);text-align:center;line-height:1.3;}
+.journey-label.current-label{font-weight:600;}
+.journey-bottom{display:flex;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);}
+.journey-progress{flex:1.3;min-width:0;}
+.journey-progress-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.journey-pct{font-size:24px;font-weight:300;letter-spacing:-.5px;}
+.journey-pct-sub{font-size:10.5px;color:var(--muted);margin-bottom:8px;}
+.journey-track-mini{background:var(--surface3);border-radius:999px;height:6px;overflow:hidden;}
+.journey-fill-mini{height:100%;border-radius:999px;transition:width .6s var(--ease);}
+.journey-next{flex:1;min-width:0;padding-left:14px;border-left:1px solid var(--border);}
+.journey-next-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.journey-next-body{font-size:12.5px;color:var(--text2);line-height:1.4;}
+.journey-next-body strong{color:var(--text);}
 
 
 /* ── DRAG & DROP ── */
@@ -494,7 +500,6 @@ body{
     <div class="focus-text" id="focusText">Lädt...</div>
     <div class="focus-sub" id="focusSub"></div>
     <div id="planSlot"></div>
-    <div id="alsoSlot"></div>
     <div class="focus-actions">
       <button class="focus-btn primary" onclick="markFocusDone()">Abhaken</button>
       <button class="focus-btn" onclick="markLazy()">War dran</button>
@@ -791,73 +796,77 @@ function nextMilestone(){
   if(days === null || days < 0) return null;
   return {p, days};
 }
+const JOURNEY_STAGES = [
+  {key:'start',    label:'Start',      color:'--text2'},
+  {key:'unterwegs',label:'Unterwegs',  color:'--blue'},
+  {key:'nah',      label:'Nah dran',   color:'--warn'},
+  {key:'ziel',     label:'Ziel',       color:'--red'},
+];
+function stageIndexFor(days){
+  if(days > 90) return 0;
+  if(days > 30) return 1;
+  if(days > 7)  return 2;
+  return 3;
+}
+function journeyIcon(kind){
+  const paths = {
+    check:'<path d="M2 7l3.2 3.2L12 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    lock: '<rect x="3" y="6" width="8" height="6.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.2"/>',
+  };
+  return `<svg viewBox="0 0 14 14" fill="currentColor">${paths[kind]||''}</svg>`;
+}
 function renderMilestone(){
   const el = document.getElementById('milestoneSlot');
   if(!el) return;
   const m = nextMilestone();
   if(!m){ el.innerHTML = ''; return; }
-  const days = m.days;
+  const days = Math.max(m.days, 0);
+  const curIdx = stageIndexFor(days);
+  const cur = JOURNEY_STAGES[curIdx];
+  const tier = curIdx <= 1 ? (curIdx===0?'safe':'progress') : curIdx===2 ? 'warn' : 'crit';
   const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+  const pct = Math.max(0, Math.min(100, Math.round((1 - days/120)*100)));
 
-  // Tier: game-artige Zonen statt linearer Zahl
-  let tier, tierLabel, ringMax;
-  if(days <= 7){ tier='crit'; tierLabel='Kritisch'; ringMax=7; }
-  else if(days <= 30){ tier='warn'; tierLabel='Nah'; ringMax=30; }
-  else { tier='safe'; tierLabel='Sicher'; ringMax=90; }
-  const frac = Math.max(0, Math.min(1, 1 - days/ringMax)); // fuellt sich, je naeher der Termin
-  const R = 27, C = 2*Math.PI*R;
-  const dash = C * frac;
-  const ringColor = tier==='crit' ? 'var(--red)' : tier==='warn' ? 'var(--warn)' : 'var(--accent)';
+  const nodesHtml = JOURNEY_STAGES.map((s,i) => {
+    const state = i < curIdx ? 'done' : i === curIdx ? 'current' : 'locked';
+    const jc = `var(${s.color})`;
+    const jcDim = state!=='locked' ? `color-mix(in srgb, ${jc} 16%, transparent)` : '';
+    let inner;
+    if(state==='done') inner = journeyIcon('check');
+    else if(state==='locked') inner = journeyIcon('lock');
+    else inner = '<div class="journey-dot-core"></div>';
+    const here = state==='current' ? `<div class="journey-here" style="--jc:${jc}">Du bist hier</div>` : '';
+    return `<div class="journey-node-wrap">
+      <div class="journey-line ${i<=curIdx?'done':'locked'}" style="--jc:${jc}"></div>
+      ${here}
+      <div class="journey-dot ${state}" style="--jc:${jc};--jc-dim:${jcDim};color:${state==='locked'?'var(--muted)':jc}">${inner}</div>
+      <div class="journey-label ${state==='current'?'current-label':''}" style="${state==='current'?`color:${jc}`:''}">${s.label}</div>
+    </div>`;
+  }).join('');
 
-  el.innerHTML = `<div class="quest-card tier-${tier}">
-    <div class="quest-ring">
-      <svg viewBox="0 0 64 64">
-        <circle class="track" cx="32" cy="32" r="${R}"/>
-        <circle class="fill" cx="32" cy="32" r="${R}" stroke="${ringColor}"
-          stroke-dasharray="${C}" stroke-dashoffset="${C-dash}"/>
-      </svg>
-      <div class="quest-ring-num"><b>${days}</b><span>Tage</span></div>
-    </div>
-    <div class="quest-body">
-      <div class="quest-eyebrow">
-        <span class="quest-eyebrow-label">Meilenstein</span>
-        <span class="quest-tier-chip">${tierLabel}</span>
+  const nextStage = JOURNEY_STAGES[curIdx+1];
+  const nextBody = nextStage
+    ? `Noch <strong>${days - [90,30,7,0][curIdx]} Tage</strong> bis „${nextStage.label}"`
+    : `<strong>Letzte Etappe</strong> — ${days} Tage bis zum Termin`;
+
+  el.innerHTML = `<div class="journey-card tier-${tier}">
+    <div class="journey-eyebrow">Meilenstein</div>
+    <div class="journey-title">${esc(m.p.name)} · ${d}</div>
+    <div class="journey-track">${nodesHtml}</div>
+    <div class="journey-bottom">
+      <div class="journey-progress">
+        <div class="journey-progress-label">Fortschritt</div>
+        <div class="journey-pct" style="color:var(${cur.color})">${pct}%</div>
+        <div class="journey-pct-sub">${days} Tage verbleibend</div>
+        <div class="journey-track-mini"><div class="journey-fill-mini" style="width:${pct}%;background:var(${cur.color})"></div></div>
       </div>
-      <div class="quest-title">${esc(m.p.name)}</div>
-      <div class="quest-date">${d}</div>
+      <div class="journey-next">
+        <div class="journey-next-label">Nächste Etappe</div>
+        <div class="journey-next-body">${nextBody}</div>
+      </div>
     </div>
   </div>`;
 }
-
-// ── WEITERE KLEINE TASKS ──────────────────
-function renderAlso(){
-  const el = document.getElementById('alsoSlot');
-  if(!el) return;
-  const items = buildFocusItems();
-  const rest = items.filter((_,i) => i !== (focusIdx % Math.max(items.length,1))).slice(0,3);
-  if(!rest.length){ el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="also">
-    <div class="also-label">Auch klein machbar</div>
-    ${rest.map(it => `<div class="also-item">
-        <div class="item-check" onclick="quickDone('${it.proj.id}',this.dataset.t)" data-t="${esc(it.todo).replace(/"/g,'&quot;')}">✓</div>
-        <div>${esc(it.todo)}<span class="also-proj">${esc(it.proj.name)}</span></div>
-      </div>`).join('')}
-  </div>`;
-}
-function quickDone(pid, todo){
-  const p = data.projects.find(x => x.id === pid);
-  if(!p) return;
-  const i = p.todos.indexOf(todo);
-  if(i < 0) return;
-  p.todos.splice(i,1);
-  p.done.push(todo);
-  p.lastTouched = Date.now();
-  data.xp = (data.xp||0) + XP_DONE;
-  markDay('full');
-  showXPPop(XP_DONE);
-  scheduleSave(); render();
-}
-
 
 // ── DRAG & DROP (Long-Press) ──────────────
 let dragState = null;
@@ -1048,9 +1057,9 @@ function buildFocusItems() {
   const p = activeProject();
   if(!p) return items;
   const dd = deadlineDays(p);
-  if (dd !== null && dd <= 14) p.todos.slice(0,3).forEach(t => add(p,t,'deadline',{days:dd}));
-  if (momentum(p) === 'stale') p.todos.slice(0,3).forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'stale'); });
-  p.todos.slice(0,4).forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'normal'); });
+  if (dd !== null && dd <= 14) p.todos.slice(0,1).forEach(t => add(p,t,'deadline',{days:dd}));
+  if (momentum(p) === 'stale') p.todos.slice(0,1).forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'stale'); });
+  p.todos.forEach(t => { if (!items.find(i=>i.todo===t)) add(p,t,'normal'); });
   return items;
 }
 
@@ -1155,7 +1164,6 @@ function render() {
   restartQuoteTimer();
   // Focus
   renderFocus();
-  renderAlso();
   renderActiveProjectPanel();
   // Grid
   const grid = document.getElementById('projectGrid');
