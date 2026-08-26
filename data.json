@@ -20,13 +20,14 @@
       "id": "contentchallenge",
       "name": "Content Challenge",
       "meta": "60 Tage Â· 60s Videos Â· Post & Forget",
-      "status": "idea",
+      "status": "active",
       "deadline": null,
       "ideas": [
         "Thema: 'Was macht mich besonders' â sehr ehrlich"
       ],
       "todos": [],
-      "done": []
+      "done": [],
+      "lastTouched": 1787738889785
     },
     {
       "id": "claudeboard",
