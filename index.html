@@ -148,9 +148,10 @@ body{
 }
 .focus-text{font-size:21px;font-weight:400;line-height:1.32;letter-spacing:-.4px;text-wrap:balance;}
 .focus-sub{font-size:12px;color:var(--text2);margin-top:7px;}
-.focus-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
+.focus-actions{display:flex;gap:7px;margin-top:16px;}
+.focus-actions .focus-btn{flex:1;white-space:nowrap;padding:10px 6px;}
 .focus-btn{
-  font-family:inherit;font-size:13px;font-weight:500;padding:10px 18px;border-radius:999px;
+  font-family:inherit;font-size:12.5px;font-weight:500;padding:10px 14px;border-radius:999px;
   cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);
   transition:background var(--trans),color var(--trans),transform .1s var(--ease);
 }
@@ -159,14 +160,42 @@ body{
 .focus-btn.primary{background:var(--accent);border-color:transparent;color:var(--bg);font-weight:500;}
 .focus-btn.primary:hover{filter:brightness(1.08);color:var(--bg);}
 
+
+/* ── TREND HEATMAP (ersetzt Streak-Zähler) ── */
+.trend-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px;margin-bottom:20px;}
+.trend-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:10px;}
+.trend-label{font-size:12px;color:var(--text2);}
+.trend-val{font-size:12px;color:var(--muted);}
+.trend-grid{display:flex;gap:5px;}
+.trend-cell{flex:1;height:30px;border-radius:6px;background:var(--surface3);position:relative;transition:background var(--trans),transform .12s var(--ease);cursor:default;}
+.trend-cell.full{background:var(--green);}
+.trend-cell.lazy{background:var(--warn);opacity:.75;}
+.trend-cell.today{box-shadow:0 0 0 2px var(--accent);}
+.trend-foot{display:flex;gap:14px;margin-top:11px;font-size:11px;color:var(--muted);flex-wrap:wrap;}
+.trend-key{display:flex;align-items:center;gap:5px;}
+.trend-swatch{width:9px;height:9px;border-radius:3px;}
+
+/* ── WENN/DANN ── */
+.plan-row{display:flex;gap:8px;margin-top:14px;}
+.plan-input{
+  background:var(--surface2);border:1px solid transparent;border-radius:999px;color:var(--text);
+  font-family:inherit;font-size:13px;padding:9px 15px;outline:none;flex:1;min-width:0;
+  transition:border-color var(--trans);
+}
+.plan-input:focus{border-color:var(--accent-border);}
+.plan-input::placeholder{color:var(--muted);}
+.plan-set{font-size:12px;color:var(--accent);margin-top:11px;display:flex;align-items:center;gap:7px;}
+.plan-edit{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:999px;font-family:inherit;}
+.plan-edit:hover{color:var(--text);background:var(--surface2);}
+
 /* ── STATS ── */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .stat-pill{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);
-  padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;
+  padding:13px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;
 }
 .stat-val{font-size:22px;font-weight:400;letter-spacing:-.5px;line-height:1.1;}
-.stat-key{font-size:10px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.stat-key{font-size:9.5px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .xp-pill .stat-val{color:var(--xp);} .streak-pill .stat-val{color:var(--warn);}
 
 /* ── LEVEL ── */
@@ -374,13 +403,16 @@ body{
     <div class="focus-label">⚡ Focus · Next Action</div>
     <div class="focus-text" id="focusText">Lädt...</div>
     <div class="focus-sub" id="focusSub"></div>
+    <div id="planSlot"></div>
     <div class="focus-actions">
-      <button class="focus-btn primary" onclick="markFocusDone()">✓ Erledigt (+15 XP)</button>
-      <button class="focus-btn" onclick="skipFocus()">↷ Überspringen</button>
+      <button class="focus-btn primary" onclick="markFocusDone()">✓ Erledigt</button>
+      <button class="focus-btn" onclick="markLazy()">◐ Drangewesen</button>
+      <button class="focus-btn" onclick="skipFocus()">↷ Anderes</button>
     </div>
   </div>
 
   <div class="stats-row" id="statsRow"></div>
+  <div class="trend-card" id="trendCard"></div>
   <div class="level-bar" id="levelBar"></div>
   <div class="grid" id="projectGrid"></div>
 
@@ -500,13 +532,115 @@ function setSyncStatus(state, msg) {
 
 // ── STREAK ────────────────────────────────
 function updateStreak() {
-  const today = new Date().toDateString();
-  if (!data.lastActive) { data.lastActive = today; data.streak = data.streak||0; return; }
-  const diff = Math.floor((new Date() - new Date(data.lastActive)) / 86400000);
-  if (diff === 0) return;
-  if (diff <= 2) data.streak = (data.streak||0) + 1;
-  else data.streak = 0;
-  data.lastActive = today;
+  // Kein harter Streak mehr: der 14-Tage-Trend ersetzt den Zaehler.
+  ensureLog();
+  if(!data.plans || typeof data.plans !== 'object') data.plans = {};
+  if(!data.lastActive) data.lastActive = new Date().toDateString();
+}
+
+
+// ── TAGES-LOG (Trend statt Streak) ────────
+// data.log = { "2026-08-26": "full" | "lazy" }
+const XP_SHOW_UP = 5;
+function dayKey(d){const x=d||new Date();return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');}
+function ensureLog(){ if(!data.log || typeof data.log !== 'object') data.log = {}; return data.log; }
+
+function markDay(state){
+  const log = ensureLog();
+  const k = dayKey();
+  if (log[k] === 'full') return;          // voller Tag bleibt voller Tag
+  log[k] = state;
+  data.lastActive = new Date().toDateString();
+}
+
+function last14(){
+  const out = [];
+  for (let i = 13; i >= 0; i--){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    out.push({key: dayKey(d), state: (ensureLog())[dayKey(d)] || null, isToday: i === 0});
+  }
+  return out;
+}
+
+// "Nie zwei Tage hintereinander" statt starrem Streak
+function missedInARow(){
+  const log = ensureLog();
+  let n = 0;
+  for (let i = 1; i <= 14; i++){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    if (log[dayKey(d)]) break;
+    n++;
+  }
+  return n;
+}
+function rate14(){
+  const days = last14();
+  const hit = days.filter(d => d.state).length;
+  return Math.round(hit / 14 * 100);
+}
+
+function renderTrend(){
+  const el = document.getElementById('trendCard');
+  if(!el) return;
+  const days = last14();
+  const pct = rate14();
+  const missed = missedInARow();
+  let note;
+  if (missed >= 2) note = 'Zwei Tage Pause – heute wieder anknüpfen';
+  else if (pct >= 80) note = 'Guter Rhythmus';
+  else note = 'Ziel: 80 % – nicht 100 %';
+  el.innerHTML = `
+    <div class="trend-head">
+      <span class="trend-label">Letzte 14 Tage · ${pct}%</span>
+      <span class="trend-val">${note}</span>
+    </div>
+    <div class="trend-grid">
+      ${days.map(d=>`<div class="trend-cell ${d.state==='full'?'full':d.state==='lazy'?'lazy':''} ${d.isToday?'today':''}" title="${d.key}"></div>`).join('')}
+    </div>
+    <div class="trend-foot">
+      <span class="trend-key"><span class="trend-swatch" style="background:var(--green)"></span>Erledigt</span>
+      <span class="trend-key"><span class="trend-swatch" style="background:var(--warn);opacity:.75"></span>Drangewesen</span>
+      <span class="trend-key"><span class="trend-swatch" style="background:var(--surface3)"></span>Pause</span>
+    </div>`;
+}
+
+// ── WENN / DANN ───────────────────────────
+function renderPlan(){
+  const slot = document.getElementById('planSlot');
+  if(!slot) return;
+  const k = dayKey();
+  if(!data.plans || typeof data.plans !== 'object') data.plans = {};
+  const plan = data.plans[k];
+  if (plan) {
+    slot.innerHTML = `<div class="plan-set">🕑 ${esc(plan)}<button class="plan-edit" onclick="clearPlan()">ändern</button></div>`;
+  } else {
+    slot.innerHTML = `<div class="plan-row">
+      <input class="plan-input" id="planInput" placeholder="Wann & wo? z.B. 19 Uhr, Küchentisch" onkeydown="if(event.key==='Enter')savePlan()"/>
+      <button class="focus-btn" onclick="savePlan()">Setzen</button>
+    </div>`;
+  }
+}
+function savePlan(){
+  const inp = document.getElementById('planInput');
+  if(!inp) return;
+  const v = inp.value.trim();
+  if(!v) return;
+  if(!data.plans) data.plans = {};
+  data.plans[dayKey()] = v;
+  scheduleSave(); renderPlan(); showToast('Vorsatz gesetzt');
+}
+function clearPlan(){
+  if(data.plans) delete data.plans[dayKey()];
+  scheduleSave(); renderPlan();
+}
+
+// ── LAZY DAY ──────────────────────────────
+function markLazy(){
+  markDay('lazy');
+  data.xp = (data.xp||0) + XP_SHOW_UP;
+  showXPPop(XP_SHOW_UP);
+  scheduleSave(); render();
+  showToast('Zählt trotzdem');
 }
 
 // ── THEME ─────────────────────────────────
@@ -581,7 +715,7 @@ function markFocusDone() {
     proj.done.push(item.todo);
     proj.lastTouched = Date.now();
     data.xp = (data.xp||0) + XP_DONE;
-    data.lastActive = new Date().toDateString();
+    markDay('full');
     showXPPop(XP_DONE);
     scheduleSave(); render();
   }
@@ -642,8 +776,6 @@ function render() {
     <div class="stat-pill"><span class="stat-val">${p.filter(x=>x.status==='active').length}</span><span class="stat-key">Aktiv</span></div>
     <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+x.todos.length,0)}</span><span class="stat-key">Todos</span></div>
     <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+(x.done||[]).length,0)}</span><span class="stat-key">Erledigt</span></div>
-    <div class="stat-pill xp-pill"><span class="stat-val">${data.xp||0}</span><span class="stat-key">XP</span></div>
-    <div class="stat-pill streak-pill"><span class="stat-val">${data.streak||0}🔥</span><span class="stat-key">Streak</span></div>
   `;
   // Level
   const l = xpLevel();
@@ -651,6 +783,9 @@ function render() {
     <div class="level-row"><span class="level-label">Level ${l.level} · ${l.xp} XP</span><span class="level-val">${l.xpToNext} XP bis Level ${l.level+1}</span></div>
     <div class="bar-track"><div class="bar-fill" style="width:${l.progress}%"></div></div>
   `;
+  // Trend + Plan
+  renderTrend();
+  renderPlan();
   // Quotes
   renderQuote();
   restartQuoteTimer();
