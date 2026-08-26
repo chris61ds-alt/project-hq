@@ -16,6 +16,26 @@
       ]
     },
     {
+      "id": "wedding",
+      "name": "Hochzeit",
+      "meta": "1-Tages-Event · München/Allgäu/Voralpen",
+      "status": "paused",
+      "deadline": null,
+      "ideas": [
+        "Boutique-Resort mit Bergblick",
+        "Family Style Dinner im Freien",
+        "Liveband vs. DJ"
+      ],
+      "todos": [
+        "Redet über den Budget-Rahmen – ein Abend, eine Zahl"
+      ],
+      "done": [
+        "Location gefunden: Grandsberger Hof",
+        "Datum steht: 16.09.2027"
+      ],
+      "lastTouched": 1787738874788
+    },
+    {
       "id": "contentchallenge",
       "name": "Content Challenge",
       "meta": "60 Tage · 60s Videos · Post & Forget",
@@ -39,26 +59,6 @@
       ],
       "done": [],
       "lastTouched": 1787739571410.2983
-    },
-    {
-      "id": "wedding",
-      "name": "Hochzeit",
-      "meta": "1-Tages-Event · München/Allgäu/Voralpen",
-      "status": "paused",
-      "deadline": null,
-      "ideas": [
-        "Boutique-Resort mit Bergblick",
-        "Family Style Dinner im Freien",
-        "Liveband vs. DJ"
-      ],
-      "todos": [
-        "Redet über den Budget-Rahmen – ein Abend, eine Zahl"
-      ],
-      "done": [
-        "Location gefunden: Grandsberger Hof",
-        "Datum steht: 16.09.2027"
-      ],
-      "lastTouched": 1787738874788
     }
   ],
   "xp": 5,
@@ -71,5 +71,6 @@
   "log": {
     "2026-08-26": "lazy"
   },
-  "plans": {}
+  "plans": {},
+  "sortMode": "manual"
 }
