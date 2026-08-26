@@ -791,10 +791,16 @@ function setActiveProject(id){
 // ── MEILENSTEIN ───────────────────────────
 function nextMilestone(){
   const p = activeProject();
-  if(!p || !p.deadline) return null;
-  const days = deadlineDays(p);
-  if(days === null || days < 0) return null;
-  return {p, days};
+  if(!p) return null;
+  const list = (p.milestones && p.milestones.length)
+    ? p.milestones
+    : (p.deadline ? [{label:p.name, date:p.deadline}] : []);
+  const upcoming = list
+    .map(m => ({...m, days: daysUntilDate(m.date)}))
+    .filter(m => m.days !== null && m.days >= 0)
+    .sort((a,b) => a.days - b.days);
+  if(!upcoming.length) return null;
+  return {p, days: upcoming[0].days, label: upcoming[0].label, date: upcoming[0].date, more: upcoming.length - 1};
 }
 const JOURNEY_STAGES = [
   {key:'start',    label:'Start',      color:'--text2'},
@@ -824,8 +830,9 @@ function renderMilestone(){
   const curIdx = stageIndexFor(days);
   const cur = JOURNEY_STAGES[curIdx];
   const tier = curIdx <= 1 ? (curIdx===0?'safe':'progress') : curIdx===2 ? 'warn' : 'crit';
-  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+  const d = new Date(m.date).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
   const pct = Math.max(0, Math.min(100, Math.round((1 - days/120)*100)));
+  const moreHtml = m.more > 0 ? `<span style="color:var(--muted);font-weight:400"> · +${m.more} weitere</span>` : '';
 
   const nodesHtml = JOURNEY_STAGES.map((s,i) => {
     const state = i < curIdx ? 'done' : i === curIdx ? 'current' : 'locked';
@@ -851,7 +858,7 @@ function renderMilestone(){
 
   el.innerHTML = `<div class="journey-card tier-${tier}">
     <div class="journey-eyebrow">Meilenstein</div>
-    <div class="journey-title">${esc(m.p.name)} · ${d}</div>
+    <div class="journey-title">${esc(m.label)} · ${d}${moreHtml}</div>
     <div class="journey-track">${nodesHtml}</div>
     <div class="journey-bottom">
       <div class="journey-progress">
@@ -1048,6 +1055,10 @@ function momentum(proj) {
 function deadlineDays(proj) {
   if (!proj.deadline) return null;
   return Math.floor((new Date(proj.deadline) - new Date()) / 86400000);
+}
+function daysUntilDate(dateStr){
+  if(!dateStr) return null;
+  return Math.floor((new Date(dateStr) - new Date()) / 86400000);
 }
 
 // ── FOCUS ─────────────────────────────────
