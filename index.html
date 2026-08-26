@@ -207,6 +207,26 @@ body{
 .card-header{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .drag-hint{font-size:11px;color:var(--muted);margin:0 2px 10px;letter-spacing:.3px;}
 
+
+/* ── CHALLENGE-ÜBERSICHT ── */
+.chal-strip{margin-top:10px;padding:11px 13px;background:var(--surface2);border-radius:12px;}
+.chal-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.chal-day{font-size:13px;color:var(--text);font-weight:500;}
+.chal-phase{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:500;}
+.chal-phase.rec{background:var(--blue-dim);color:var(--blue);}
+.chal-phase.post{background:var(--accent-dim);color:var(--accent);}
+.chal-bar-track{background:var(--surface3);border-radius:999px;height:5px;overflow:hidden;margin-bottom:7px;}
+.chal-bar-fill{height:100%;border-radius:999px;background:var(--accent);transition:width .5s var(--ease);}
+.chal-note{font-size:11.5px;color:var(--muted);}
+.chal-actions{display:flex;gap:7px;margin-top:11px;}
+.chal-btn{
+  flex:1;font-family:inherit;font-size:12.5px;font-weight:500;padding:9px 8px;border-radius:999px;
+  cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);
+  transition:background var(--trans),color var(--trans);
+}
+.chal-btn:hover{background:var(--surface3);}
+.chal-btn.done-today{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .stat-pill{
@@ -830,6 +850,54 @@ function commitOrder(){
   showToast('Reihenfolge gespeichert');
 }
 
+
+// ── CHALLENGE-ÜBERSICHT ───────────────────
+function chalDayNum(ch){
+  const start = new Date(ch.startDate);
+  const diff = Math.floor((new Date().setHours(0,0,0,0) - start.setHours(0,0,0,0)) / 86400000);
+  return Math.min(Math.max(diff+1,1), ch.totalDays);
+}
+function chalPhase(ch){
+  return (ch.recordDays||[]).length >= ch.switchAfterDays ? 'post' : 'rec';
+}
+function renderChallengeStrip(proj){
+  const ch = proj.challenge;
+  if(!ch) return '';
+  const day = chalDayNum(ch);
+  const phase = chalPhase(ch);
+  const recCt = (ch.recordDays||[]).length, postCt = (ch.postDays||[]).length;
+  const todayKey = dayKey();
+  const recToday = (ch.recordDays||[]).includes(todayKey);
+  const postToday = (ch.postDays||[]).includes(todayKey);
+  const pct = Math.round(day/ch.totalDays*100);
+  const note = phase === 'rec'
+    ? `Aufnahme-Phase · noch ${Math.max(ch.switchAfterDays-recCt,0)} Tage bis zum ersten Post`
+    : `Posting-Phase · ${postCt} von ${ch.totalDays-ch.switchAfterDays} gepostet`;
+  return `<div class="chal-strip">
+    <div class="chal-top">
+      <span class="chal-day">Tag ${day} von ${ch.totalDays}</span>
+      <span class="chal-phase ${phase}">${phase==='rec'?'Aufnehmen':'Posten'}</span>
+    </div>
+    <div class="chal-bar-track"><div class="chal-bar-fill" style="width:${pct}%"></div></div>
+    <div class="chal-note">${note}</div>
+    <div class="chal-actions">
+      <button class="chal-btn ${recToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','record')">${recToday?'✓ Aufgenommen':'Video aufgenommen'}</button>
+      ${phase==='post' ? `<button class="chal-btn ${postToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','post')">${postToday?'✓ Gepostet':'Video gepostet'}</button>` : ''}
+    </div>
+  </div>`;
+}
+function chalLog(pid, kind){
+  const p = data.projects.find(x=>x.id===pid);
+  if(!p || !p.challenge) return;
+  const key = dayKey();
+  const arr = kind === 'record' ? (p.challenge.recordDays ||= []) : (p.challenge.postDays ||= []);
+  if(!arr.includes(key)) arr.push(key);
+  markDay('full');
+  data.xp = (data.xp||0) + XP_DONE;
+  showXPPop(XP_DONE);
+  scheduleSave(); render();
+}
+
 // ── THEME ─────────────────────────────────
 function setTheme(t) {
   theme = t;
@@ -1017,6 +1085,7 @@ function render() {
         <div style="flex:1;min-width:0">
           <div class="card-title">${esc(proj.name)}${mom==='stale'?' <span class="badge badge-stale">RUHT</span>':''}</div>
           <div class="card-meta">${esc(proj.meta)}</div>
+        ${renderChallengeStrip(proj)}
         </div>
         <div class="card-badges">
           <span class="badge ${s.c}">${s.l}</span>
