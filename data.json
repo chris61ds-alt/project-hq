@@ -33,7 +33,21 @@
           "2026-08-26"
         ],
         "postDays": []
-      }
+      },
+      "milestones": [
+        {
+          "label": "Erster Post (Ende Aufnahme-Phase)",
+          "date": "2026-09-02"
+        },
+        {
+          "label": "Halbzeit",
+          "date": "2026-09-25"
+        },
+        {
+          "label": "Challenge-Ende",
+          "date": "2026-10-25"
+        }
+      ]
     },
     {
       "id": "ideenliste",
