@@ -106,7 +106,7 @@ body{
 
 /* ── QUOTE ── */
 .quote-strip{
-  position:relative;border-radius:var(--r-lg);
+  position:relative;border-radius:var(--r-lg);border:none!important;
   padding:24px 46px;margin-bottom:18px;overflow:hidden;
   min-height:88px;display:flex;align-items:center;justify-content:center;
   background:
@@ -116,7 +116,7 @@ body{
   border:1px solid var(--border);
 }
 .quote-text{
-  font-size:19px;font-weight:300;line-height:1.4;letter-spacing:-.3px;
+  font-size:20px;font-weight:300;line-height:1.38;letter-spacing:-.5px;
   text-align:center;color:var(--text);position:relative;z-index:1;
   transition:opacity .3s var(--ease),transform .3s var(--ease);
   text-wrap:balance;
@@ -137,16 +137,16 @@ body{
 
 /* ── FOCUS HERO (signature) ── */
 .focus-card{
-  position:relative;border-radius:var(--r-lg);padding:22px 22px 20px;margin-bottom:18px;
+  position:relative;border-radius:var(--r-lg);padding:24px 22px 20px;margin-bottom:20px;
   background:linear-gradient(150deg,var(--accent-dim),transparent 70%),var(--surface);
   border:1px solid var(--accent-border);
   box-shadow:var(--shadow);
 }
 .focus-label{
-  font-size:11px;color:var(--accent);letter-spacing:1.6px;text-transform:uppercase;
-  font-weight:500;margin-bottom:10px;
+  font-size:10.5px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;margin-bottom:12px;
 }
-.focus-text{font-size:21px;font-weight:400;line-height:1.32;letter-spacing:-.4px;text-wrap:balance;}
+.focus-text{font-size:26px;font-weight:300;line-height:1.24;letter-spacing:-.8px;text-wrap:balance;}
 .focus-sub{font-size:12px;color:var(--text2);margin-top:7px;}
 .focus-actions{display:flex;gap:7px;margin-top:16px;}
 .focus-actions .focus-btn{flex:1;white-space:nowrap;padding:10px 6px;}
@@ -162,7 +162,7 @@ body{
 
 
 /* ── TREND HEATMAP (ersetzt Streak-Zähler) ── */
-.trend-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px;margin-bottom:20px;}
+.trend-card{background:var(--surface);border:none;border-radius:var(--r-md);padding:17px 19px;margin-bottom:22px;}
 .trend-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:10px;}
 .trend-label{font-size:12px;color:var(--text2);}
 .trend-val{font-size:12px;color:var(--muted);}
@@ -191,9 +191,11 @@ body{
 
 /* ── MEILENSTEIN + NEBEN-TASKS ── */
 .milestone{
-  display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:9px 14px;
-  background:var(--surface2);border-radius:999px;font-size:12.5px;color:var(--text2);
+  display:flex;align-items:baseline;gap:10px;margin-bottom:16px;padding:11px 18px;
+  background:var(--surface2);border-radius:999px;font-size:13px;color:var(--text2);
 }
+.ms-key{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+.ms-body{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .milestone strong{color:var(--text);font-weight:500;}
 .milestone .ms-days{margin-left:auto;color:var(--warn);white-space:nowrap;font-size:12px;}
 .also{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
@@ -205,15 +207,15 @@ body{
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .stat-pill{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);
-  padding:13px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;
+  background:var(--surface);border:none;border-radius:var(--r-md);
+  padding:15px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;
 }
-.stat-val{font-size:22px;font-weight:400;letter-spacing:-.5px;line-height:1.1;}
+.stat-val{font-size:27px;font-weight:300;letter-spacing:-1px;line-height:1.05;}
 .stat-key{font-size:9.5px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .xp-pill .stat-val{color:var(--xp);} .streak-pill .stat-val{color:var(--warn);}
 
 /* ── LEVEL ── */
-.level-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;}
+.level-bar{background:transparent;border:none;border-radius:0;padding:0 2px;margin-bottom:24px;}
 .level-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
 .level-label{font-size:12px;color:var(--text2);}
 .level-val{font-size:12px;color:var(--muted);}
@@ -221,25 +223,29 @@ body{
 .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--xp));transition:width .7s var(--ease);}
 
 /* ── GRID + CARD ── */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
 .card{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
-  overflow:hidden;box-shadow:var(--shadow);
-  transition:box-shadow var(--trans),border-color var(--trans),transform var(--trans);
+  background:var(--surface);border:none;border-radius:var(--r-lg);
+  overflow:hidden;box-shadow:var(--shadow);position:relative;
+  transition:box-shadow var(--trans),transform var(--trans);
   animation:cardIn .45s var(--ease) backwards;
 }
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;z-index:3;background:var(--accent);opacity:.9;}
+.card[data-st='idea']::before{background:var(--blue);}
+.card[data-st='paused']::before,.card[data-st='onhold']::before{background:var(--warn);}
+.card[data-st='done']::before{background:var(--green);}
+.card[data-st='open']::before{background:var(--border2);}
 @keyframes cardIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 .card:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px);}
-.card.stale{border-color:var(--red-dim);}
-.card.hot{border-color:var(--accent-border);}
-.card.urgent{border-color:var(--warn-border);}
+.card.stale::before{background:var(--red);}
+.card.urgent::before{background:var(--warn);}
 
-.card-art{height:66px;width:100%;display:block;position:relative;overflow:hidden;background:var(--surface2);}
+.card-art{height:56px;width:100%;display:block;position:relative;overflow:hidden;background:var(--surface2);}
 .card-art svg{display:block;width:100%;height:100%;}
-.card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,var(--surface) 100%);pointer-events:none;}
+.card-art::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--surface) 100%);pointer-events:none;}
 
-.card-header{padding:14px 17px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
-.card-title{font-size:16px;font-weight:500;letter-spacing:-.2px;line-height:1.3;}
+.card-header{padding:15px 18px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.card-title{font-size:17px;font-weight:400;letter-spacing:-.35px;line-height:1.25;}
 .card-meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;}
 .card-badges{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
 .toggle-arrow{color:var(--muted);font-size:11px;transition:transform var(--trans);}
@@ -265,7 +271,7 @@ body{
 .badge-urgent{background:var(--warn-dim);color:var(--warn);}
 
 /* ── CARD BODY ── */
-.card-body{padding:0 17px 16px;display:none;}
+.card-body{padding:0 18px 18px;display:none;}
 .card-body.open{display:block;animation:bodyIn .3s var(--ease);}
 @keyframes bodyIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
 .section-label{font-size:11px;color:var(--muted);letter-spacing:1.3px;text-transform:uppercase;font-weight:500;margin:16px 0 6px;}
@@ -383,7 +389,7 @@ body{
 <!-- TOKEN MODAL -->
 <div class="modal-overlay" id="tokenModal" style="display:none;">
   <div class="modal">
-    <h2>🔑 GitHub Token</h2>
+    <h2>GitHub Token</h2>
     <p>Für Cross-Device-Sync wird dein GitHub Personal Access Token einmalig im Browser gespeichert. Es wird nur genutzt um <code>data.json</code> im Repo zu lesen und zu schreiben.</p>
     <input id="tokenInput" type="password" placeholder="ghp_..."/>
     <button onclick="saveToken()">Token speichern & laden</button>
@@ -395,7 +401,7 @@ body{
   <span class="live-dot"></span>
   <h1>Project HQ</h1>
   <input class="quick-capture" id="quickCapture" placeholder="Projekt: Todo oder Idee – direkt tippen..." onkeydown="handleQuickCapture(event)"/>
-  <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+  <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☾</button>
   <button class="icon-btn" onclick="syncNow()" title="Sync">↻</button>
 </div>
 
@@ -415,15 +421,15 @@ body{
 
   <div id="milestoneSlot"></div>
   <div class="focus-card" id="focusCard">
-    <div class="focus-label">⚡ Focus · Next Action</div>
+    <div class="focus-label">Fokus heute</div>
     <div class="focus-text" id="focusText">Lädt...</div>
     <div class="focus-sub" id="focusSub"></div>
     <div id="planSlot"></div>
     <div id="alsoSlot"></div>
     <div class="focus-actions">
-      <button class="focus-btn primary" onclick="markFocusDone()">✓ Erledigt</button>
-      <button class="focus-btn" onclick="markLazy()">◐ Drangewesen</button>
-      <button class="focus-btn" onclick="skipFocus()">↷ Anderes</button>
+      <button class="focus-btn primary" onclick="markFocusDone()">Erledigt</button>
+      <button class="focus-btn" onclick="markLazy()">Drangewesen</button>
+      <button class="focus-btn" onclick="skipFocus()">Anderes</button>
     </div>
   </div>
 
@@ -635,7 +641,7 @@ function renderPlan(){
   if(!data.plans || typeof data.plans !== 'object') data.plans = {};
   const plan = data.plans[k];
   if (plan) {
-    slot.innerHTML = `<div class="plan-set">🕑 ${esc(plan)}<button class="plan-edit" onclick="clearPlan()">ändern</button></div>`;
+    slot.innerHTML = `<div class="plan-set">${esc(plan)}<button class="plan-edit" onclick="clearPlan()">ändern</button></div>`;
   } else {
     slot.innerHTML = `<div class="plan-row">
       <input class="plan-input" id="planInput" placeholder="Wann & wo? z.B. 19 Uhr, Küchentisch" onkeydown="if(event.key==='Enter')savePlan()"/>
@@ -681,8 +687,8 @@ function renderMilestone(){
   if(!el) return;
   const m = nextMilestone();
   if(!m){ el.innerHTML = ''; return; }
-  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'});
-  el.innerHTML = `<div class="milestone">🚩 <span>Nächster Meilenstein: <strong>${esc(m.p.name)}</strong> · ${d}</span><span class="ms-days">${m.days} T</span></div>`;
+  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  el.innerHTML = `<div class="milestone"><span class="ms-key">Meilenstein</span><span class="ms-body"><strong>${esc(m.p.name)}</strong> · ${d}</span><span class="ms-days">${m.days} T</span></div>`;
 }
 
 // ── WEITERE KLEINE TASKS ──────────────────
@@ -718,7 +724,7 @@ function quickDone(pid, todo){
 function setTheme(t) {
   theme = t;
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☾' : '☀';
   document.querySelector('meta[name="theme-color"]').content = t === 'dark' ? '#0a0a0c' : '#f2f2ee';
 }
 function toggleTheme() {
@@ -762,15 +768,15 @@ function buildFocusItems() {
 function renderFocus() {
   const items = buildFocusItems();
   if (!items.length) {
-    document.getElementById('focusText').textContent = 'Keine offenen Todos – 🎉';
+    document.getElementById('focusText').textContent = 'Keine offenen Todos';
     document.getElementById('focusSub').textContent = 'Füge neue Todos hinzu.';
     return;
   }
   const item = items[focusIdx % items.length];
   document.getElementById('focusText').textContent = item.todo;
-  let sub = `📁 ${item.proj.name}`;
-  if (item.urgency === 'deadline') sub += `  ·  ⚠️ Deadline in ${item.days} Tagen`;
-  if (item.urgency === 'stale') sub += `  ·  💤 Braucht Aufmerksamkeit`;
+  let sub = item.proj.name;
+  if (item.urgency === 'deadline') sub += `  ·  Deadline in ${item.days} Tagen`;
+  if (item.urgency === 'stale') sub += `  ·  Braucht Aufmerksamkeit`;
   document.getElementById('focusSub').textContent = sub;
 }
 
@@ -883,12 +889,13 @@ function render() {
     if (dd!==null && dd<=7) cls+=' urgent';
     const card = document.createElement('div');
     card.className = cls;
+    card.dataset.st = proj.status;
     card.innerHTML = `
       ${genArt(proj)}
       <div class="card-header" onclick="toggle('${proj.id}')">
         <div style="flex:1;min-width:0">
-          <div class="card-title">${esc(proj.name)} ${mom==='stale'?'<span class="badge badge-stale">STALE</span>':''} ${mom==='hot'?'🔥':''}</div>
-          <div class="card-meta">${esc(proj.meta)}${dd!==null?` · 📅 ${dd}d`:''}</div>
+          <div class="card-title">${esc(proj.name)}${mom==='stale'?' <span class="badge badge-stale">RUHT</span>':''}</div>
+          <div class="card-meta">${esc(proj.meta)}</div>
         </div>
         <div class="card-badges">
           <span class="badge ${s.c}">${s.l}</span>
@@ -897,17 +904,17 @@ function render() {
       </div>
       ${total>0?`<div class="card-progress"><div class="progress-row"><span class="progress-label">${doneCount}/${total} erledigt</span><span class="progress-pct">${pct}%</span></div><div class="prog-track"><div class="prog-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div></div>`:'<div class="card-spacer"></div>'}
       <div class="card-body ${isOpen?'open':''}">
-        <div class="section-label">💡 Ideen (${proj.ideas.length})</div>
+        <div class="section-label">Ideen (${proj.ideas.length})</div>
         ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
         <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
         <div class="divider"></div>
-        <div class="section-label">☑ Todos (${proj.todos.length})</div>
+        <div class="section-label">Todos (${proj.todos.length})</div>
         ${proj.todos.map((x,i)=>`<div class="item"><div class="item-check" onclick="completeTodo('${proj.id}',${i})">✓</div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','todos',${i})">×</button></div>`).join('')}
-        ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">✓ Done (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
+        ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">Erledigt (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
         <div class="add-row"><input class="add-input" id="ti-${proj.id}" placeholder="Todo..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','todos')"/><button class="add-btn" onclick="addItem('${proj.id}','todos')">+</button></div>
         <div class="card-footer">
           <select class="status-select" onchange="chStatus('${proj.id}',this.value)">${Object.entries(SM).map(([k,v])=>`<option value="${k}" ${proj.status===k?'selected':''}>${v.l}</option>`).join('')}</select>
-          ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">📅 ${dd}d</span>`:''}
+          ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">${dd} Tage</span>`:''}
           <button class="del-btn" onclick="rmProject('${proj.id}')">löschen</button>
         </div>
       </div>
@@ -966,12 +973,12 @@ function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt
 function rngFrom(seed){let s=seed>>>0;return()=>{s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
 
 const ART_PALETTES = {
-  active:  [['#A9B8FF','#7E8FE8','#171A23'],['#B6C2FF','#6E7FD8','#141721']],
-  open:    [['#8FD0F0','#5E9FD0','#151A24'],['#A2DAF2','#4E8CC0','#131822']],
-  idea:    [['#C3AEF5','#8FD0F0','#181624'],['#D2C0FA','#9FD8F5','#171525']],
-  paused:  [['#F5B583','#C08258','#231C18'],['#EEC09A','#B07A50','#211A16']],
-  onhold:  [['#F5B583','#A691C4','#221C22'],['#E8B492','#9A85B8','#1F1A20']],
-  done:    [['#8BD9AE','#4FA37C','#152420'],['#A0E3BE','#5FAF8A','#13211E']]
+  active:  [['#A9B8FF'],['#B6C2FF']],
+  open:    [['#8FD0F0'],['#A2DAF2']],
+  idea:    [['#C3AEF5'],['#D2C0FA']],
+  paused:  [['#F5B583'],['#EEC09A']],
+  onhold:  [['#F5B583'],['#E8B492']],
+  done:    [['#8BD9AE'],['#A0E3BE']]
 };
 
 function genArt(proj){
@@ -979,44 +986,35 @@ function genArt(proj){
   const rnd = rngFrom(seed);
   const pool = ART_PALETTES[proj.status] || ART_PALETTES.open;
   const pal = pool[Math.floor(rnd()*pool.length)];
-  const [c1,c2,bg] = pal;
-  const gid = 'g'+seed.toString(36);
-  const W=400,H=74;
-  let shapes='';
+  const line = pal[0];
+  const W=400,H=56;
+  let s='';
   const mode = Math.floor(rnd()*3);
 
-  if(mode===0){ // flowing arcs
-    for(let i=0;i<5;i++){
-      const y = 12+rnd()*60, amp = 14+rnd()*30, sw = 1.2+rnd()*2.4;
-      const col = i%2 ? c1 : c2, op = (0.18+rnd()*0.34).toFixed(2);
-      shapes += `<path d="M-20 ${y.toFixed(1)} Q ${(W*0.3).toFixed(0)} ${(y-amp).toFixed(1)}, ${(W*0.55).toFixed(0)} ${y.toFixed(1)} T ${W+20} ${(y+amp*0.4).toFixed(1)}" fill="none" stroke="${col}" stroke-width="${sw.toFixed(1)}" opacity="${op}"/>`;
-    }
-  } else if(mode===1){ // orbital circles
+  if(mode===0){                       // konzentrische Boegen
+    const cx = 60+rnd()*280, cy = H+8;
     for(let i=0;i<7;i++){
-      const cx = rnd()*W, cy = rnd()*H, r = 6+rnd()*32;
-      const col = i%3===0 ? c1 : c2, op=(0.12+rnd()*0.30).toFixed(2);
-      const filled = rnd()>0.55;
-      shapes += filled
-        ? `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="${col}" opacity="${op}"/>`
-        : `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="none" stroke="${col}" stroke-width="1.4" opacity="${op}"/>`;
+      const r = 14+i*11+rnd()*4;
+      s += `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="none" stroke="${line}" stroke-width="1" opacity="${(0.42-i*0.045).toFixed(2)}"/>`;
     }
-  } else { // vertical rhythm bars
-    let x=-4;
-    while(x<W){
-      const w = 5+rnd()*22, h = 12+rnd()*62, y = H-h;
-      const col = rnd()>0.5 ? c1 : c2, op=(0.12+rnd()*0.32).toFixed(2);
-      shapes += `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="3" fill="${col}" opacity="${op}"/>`;
-      x += w + 3 + rnd()*13;
+  } else if(mode===1){                // Punktraster mit Dichteverlauf
+    for(let x=14;x<W;x+=17){
+      for(let y=12;y<H;y+=13){
+        const t = x/W;
+        const op = (0.5-t*0.38)*(0.55+rnd()*0.45);
+        if(op<0.05) continue;
+        s += `<circle cx="${x}" cy="${y}" r="1.5" fill="${line}" opacity="${op.toFixed(2)}"/>`;
+      }
+    }
+  } else {                            // paralleles Linienfeld
+    const step = 9+rnd()*5, slant = 12+rnd()*22;
+    for(let x=-40;x<W+40;x+=step){
+      const op = (0.10+ (0.34*(1-Math.abs(x-W*0.35)/W))).toFixed(2);
+      s += `<line x1="${x.toFixed(0)}" y1="0" x2="${(x+slant).toFixed(0)}" y2="${H}" stroke="${line}" stroke-width="1" opacity="${op}"/>`;
     }
   }
 
-  const ang = Math.floor(rnd()*360);
-  return `<div class="card-art"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="${gid}" gradientTransform="rotate(${ang} .5 .5)">
-      <stop offset="0%" stop-color="${bg}"/><stop offset="100%" stop-color="${c2}" stop-opacity="0.20"/>
-    </linearGradient></defs>
-    <rect width="${W}" height="${H}" fill="url(#${gid})"/>${shapes}
-  </svg></div>`;
+  return `<div class="card-art"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
 }
 
 // ── INTERACTIONS ──────────────────────────
