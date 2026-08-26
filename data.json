@@ -49,13 +49,15 @@
       "lastTouched": 1787738874788
     }
   ],
-  "xp": 0,
+  "xp": 5,
   "streak": 0,
-  "lastActive": "Sun May 17 2026",
+  "lastActive": "Wed Aug 26 2026",
   "theme": "light",
   "quotes": [
     "You only have one life!"
   ],
-  "log": {},
+  "log": {
+    "2026-08-26": "lazy"
+  },
   "plans": {}
 }
