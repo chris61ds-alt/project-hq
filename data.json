@@ -17,63 +17,6 @@
       ]
     },
     {
-      "id": "juzy",
-      "name": "Juzy",
-      "meta": "Finance App Â· Google Play Â· Vasco da Soda",
-      "status": "onhold",
-      "deadline": null,
-      "ideas": [
-        "Onboarding-Flow Ã¼berarbeiten",
-        "Widget fÃ¼r Home Screen",
-        "Kategorien individuell anpassen lassen",
-        "App-Namen Ã¤ndern fÃ¼r bessere SEO â \"Juzy\" schwer auffindbar?"
-      ],
-      "todos": [
-        "v1.2 planen",
-        "App Store Screenshots aktualisieren",
-        "Review-Anfragen einbauen"
-      ],
-      "done": []
-    },
-    {
-      "id": "curveday",
-      "name": "CurveDay",
-      "meta": "Flutter App Â· Testing Â· Google Play",
-      "status": "onhold",
-      "deadline": "2026-06-08",
-      "ideas": [
-        "Alternative Store-Kategorie prÃ¼fen"
-      ],
-      "todos": [
-        "â¡ Play Store Launch vorbereiten",
-        "Testing abschlieÃen & Bugs dokumentieren",
-        "Store-Listing finalisieren",
-        "Compliance-Check vor Launch"
-      ],
-      "done": []
-    },
-    {
-      "id": "newsletter",
-      "name": "AI Newsletter",
-      "meta": "Google Apps Script Â· Automatisierung",
-      "status": "active",
-      "deadline": null,
-      "ideas": [
-        "Nicht nur Artikel zusammenfassen â Reddit & Foren scrapen: was setzen Menschen wirklich um?",
-        "Subreddits: r/artificial, r/ChatGPT, r/MachineLearning, r/LocalLLaMA",
-        "Rubrik \"Aus der Community\" â Top-Threads der Woche mit Takeaways",
-        "Kurations-Agent fÃ¼r Content",
-        "LinkedIn-Cross-Post automatisieren"
-      ],
-      "todos": [
-        "Reddit API / Scraping-Methode klÃ¤ren (PRAW vs. RSS)",
-        "Script finalisieren",
-        "Erste Ausgabe rausschicken",
-        "Subscriber-Liste aufbauen"
-      ],
-      "done": []
-    },
-    {
       "id": "contentchallenge",
       "name": "Content Challenge",
       "meta": "60 Tage · 60s Videos · Post & Forget",
@@ -86,23 +29,9 @@
       "done": []
     },
     {
-      "id": "openclaw",
-      "name": "OpenClaw Marketing",
-      "meta": "Birgit Â· Marketing Â· Brand aufbauen",
-      "status": "onhold",
-      "deadline": null,
-      "ideas": [
-        "Was braucht Birgit zuerst â Positionierung, Website, Social?"
-      ],
-      "todos": [
-        "Kickoff mit Birgit â Status quo & Ziele klÃ¤ren"
-      ],
-      "done": []
-    },
-    {
       "id": "claudeboard",
-      "name": "Claude Management Board",
-      "meta": "PWA Â· Dieses Board Â· Schnellzugriff",
+      "name": "Project HQ",
+      "meta": "Dieses Board · PWA · Momentum Coach",
       "status": "active",
       "deadline": null,
       "ideas": [
@@ -133,58 +62,13 @@
         "Budget-Rahmen mit Caro besprechen"
       ],
       "done": []
-    },
-    {
-      "id": "dualshot",
-      "name": "DualShot",
-      "meta": "Dual-Kamera-App Â· Flutter Â· Vibe Coding",
-      "status": "idea",
-      "deadline": null,
-      "ideas": [
-        "5 Modi: Dual, PiP (Overlay), Multi, Split, Single",
-        "BeReal-Style Daily Moments als Use Case",
-        "Zielgruppe: Travel Vlogger, Reaction Creator, Interviews",
-        "ð¬ SMART DIRECTOR MODE: Blickerkennung (MediaPipe Face Mesh) â A-Roll/B-Roll Auto-Cut, EDL + ffmpeg_kit_flutter",
-        "Smart Director: Sync via UDP/WebSocket (NTP-Prinzip, ms-genau), Host/Client im WLAN",
-        "Smart Director: On-Device KI, kein Cloud-Upload"
-      ],
-      "todos": [
-        "Flutter-Projekt aufsetzen (Vasco da Soda)",
-        "Kamera-Permission Flow planen",
-        "Dual-Stream Recording testen",
-        "UI fÃ¼r 5 Modi designen",
-        "Smart Director: MediaPipe Face Mesh Integration testen",
-        "Smart Director: WebSocket Sync prototypen",
-        "Smart Director: EDL + ffmpeg_kit_flutter testen",
-        "Play Store Listing vorbereiten",
-        "Monetarisierungs-Modell â Smart Director als Premium?"
-      ],
-      "done": []
-    },
-    {
-      "id": "momentumcoach",
-      "name": "Momentum Coach",
-      "meta": "Coaching-Dashboard · Android Widget-Konzept",
-      "status": "idea",
-      "deadline": null,
-      "ideas": [
-        "Fokus-Frage des Tages statt Projektverwaltung",
-        "Momentum-Score pro aktivem Projekt statt nur Status",
-        "Streak-Tracker fürs Dranbleiben (nicht fürs Fertigwerden)",
-        "Kurzer Abend-Reflexions-Prompt (1 Satz)",
-        "Android: PWA + Add-to-Homescreen als Startpunkt",
-        "Später: KWGT + JSON-Feed für echtes Homescreen-Widget"
-      ],
-      "todos": [
-        "PWA-Grundgerüst bauen (nutzt bestehende GitHub/data.json-Struktur)",
-        "Fokus-Frage-Logik definieren",
-        "Momentum-Score-Berechnung entwerfen"
-      ],
-      "done": []
     }
   ],
   "xp": 0,
   "streak": 0,
   "lastActive": "Sun May 17 2026",
-  "theme": "light"
+  "theme": "light",
+  "quotes": [
+    "You only have one life!"
+  ]
 }
