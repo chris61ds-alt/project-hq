@@ -51,17 +51,18 @@
         "Many people don't get so much older after 30 - if you only remember one day, do you keep living?"
       ],
       "todos": [
-        "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
         "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
         "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
         "Trag ein Startdatum ein – irgendeins, es muss nicht der perfekte Montag sein",
         "Poste dein erstes Video – und schau danach nicht mehr rein"
       ],
-      "done": [],
-      "lastTouched": 1787739571410.2983
+      "done": [
+        "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst"
+      ],
+      "lastTouched": 1787766106958
     }
   ],
-  "xp": 5,
+  "xp": 20,
   "streak": 0,
   "lastActive": "Wed Aug 26 2026",
   "theme": "light",
@@ -76,7 +77,7 @@
     "Je fester du den Fluss halten willst, desto mehr entgleitet er dir."
   ],
   "log": {
-    "2026-08-26": "lazy"
+    "2026-08-26": "full"
   },
   "plans": {
     "2026-08-26": "I try to put more life into every day"
