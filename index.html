@@ -676,7 +676,7 @@ function markLazy(){
 // ── MEILENSTEIN ───────────────────────────
 function nextMilestone(){
   const cands = data.projects
-    .filter(p => p.deadline && p.status !== 'done')
+    .filter(p => p.deadline && p.status === 'active')
     .map(p => ({p, days: deadlineDays(p)}))
     .filter(x => x.days !== null && x.days >= 0)
     .sort((a,b) => a.days - b.days);
@@ -877,8 +877,13 @@ function buildFocusItems() {
 function renderFocus() {
   const items = buildFocusItems();
   if (!items.length) {
-    document.getElementById('focusText').textContent = 'Keine offenen Todos';
-    document.getElementById('focusSub').textContent = 'Füge neue Todos hinzu.';
+    const anyActive = data.projects.some(p => p.status === 'active');
+    document.getElementById('focusText').textContent = anyActive
+      ? 'Keine offenen Todos'
+      : 'Kein Projekt aktiv';
+    document.getElementById('focusSub').textContent = anyActive
+      ? 'Leg unten einen neuen Schritt an.'
+      : 'Setz ein Projekt auf AKTIV, um hier loszulegen.';
     return;
   }
   const item = items[focusIdx % items.length];
@@ -957,11 +962,13 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function render() {
   // Stats
   const p = data.projects;
+  const act = p.filter(x => x.status === 'active');
+  const parked = p.filter(x => x.status !== 'active' && x.status !== 'done');
   document.getElementById('statsRow').innerHTML = `
-    <div class="stat-pill"><span class="stat-val">${p.length}</span><span class="stat-key">Projekte</span></div>
-    <div class="stat-pill"><span class="stat-val">${p.filter(x=>x.status==='active').length}</span><span class="stat-key">Aktiv</span></div>
-    <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+x.todos.length,0)}</span><span class="stat-key">Todos</span></div>
-    <div class="stat-pill"><span class="stat-val">${p.reduce((s,x)=>s+(x.done||[]).length,0)}</span><span class="stat-key">Erledigt</span></div>
+    <div class="stat-pill"><span class="stat-val">${act.length}</span><span class="stat-key">Aktiv</span></div>
+    <div class="stat-pill"><span class="stat-val">${act.reduce((s,x)=>s+x.todos.length,0)}</span><span class="stat-key">Offen</span></div>
+    <div class="stat-pill"><span class="stat-val">${act.reduce((s,x)=>s+(x.done||[]).length,0)}</span><span class="stat-key">Erledigt</span></div>
+    <div class="stat-pill"><span class="stat-val">${parked.length}</span><span class="stat-key">Pausiert</span></div>
   `;
   // Level
   const l = xpLevel();
