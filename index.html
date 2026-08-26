@@ -184,6 +184,44 @@ body{
 .plan-edit:hover{color:var(--text);background:var(--surface2);}
 
 
+
+/* ── SKILL-STUFEN ── */
+.skill-row{display:flex;gap:4px;margin:12px 0 6px;}
+.skill-seg{flex:1;height:5px;border-radius:999px;background:var(--surface3);position:relative;overflow:hidden;}
+.skill-seg-fill{position:absolute;inset:0;border-radius:999px;background:var(--accent);transform-origin:left;}
+.skill-labels{display:flex;gap:4px;}
+.skill-lab{flex:1;font-size:9px;color:var(--muted);text-align:center;letter-spacing:.3px;}
+.skill-lab.on{color:var(--accent);font-weight:600;}
+.skill-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;}
+.skill-stage{font-size:13px;font-weight:500;}
+.skill-desc{font-size:11px;color:var(--muted);}
+
+/* ── QUESTS ── */
+.quest-block{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.quest-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.quest-label{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.quest-toggle-all{background:none;border:none;color:var(--accent);font-family:inherit;font-size:11px;cursor:pointer;padding:2px 4px;}
+.quest-item{
+  display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:12px;margin-bottom:6px;
+  background:var(--surface2);cursor:pointer;transition:background var(--trans),opacity var(--trans);
+}
+.quest-item.inactive{opacity:.45;}
+.quest-item.inactive:hover{opacity:.7;}
+.quest-item.complete{background:var(--green-dim);}
+.quest-check{
+  width:17px;height:17px;border-radius:5px;flex-shrink:0;border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;
+}
+.quest-item:not(.inactive) .quest-check{border-color:var(--accent);}
+.quest-item.complete .quest-check{background:var(--green);border-color:var(--green);color:var(--bg);}
+.quest-info{flex:1;min-width:0;}
+.quest-name{font-size:12.5px;font-weight:500;line-height:1.3;}
+.quest-desc{font-size:10.5px;color:var(--muted);margin-top:1px;line-height:1.3;}
+.quest-count{font-size:11px;color:var(--text2);white-space:nowrap;flex-shrink:0;}
+.quest-bump{background:none;border:1px solid var(--border2);border-radius:999px;color:var(--text2);
+  font-family:inherit;font-size:14px;width:26px;height:26px;cursor:pointer;flex-shrink:0;line-height:1;}
+.quest-bump:hover{border-color:var(--accent);color:var(--accent);}
+
 /* ── JOURNEY: MEILENSTEIN ── */
 .journey-card{
   position:relative;padding:18px 18px 16px;border-radius:var(--r-lg);margin-bottom:18px;
@@ -791,16 +829,10 @@ function setActiveProject(id){
 // ── MEILENSTEIN ───────────────────────────
 function nextMilestone(){
   const p = activeProject();
-  if(!p) return null;
-  const list = (p.milestones && p.milestones.length)
-    ? p.milestones
-    : (p.deadline ? [{label:p.name, date:p.deadline}] : []);
-  const upcoming = list
-    .map(m => ({...m, days: daysUntilDate(m.date)}))
-    .filter(m => m.days !== null && m.days >= 0)
-    .sort((a,b) => a.days - b.days);
-  if(!upcoming.length) return null;
-  return {p, days: upcoming[0].days, label: upcoming[0].label, date: upcoming[0].date, more: upcoming.length - 1};
+  if(!p || !p.deadline) return null;
+  const days = deadlineDays(p);
+  if(days === null || days < 0) return null;
+  return {p, days};
 }
 const JOURNEY_STAGES = [
   {key:'start',    label:'Start',      color:'--text2'},
@@ -830,9 +862,8 @@ function renderMilestone(){
   const curIdx = stageIndexFor(days);
   const cur = JOURNEY_STAGES[curIdx];
   const tier = curIdx <= 1 ? (curIdx===0?'safe':'progress') : curIdx===2 ? 'warn' : 'crit';
-  const d = new Date(m.date).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+  const d = new Date(m.p.deadline).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
   const pct = Math.max(0, Math.min(100, Math.round((1 - days/120)*100)));
-  const moreHtml = m.more > 0 ? `<span style="color:var(--muted);font-weight:400"> · +${m.more} weitere</span>` : '';
 
   const nodesHtml = JOURNEY_STAGES.map((s,i) => {
     const state = i < curIdx ? 'done' : i === curIdx ? 'current' : 'locked';
@@ -858,7 +889,7 @@ function renderMilestone(){
 
   el.innerHTML = `<div class="journey-card tier-${tier}">
     <div class="journey-eyebrow">Meilenstein</div>
-    <div class="journey-title">${esc(m.label)} · ${d}${moreHtml}</div>
+    <div class="journey-title">${esc(m.p.name)} · ${d}</div>
     <div class="journey-track">${nodesHtml}</div>
     <div class="journey-bottom">
       <div class="journey-progress">
@@ -985,6 +1016,80 @@ function commitOrder(){
 }
 
 
+
+// ── SKILL-STUFEN (Fortschritt am Tun, nicht an Reichweite) ──
+function skillState(ch){
+  const total = (ch.recordDays||[]).length;
+  const stages = ch.skillStages || [];
+  if(!stages.length) return null;
+  let idx = 0;
+  stages.forEach((s,i) => { if(total >= s.at) idx = i; });
+  const cur = stages[idx], next = stages[idx+1];
+  const span = next ? (next.at - cur.at) : 1;
+  const into = next ? (total - cur.at) : 1;
+  return {total, idx, cur, next, frac: next ? Math.max(0,Math.min(1,into/span)) : 1, stages};
+}
+function renderSkill(ch){
+  const st = skillState(ch);
+  if(!st) return '';
+  const segs = st.stages.map((s,i) => {
+    const fill = i < st.idx ? 1 : i === st.idx ? st.frac : 0;
+    return `<div class="skill-seg"><div class="skill-seg-fill" style="transform:scaleX(${fill})"></div></div>`;
+  }).join('');
+  const labs = st.stages.map((s,i) =>
+    `<div class="skill-lab ${i===st.idx?'on':''}">${s.label}</div>`).join('');
+  const nextTxt = st.next
+    ? `noch ${st.next.at - st.total} Videos bis „${st.next.label}"`
+    : 'höchste Stufe';
+  return `<div class="skill-row">${segs}</div>
+    <div class="skill-labels">${labs}</div>
+    <div class="skill-head">
+      <span class="skill-stage">${st.cur.label} · ${st.cur.desc}</span>
+      <span class="skill-desc">${nextTxt}</span>
+    </div>`;
+}
+
+// ── QUESTS (waehlbar = Autonomie) ─────────
+function renderQuests(proj){
+  const qs = (proj.challenge && proj.challenge.quests) || [];
+  if(!qs.length) return '';
+  const anyActive = qs.some(q => q.active);
+  return `<div class="quest-block">
+    <div class="quest-head">
+      <span class="quest-label">Quests · such dir aus, was dich reizt</span>
+    </div>
+    ${qs.map(q => {
+      const done = q.count >= q.target;
+      return `<div class="quest-item ${q.active?'':'inactive'} ${done?'complete':''}"
+           onclick="event.stopPropagation();toggleQuest('${proj.id}','${q.id}')">
+        <div class="quest-check">${done?'✓':''}</div>
+        <div class="quest-info">
+          <div class="quest-name">${esc(q.label)}</div>
+          <div class="quest-desc">${esc(q.desc)}</div>
+        </div>
+        <span class="quest-count">${q.count}/${q.target}</span>
+        ${q.active && !done ? `<button class="quest-bump" onclick="event.stopPropagation();bumpQuest('${proj.id}','${q.id}')">+</button>` : ''}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+function toggleQuest(pid, qid){
+  const p = data.projects.find(x=>x.id===pid);
+  const q = p && p.challenge && (p.challenge.quests||[]).find(x=>x.id===qid);
+  if(!q) return;
+  q.active = !q.active;
+  scheduleSave(); render();
+}
+function bumpQuest(pid, qid){
+  const p = data.projects.find(x=>x.id===pid);
+  const q = p && p.challenge && (p.challenge.quests||[]).find(x=>x.id===qid);
+  if(!q) return;
+  q.count = Math.min(q.count + 1, q.target);
+  if(q.count >= q.target) showToast(`„${q.label}" geschafft`);
+  markDay('full');
+  scheduleSave(); render();
+}
+
 // ── CHALLENGE-ÜBERSICHT ───────────────────
 function chalDayNum(ch){
   const start = new Date(ch.startDate);
@@ -1014,10 +1119,12 @@ function renderChallengeStrip(proj){
     </div>
     <div class="chal-bar-track"><div class="chal-bar-fill" style="width:${pct}%"></div></div>
     <div class="chal-note">${note}</div>
+    ${renderSkill(ch)}
     <div class="chal-actions">
       <button class="chal-btn ${recToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','record')">${recToday?'✓ Aufgenommen':'Video aufgenommen'}</button>
       ${phase==='post' ? `<button class="chal-btn ${postToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','post')">${postToday?'✓ Gepostet':'Video gepostet'}</button>` : ''}
     </div>
+    ${renderQuests(proj)}
   </div>`;
 }
 function chalLog(pid, kind){
@@ -1055,10 +1162,6 @@ function momentum(proj) {
 function deadlineDays(proj) {
   if (!proj.deadline) return null;
   return Math.floor((new Date(proj.deadline) - new Date()) / 86400000);
-}
-function daysUntilDate(dateStr){
-  if(!dateStr) return null;
-  return Math.floor((new Date(dateStr) - new Date()) / 86400000);
 }
 
 // ── FOCUS ─────────────────────────────────
