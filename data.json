@@ -1,21 +1,6 @@
 {
   "projects": [
     {
-      "id": "ideenliste",
-      "name": "Ideenliste",
-      "meta": "Quick Capture · Recherche",
-      "status": "idea",
-      "deadline": null,
-      "ideas": [],
-      "todos": [
-        "Skizzier drei Versionen deines Lebens in 5 Jahren – je eine halbe Seite, roh",
-        "Schau dir an, wie kleine Firmen Cloud nutzen – 20 Minuten, dann Notiz"
-      ],
-      "done": [
-        "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
-      ]
-    },
-    {
       "id": "contentchallenge",
       "name": "Content Challenge",
       "meta": "60 Tage · 60s Videos · Post & Forget",
@@ -49,6 +34,21 @@
         ],
         "postDays": []
       }
+    },
+    {
+      "id": "ideenliste",
+      "name": "Ideenliste",
+      "meta": "Quick Capture · Recherche",
+      "status": "idea",
+      "deadline": null,
+      "ideas": [],
+      "todos": [
+        "Skizzier drei Versionen deines Lebens in 5 Jahren – je eine halbe Seite, roh",
+        "Schau dir an, wie kleine Firmen Cloud nutzen – 20 Minuten, dann Notiz"
+      ],
+      "done": [
+        "Recherchieren: Wohnung kaufen → Wohnungskauf-Toolkit gebaut (Nebenkosten-, Rendite- & Cashflow-Rechner + Due-Diligence-Checkliste)"
+      ]
     },
     {
       "id": "wedding",
