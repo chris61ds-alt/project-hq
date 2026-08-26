@@ -127,13 +127,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:16p
 
 <script>
 const STORAGE_KEY = "momentumCoachState";
+const THEME_KEY = "momentumCoachTheme";
 const PROJECT_HQ_URL = "../data.json";
+const REMOTE_STATE_URL = "./state.json";
 
-function loadState(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw){ try { return JSON.parse(raw); } catch(e){} }
+function defaultState(){
   return {
-    theme: "dark",
     streak: 0,
     lastCheckinDate: null,
     totalCheckins: 0,
@@ -143,10 +142,58 @@ function loadState(){
     reflections: []
   };
 }
-let state = loadState();
+
+function loadLocalState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ try { return JSON.parse(raw); } catch(e){} }
+  return defaultState();
+}
+
+let state = loadLocalState();
+state.theme = localStorage.getItem(THEME_KEY) || "dark";
+
+// Remote state.json ist die "Coach"-Quelle (von Claude aus dem Chat gepflegt).
+// Bei jedem Laden: falls Remote neuer/anders ist als der lokale Stand, übernehmen.
+async function syncFromRemote(){
+  try{
+    const res = await fetch(REMOTE_STATE_URL, {cache:"no-store"});
+    if(!res.ok) return;
+    const remote = await res.json();
+    const local = loadLocalState();
+
+    // Streak/Check-ins: höheren Wert übernehmen (Coach-Push oder lokale Nutzung, je nachdem was weiter ist)
+    state.streak = Math.max(remote.streak||0, local.streak||0);
+    state.totalCheckins = Math.max(remote.totalCheckins||0, local.totalCheckins||0);
+    state.lastCheckinDate = remote.lastCheckinDate || local.lastCheckinDate;
+
+    // Fokus: neuestes Datum gewinnt
+    const remoteFocusDate = remote.todayFocusDate ? new Date(remote.todayFocusDate) : null;
+    const localFocusDate = local.todayFocusDate ? new Date(local.todayFocusDate) : null;
+    if(remoteFocusDate && (!localFocusDate || remoteFocusDate >= localFocusDate)){
+      state.todayFocus = remote.todayFocus;
+      state.todayFocusDate = remote.todayFocusDate;
+      state.todayFocusDone = remote.todayFocusDone;
+    }
+
+    // Reflexionen: zusammenführen, Duplikate anhand date+text vermeiden
+    const merged = [...(local.reflections||[])];
+    (remote.reflections||[]).forEach(r => {
+      if(!merged.some(m => m.date === r.date && m.text === r.text)) merged.push(r);
+    });
+    state.reflections = merged;
+
+    saveState();
+    renderStats();
+    renderFocus();
+    renderReflections();
+  } catch(e){
+    // offline oder Fetch-Fehler → einfach beim lokalen Stand bleiben
+  }
+}
 
 function saveState(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(THEME_KEY, state.theme);
 }
 
 function todayStr(){
@@ -315,6 +362,7 @@ renderStats();
 renderFocus();
 renderReflections();
 renderProjects();
+syncFromRemote();
 
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
