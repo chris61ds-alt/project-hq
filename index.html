@@ -357,6 +357,11 @@ body{
 .buf-today{font-size:12.5px;color:var(--text2);}
 .buf-total{font-size:12.5px;color:var(--text2);margin-left:auto;}
 
+
+.credit-chip{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;
+  background:var(--xp-dim);color:var(--xp);letter-spacing:.2px;}
+.trend-cell.covered{background:var(--xp);opacity:.55;}
+
 /* ── QUESTS ── */
 .quest-block{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 .quest-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
@@ -882,7 +887,7 @@ function updateStreak() {
 // ── TAGES-LOG (Trend statt Streak) ────────
 // data.log = { "2026-08-26": "full" | "lazy" }
 const XP_SHOW_UP = 5;
-function dayKey(d){const x=d||new Date();return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');}
+function dayKey(d){const x = d || new Date(); return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');}
 function ensureLog(){ if(!data.log || typeof data.log !== 'object') data.log = {}; return data.log; }
 
 function markDay(state){
@@ -894,10 +899,15 @@ function markDay(state){
 }
 
 function last14(){
+  const ch = activeProject()?.challenge;
+  const covered = new Set((ch && ch.coveredDays) || []);
   const out = [];
   for (let i = 13; i >= 0; i--){
     const d = new Date(); d.setDate(d.getDate() - i);
-    out.push({key: dayKey(d), state: (ensureLog())[dayKey(d)] || null, isToday: i === 0});
+    const k = dayKey(d);
+    let state = (ensureLog())[k] || null;
+    if(!state && covered.has(k)) state = 'covered';
+    out.push({key: k, state, isToday: i === 0});
   }
   return out;
 }
@@ -935,11 +945,12 @@ function renderTrend(){
       <span class="trend-val">${note}</span>
     </div>
     <div class="trend-grid">
-      ${days.map(d=>`<div class="trend-cell ${d.state==='full'?'full':d.state==='lazy'?'lazy':''} ${d.isToday?'today':''}" title="${d.key}"></div>`).join('')}
+      ${days.map(d=>`<div class="trend-cell ${d.state==='full'?'full':d.state==='lazy'?'lazy':d.state==='covered'?'covered':''} ${d.isToday?'today':''}" title="${d.key}"></div>`).join('')}
     </div>
     <div class="trend-foot">
       <span class="trend-key"><span class="trend-swatch" style="background:var(--green)"></span>Erledigt</span>
       <span class="trend-key"><span class="trend-swatch" style="background:var(--warn);opacity:.75"></span>Drangewesen</span>
+      <span class="trend-key"><span class="trend-swatch" style="background:var(--xp);opacity:.55"></span>Gedeckt</span>
       <span class="trend-key"><span class="trend-swatch" style="background:var(--surface3)"></span>Pause</span>
     </div>`;
 }
@@ -1565,6 +1576,77 @@ function focusSkip(){
   if(p && p.challenge && p.challenge.pool) skipQuest(); else skipFocus();
 }
 
+
+// ── NEBENQUESTS + TAGESGUTHABEN ───────────
+function sideQuests(ch){
+  const rank = questRank(ch);
+  return (ch.side||[]).filter(q => (q.tier??0) <= rank);
+}
+function lockedSideCount(ch){
+  const rank = questRank(ch);
+  return (ch.side||[]).filter(q => (q.tier??0) > rank).length;
+}
+function toggleSide(qid){
+  const ch = activeProject()?.challenge; if(!ch) return;
+  const q = (ch.side||[]).find(x=>x.id===qid); if(!q) return;
+  q.active = !q.active;
+  scheduleSave(); render();
+}
+function bumpSide(qid){
+  const ch = activeProject()?.challenge; if(!ch) return;
+  const q = (ch.side||[]).find(x=>x.id===qid); if(!q || q.count >= q.target) return;
+  q.count++;
+  data.xp = (data.xp||0) + XP_SHOW_UP;
+  if(q.count >= q.target){
+    ch.credits = (ch.credits||0) + 1;
+    showToast(`„${q.label}" geschafft — +1 Tagesguthaben`);
+  } else {
+    showXPPop(XP_SHOW_UP);
+  }
+  scheduleSave(); render();
+}
+
+// Guthaben deckt automatisch verpasste Tage
+function applyCredits(ch){
+  if(!ch || !ch.startDate) return;
+  ch.coveredDays ||= []; ch.credits ||= 0;
+  const done = new Set((ch.completed||[]).map(x=>x.date));
+  const start = new Date(ch.startDate); start.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  for(let d = new Date(start); d < today && ch.credits > 0; d.setDate(d.getDate()+1)){
+    const k = dayKey(d);
+    if(done.has(k) || ch.coveredDays.includes(k)) continue;
+    ch.coveredDays.push(k);
+    ch.credits--;
+  }
+}
+function renderSide(proj){
+  const ch = proj.challenge;
+  const qs = sideQuests(ch);
+  if(!qs.length) return '';
+  const locked = lockedSideCount(ch);
+  return `<div class="quest-block">
+    <div class="quest-head">
+      <span class="quest-label">Nebenquests · je 1 Tagesguthaben</span>
+      ${ch.credits>0?`<span class="credit-chip">${ch.credits} Guthaben</span>`:''}
+    </div>
+    ${qs.map(q => {
+      const done = q.count >= q.target;
+      return `<div class="quest-item ${q.active?'':'inactive'} ${done?'complete':''}"
+           onclick="event.stopPropagation();toggleSide('${q.id}')">
+        <div class="quest-check">${done?'✓':''}</div>
+        <div class="quest-info">
+          <div class="quest-name">${esc(q.label)}</div>
+          <div class="quest-desc">${esc(q.desc)}</div>
+        </div>
+        <span class="quest-count">${q.count}/${q.target}</span>
+        ${q.active && !done ? `<button class="quest-bump" onclick="event.stopPropagation();bumpSide('${q.id}')">+</button>` : ''}
+      </div>`;
+    }).join('')}
+    ${locked>0?`<div class="locked-hint"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="6" width="8" height="6.5" rx="1.2"/><path d="M4.5 6V4a2.5 2.5 0 0 1 5 0v2"/></svg>${locked} weitere beim nächsten Rang</div>`:''}
+  </div>`;
+}
+
 // ── TAGESQUEST (ein Konzept) ──────────────
 function questStats(ch){
   const done = ch.completed || [];
@@ -1652,6 +1734,7 @@ function renderChallengeStrip(proj){
       <span class="buf-total">${st.total} Quests erledigt</span>
     </div>
     <div class="chal-note" style="margin-top:8px">${poolLeft} weitere auf diesem Rang${rank<3?` · mehr beim Aufstieg`:''}</div>
+    ${renderSide(proj)}
     ${renderHooks(proj)}
   </div>`;
 }
@@ -1811,6 +1894,7 @@ const SM = {active:{l:'AKTIV',c:'badge-active'},paused:{l:'PAUSIERT',c:'badge-pa
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function render() {
+  const _ch = activeProject()?.challenge; if(_ch) applyCredits(_ch);
   // Hero, Meilenstein, Trend, Plan
   renderHero();
   renderMilestone();
