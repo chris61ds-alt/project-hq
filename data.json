@@ -122,7 +122,26 @@
         },
         "unlockedTiers": [
           0
-        ]
+        ],
+        "hooks": {
+          "eigene": [
+            "Ich bin schlecht in [X]. Hier ist, was ich diese Woche versucht habe.",
+            "Das hier funktioniert nicht — und ich mach's trotzdem seit [Zeitraum].",
+            "Niemand hat mich das gefragt, aber [Aussage].",
+            "Ich hab [X] versucht. Es ist schiefgegangen. Und zwar so:",
+            "Was ich an [Thema] immer noch nicht verstehe:",
+            "Tag [N] von 60. Heute lief [X] schief.",
+            "Ich dachte [Annahme]. Falsch.",
+            "Das ist mein [N]. Versuch. Die ersten [N-1] zeig ich nicht."
+          ],
+          "referenz": [
+            "Is it possible to [goal] [specific detail/challenge]?",
+            "It took me 10 years to learn this — I'll teach it in under a minute.",
+            "What makes [subject] [specific result] so [positive]?",
+            "The psychology behind [subject]."
+          ],
+          "notiz": "Referenz = gefundene Vorlagen (Autoritäts-Register, passt nicht zur Prämisse). Eigene = aus der Lernenden-Position. Was trägt, zeigt sich über die Zeit."
+        }
       },
       "milestones": [
         {
