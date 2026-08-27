@@ -16,15 +16,15 @@
         "Many people don't get so much older after 30 - if you only remember one day, do you keep living?"
       ],
       "todos": [
-        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
         "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
         "Nimm an drei Tagen hintereinander auf – egal wie"
       ],
       "done": [
         "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
-        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
+        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
+        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen"
       ],
-      "lastTouched": 1787825360776,
+      "lastTouched": 1787825520412,
       "challenge": {
         "startDate": "2026-08-26",
         "switchAfterDays": 7,
@@ -194,7 +194,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 35,
+  "xp": 50,
   "streak": 0,
   "lastActive": "Thu Aug 27 2026",
   "theme": "light",
