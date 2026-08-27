@@ -66,7 +66,7 @@
             "desc": "10 fremde Hooks gesammelt und notiert",
             "target": 10,
             "count": 0,
-            "active": false
+            "active": true
           },
           {
             "id": "q_oneidea",
