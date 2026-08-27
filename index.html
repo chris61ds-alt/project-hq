@@ -186,13 +186,13 @@ body{
 
 
 /* ── SKILL-STUFEN ── */
-.skill-row{display:flex;gap:4px;margin:12px 0 6px;}
-.skill-seg{flex:1;height:5px;border-radius:999px;background:var(--surface3);position:relative;overflow:hidden;}
-.skill-seg-fill{position:absolute;inset:0;border-radius:999px;background:var(--accent);transform-origin:left;}
+.skill-row{display:flex;gap:4px;margin:0 0 6px;}
+.skill-seg{flex:1;height:6px;border-radius:999px;background:var(--surface3);position:relative;overflow:hidden;}
+.skill-seg-fill{position:absolute;inset:0;border-radius:999px;background:var(--accent);transform-origin:left;transition:transform .6s var(--ease);}
 .skill-labels{display:flex;gap:4px;}
 .skill-lab{flex:1;font-size:9px;color:var(--muted);text-align:center;letter-spacing:.3px;}
 .skill-lab.on{color:var(--accent);font-weight:600;}
-.skill-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;}
+.skill-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;gap:10px;flex-wrap:wrap;}
 .skill-stage{font-size:13px;font-weight:500;}
 .skill-desc{font-size:11px;color:var(--muted);}
 
@@ -280,15 +280,15 @@ body{
 
 
 /* ── CHALLENGE-ÜBERSICHT ── */
-.chal-strip{margin-top:10px;padding:11px 13px;background:var(--surface2);border-radius:12px;}
-.chal-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.chal-strip{margin:0;padding:0;background:none;border-radius:0;}
+.chal-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px;}
 .chal-day{font-size:13px;color:var(--text);font-weight:500;}
 .chal-phase{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:500;}
 .chal-phase.rec{background:var(--blue-dim);color:var(--blue);}
 .chal-phase.post{background:var(--accent-dim);color:var(--accent);}
 .chal-bar-track{background:var(--surface3);border-radius:999px;height:5px;overflow:hidden;margin-bottom:7px;}
 .chal-bar-fill{height:100%;border-radius:999px;background:var(--accent);transition:width .5s var(--ease);}
-.chal-note{font-size:11.5px;color:var(--muted);}
+.chal-note{font-size:11.5px;color:var(--muted);margin-bottom:14px;}
 .chal-actions{display:flex;gap:7px;margin-top:11px;}
 .chal-btn{
   flex:1;font-family:inherit;font-size:12.5px;font-weight:500;padding:9px 8px;border-radius:999px;
@@ -303,6 +303,11 @@ body{
 .active-proj-head{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px;}
 .switch-link{background:none;border:none;color:var(--accent);font-family:inherit;font-size:12.5px;cursor:pointer;padding:4px 2px;}
 .switch-link:hover{text-decoration:underline;}
+
+.active-head{padding:16px 18px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.active-section{padding:16px 18px;}
+.active-section + .active-section{border-top:1px solid var(--border);padding-top:16px;}
+.active-card .card-body{padding:0;display:block;}
 .active-card{background:var(--surface);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
 
 /* ── ÜBERSICHT-OVERLAY ── */
@@ -367,7 +372,7 @@ body{
 .progress-row{display:flex;justify-content:space-between;margin-bottom:6px;}
 .progress-label{font-size:11px;color:var(--muted);}
 .progress-pct{font-size:11px;color:var(--text2);}
-.prog-track{background:var(--surface3);border-radius:999px;height:5px;overflow:hidden;}
+.prog-track{background:var(--surface3);border-radius:999px;height:6px;overflow:hidden;}
 .prog-fill{height:100%;border-radius:999px;background:var(--accent);transition:width .6s var(--ease);}
 .prog-fill.complete{background:var(--green);}
 .card-spacer{height:14px;}
@@ -546,7 +551,6 @@ body{
   </div>
 
   <div class="trend-card" id="trendCard"></div>
-  <div class="level-bar" id="levelBar"></div>
 
   <div class="active-proj-head">
     <div class="section-label" style="margin:0">Dieses Projekt</div>
@@ -1117,7 +1121,6 @@ function renderChallengeStrip(proj){
       <span class="chal-day">Tag ${day} von ${ch.totalDays}</span>
       <span class="chal-phase ${phase}">${phase==='rec'?'Aufnehmen':'Posten'}</span>
     </div>
-    <div class="chal-bar-track"><div class="chal-bar-fill" style="width:${pct}%"></div></div>
     <div class="chal-note">${note}</div>
     ${renderSkill(ch)}
     <div class="chal-actions">
@@ -1263,12 +1266,6 @@ const SM = {active:{l:'AKTIV',c:'badge-active'},paused:{l:'PAUSIERT',c:'badge-pa
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function render() {
-  // Level
-  const l = xpLevel();
-  document.getElementById('levelBar').innerHTML = `
-    <div class="level-row"><span class="level-label">Level ${l.level} · ${l.xp} XP</span><span class="level-val">${l.xpToNext} XP bis Level ${l.level+1}</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:${l.progress}%"></div></div>
-  `;
   // Meilenstein, Trend, Plan
   renderMilestone();
   renderTrend();
@@ -1309,7 +1306,6 @@ function render() {
         <div style="flex:1;min-width:0">
           <div class="card-title">${esc(proj.name)}${mom==='stale'?' <span class="badge badge-stale">RUHT</span>':''}</div>
           <div class="card-meta">${esc(proj.meta)}</div>
-        ${renderChallengeStrip(proj)}
         </div>
         <div class="card-badges">
           <span class="badge ${s.c}">${s.l}</span>
@@ -1354,17 +1350,18 @@ function renderActiveProjectPanel(){
   }
   const s = SM[proj.status]||SM.open;
   const dd = deadlineDays(proj);
+  const chal = renderChallengeStrip(proj);
   slot.innerHTML = `<div class="active-card">
     ${genArt(proj)}
-    <div class="card-header" style="cursor:default">
+    <div class="active-head">
       <div style="flex:1;min-width:0">
         <div class="card-title">${esc(proj.name)}</div>
         <div class="card-meta">${esc(proj.meta)}</div>
-        ${renderChallengeStrip(proj)}
       </div>
-      <div class="card-badges"><span class="badge ${s.c}">${s.l}</span></div>
+      <span class="badge ${s.c}">${s.l}</span>
     </div>
-    <div class="card-body open">
+    ${chal ? `<div class="active-section">${chal}</div>` : ''}
+    <div class="active-section">
       ${projectBodyHTML(proj, dd)}
     </div>
   </div>`;
