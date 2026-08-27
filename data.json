@@ -42,7 +42,7 @@
             "desc": "3 Videos, 3 verschiedene Einstiege zum selben Thema",
             "target": 3,
             "count": 0,
-            "active": false
+            "active": true
           },
           {
             "id": "q_short",
