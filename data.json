@@ -58,7 +58,7 @@
             "desc": "3 Videos über etwas, das dir peinlich ist",
             "target": 3,
             "count": 0,
-            "active": false
+            "active": true
           },
           {
             "id": "q_swipe",
