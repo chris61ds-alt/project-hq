@@ -1487,12 +1487,15 @@ function renderHooks(proj){
 
 // ── QUESTS (waehlbar = Autonomie) ─────────
 function renderQuests(proj){
-  const qs = (proj.challenge && proj.challenge.quests) || [];
+  const all = (proj.challenge && proj.challenge.quests) || [];
+  const rank = currentRankIdx() ?? 0;
+  const qs = all.filter(q => (q.tier ?? 0) <= rank);
+  const lockedQ = all.length - qs.length;
   if(!qs.length) return '';
   const anyActive = qs.some(q => q.active);
   return `<div class="quest-block">
     <div class="quest-head">
-      <span class="quest-label">Quests · such dir aus, was dich reizt</span>
+      <span class="quest-label">Quests · über mehrere Tage</span>
     </div>
     ${qs.map(q => {
       const done = q.count >= q.target;
@@ -1507,6 +1510,7 @@ function renderQuests(proj){
         ${q.active && !done ? `<button class="quest-bump" onclick="event.stopPropagation();bumpQuest('${proj.id}','${q.id}')">+</button>` : ''}
       </div>`;
     }).join('')}
+    ${lockedQ>0?`<div class="locked-hint"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="6" width="8" height="6.5" rx="1.2"/><path d="M4.5 6V4a2.5 2.5 0 0 1 5 0v2"/></svg>${lockedQ} weitere Quests beim nächsten Rang</div>`:''}
   </div>`;
 }
 function toggleQuest(pid, qid){
@@ -1789,7 +1793,7 @@ function projectBodyHTML(proj, dd){
     ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
     <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
     <div class="divider"></div>
-    <div class="section-label">Todos (${proj.todos.length})</div>
+    <div class="section-label">Todos · heute machbar (${proj.todos.length})</div>
     ${proj.todos.map((x,i)=>`<div class="item"><div class="item-check" onclick="completeTodo('${proj.id}',${i})">✓</div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','todos',${i})">×</button></div>`).join('')}
     ${(proj.done||[]).length>0?`<div class="section-label" style="color:var(--green)">Erledigt (${proj.done.length})</div>${proj.done.map((x,i)=>`<div class="item done-item"><div class="item-text">${esc(x)}</div><button class="item-del" onclick="undoTodo('${proj.id}',${i})">↩</button></div>`).join('')}`:''}
     <div class="add-row"><input class="add-input" id="ti-${proj.id}" placeholder="Todo..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','todos')"/><button class="add-btn" onclick="addItem('${proj.id}','todos')">+</button></div>
