@@ -312,7 +312,83 @@
           }
         ],
         "completed": [],
-        "skipped": []
+        "skipped": [],
+        "side": [
+          {
+            "id": "s_ugly",
+            "tier": 0,
+            "label": "Unbequem",
+            "desc": "3 Videos über etwas, das dir peinlich ist",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_swipe",
+            "tier": 0,
+            "label": "Swipe-File",
+            "desc": "10 fremde Hooks gesammelt und notiert",
+            "target": 10,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_3days",
+            "tier": 0,
+            "label": "Drei am Stück",
+            "desc": "An drei Tagen hintereinander etwas machen",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_hook",
+            "tier": 1,
+            "label": "Hook-Labor",
+            "desc": "Ein Thema, drei verschiedene Einstiege",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_post3",
+            "tier": 1,
+            "label": "Drei Posts",
+            "desc": "An drei Tagen hintereinander posten",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_short",
+            "tier": 2,
+            "label": "Kurz halten",
+            "desc": "5 Videos unter 30 Sekunden",
+            "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_one",
+            "tier": 2,
+            "label": "Eine Aussage",
+            "desc": "5 Videos mit exakt einer Kernaussage",
+            "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_serie",
+            "tier": 3,
+            "label": "Serie bauen",
+            "desc": "3 Videos zum selben Thema, aufeinander aufbauend",
+            "target": 3,
+            "count": 0,
+            "active": false
+          }
+        ],
+        "credits": 0,
+        "coveredDays": []
       },
       "milestones": [
         {
