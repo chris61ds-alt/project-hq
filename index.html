@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Project HQ"/>
-<meta name="theme-color" content="#0a0a0c"/>
+<meta name="theme-color" content="#101219"/>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -600,6 +600,7 @@ body{
   <h1>Project HQ</h1>
   <input class="quick-capture" id="quickCapture" placeholder="Projekt: Todo oder Idee – direkt tippen..." onkeydown="handleQuickCapture(event)"/>
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☾</button>
+  <button class="icon-btn" id="installBtn" onclick="doInstall()" title="App installieren" style="display:none">⤓</button>
   <button class="icon-btn" onclick="openOverview()" title="Projekte">▤</button>
   <button class="icon-btn" onclick="syncNow()" title="Sync">↻</button>
 </div>
@@ -1774,6 +1775,36 @@ function showToast(msg){
     loadData();
   }
 })();
+
+// ── SERVICE WORKER (noetig fuer Installierbarkeit) ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW:', err));
+  });
+}
+
+// Installations-Hinweis, falls Chrome das Prompt anbietet
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstall = e;
+  const btn = document.getElementById('installBtn');
+  if (btn) btn.style.display = 'flex';
+});
+function doInstall(){
+  if (!deferredInstall) { showToast('Über Chrome-Menü ⋮ → App installieren'); return; }
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(() => {
+    deferredInstall = null;
+    const btn = document.getElementById('installBtn');
+    if (btn) btn.style.display = 'none';
+  });
+}
+window.addEventListener('appinstalled', () => {
+  const btn = document.getElementById('installBtn');
+  if (btn) btn.style.display = 'none';
+});
+
 </script>
 </body>
 </html>
