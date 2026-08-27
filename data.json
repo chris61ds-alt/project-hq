@@ -316,6 +316,11 @@
             "id": "q00",
             "date": "2026-08-27",
             "text": "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
+          },
+          {
+            "id": "q01",
+            "date": "2026-08-27",
+            "text": "Stell das Handy an eine Stelle mit gutem Licht und nimm dort auf"
           }
         ],
         "skipped": [],
@@ -447,7 +452,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 125,
+  "xp": 140,
   "streak": 0,
   "lastActive": "Thu Aug 27 2026",
   "theme": "light",
