@@ -206,6 +206,49 @@ body{
 .focus-text{font-family:'Roboto',sans-serif;font-weight:400;letter-spacing:-.4px;line-height:1.32;}
 .quote-text{font-family:'Cinzel',serif;letter-spacing:.2px;line-height:1.35;}
 
+
+/* ── RANG-AUFSTIEG ── */
+.ascend{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;
+  background:rgba(6,7,11,.9);backdrop-filter:blur(10px);opacity:0;pointer-events:none;
+  transition:opacity .45s var(--ease);padding:24px;}
+.ascend.show{opacity:1;pointer-events:auto;}
+.ascend-inner{text-align:center;max-width:340px;width:100%;transform:scale(.9);transition:transform .55s var(--ease);}
+.ascend.show .ascend-inner{transform:scale(1);}
+.ascend-rays{position:absolute;width:150vmax;height:150vmax;left:50%;top:44%;transform:translate(-50%,-50%);
+  background:conic-gradient(from 0deg, transparent 0 6deg, var(--ac,#C8A96A) 6deg 7deg, transparent 7deg 18deg);
+  opacity:.13;animation:raysSpin 22s linear infinite;pointer-events:none;}
+@keyframes raysSpin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+.ascend-kicker{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--ac);
+  font-weight:600;margin-bottom:14px;opacity:0;animation:aFade .5s var(--ease) .25s forwards;}
+.ascend-portrait{position:relative;width:170px;height:170px;margin:0 auto 18px;opacity:0;
+  animation:aPop .7s var(--ease) .4s forwards;}
+.ascend-portrait .frm{position:absolute;inset:0;overflow:hidden;
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);}
+.ascend-portrait img{width:100%;height:100%;object-fit:cover;display:block;}
+.ascend-portrait .halo{position:absolute;inset:-14px;border-radius:50%;
+  box-shadow:0 0 40px 6px var(--ac);opacity:.5;animation:haloPulse 2.4s ease-in-out infinite;}
+@keyframes haloPulse{0%,100%{opacity:.32;}50%{opacity:.62;}}
+.ascend-rank{font-family:'Cinzel',serif;font-size:38px;font-weight:900;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ac);line-height:1;opacity:0;
+  animation:aFade .6s var(--ease) .62s forwards;text-shadow:0 0 26px var(--ac);}
+.ascend-desc{font-size:16px;color:var(--text);margin-top:12px;line-height:1.4;opacity:0;
+  animation:aFade .6s var(--ease) .78s forwards;}
+.ascend-sub{font-size:13px;color:var(--text2);margin-top:8px;opacity:0;
+  animation:aFade .6s var(--ease) .9s forwards;}
+.ascend-btn{margin-top:24px;font-family:inherit;font-size:15px;font-weight:600;padding:13px 30px;
+  border-radius:999px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer;
+  opacity:0;animation:aFade .6s var(--ease) 1.05s forwards;letter-spacing:.5px;}
+.ascend-btn:hover{background:var(--ac);color:#0b0d13;}
+@keyframes aFade{to{opacity:1;}}
+@keyframes aPop{0%{opacity:0;transform:scale(.72);}70%{transform:scale(1.05);}100%{opacity:1;transform:scale(1);}}
+.ascend-spark{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--ac);
+  animation:sparkFly 1.6s ease-out forwards;pointer-events:none;}
+@keyframes sparkFly{0%{opacity:1;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3);}}
+@media (prefers-reduced-motion:reduce){
+  .ascend-rays,.ascend-portrait .halo,.ascend-spark{animation:none;}
+  .ascend-kicker,.ascend-rank,.ascend-desc,.ascend-sub,.ascend-btn,.ascend-portrait{animation:none;opacity:1;}
+}
+
 /* ── RANG-HERO (kompakt, Portrait rechts) ── */
 .hero-card{
   position:relative;margin-bottom:20px;padding:18px 20px;
@@ -673,6 +716,22 @@ body{
   </div>
 </div>
 
+
+<div class="ascend" id="ascendOverlay">
+  <div class="ascend-rays" id="ascendRays"></div>
+  <div class="ascend-inner">
+    <div class="ascend-kicker">Rang aufgestiegen</div>
+    <div class="ascend-portrait">
+      <div class="halo"></div>
+      <div class="frm"><img id="ascendImg" src="" alt=""/></div>
+    </div>
+    <div class="ascend-rank" id="ascendRank"></div>
+    <div class="ascend-desc" id="ascendDesc"></div>
+    <div class="ascend-sub" id="ascendSub"></div>
+    <button class="ascend-btn" onclick="closeAscend()">Weiter</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1106,6 +1165,58 @@ function commitOrder(){
 
 
 
+
+// ── RANG-AUFSTIEG ─────────────────────────
+function currentRankIdx(){
+  const proj = activeProject();
+  const ch = proj && proj.challenge;
+  if(!ch || !ch.skillStages) return null;
+  const st = skillState(ch);
+  return st ? st.idx : null;
+}
+function checkAscend(prevIdx){
+  const now = currentRankIdx();
+  if(prevIdx === null || now === null || now <= prevIdx) return;
+  showAscend(now);
+}
+function showAscend(idx){
+  const rank = RANKS[idx]; if(!rank) return;
+  const col = getComputedStyle(document.body).getPropertyValue(rank.color).trim() || '#C8A96A';
+  const ov = document.getElementById('ascendOverlay');
+  ov.style.setProperty('--ac', col);
+  document.getElementById('ascendImg').src = `ranks/${rank.img}.jpg`;
+  document.getElementById('ascendRank').textContent = rank.name;
+  document.getElementById('ascendDesc').textContent = rank.desc;
+  const next = RANKS[idx+1];
+  const proj = activeProject();
+  const st = skillState(proj.challenge);
+  document.getElementById('ascendSub').textContent = next
+    ? `Nächster Rang: ${next.name} — bei ${st.stages[idx+1].at} Videos`
+    : 'Höchster Rang erreicht';
+  ov.classList.add('show');
+  if(navigator.vibrate) navigator.vibrate([18,50,30]);
+  spawnSparks(col);
+}
+function spawnSparks(col){
+  const ov = document.getElementById('ascendOverlay');
+  const cx = window.innerWidth/2, cy = window.innerHeight*0.40;
+  for(let i=0;i<26;i++){
+    const s = document.createElement('div');
+    s.className = 'ascend-spark';
+    const a = Math.random()*Math.PI*2, d = 90 + Math.random()*180;
+    s.style.left = cx+'px'; s.style.top = cy+'px';
+    s.style.background = col;
+    s.style.setProperty('--dx', (Math.cos(a)*d).toFixed(0)+'px');
+    s.style.setProperty('--dy', (Math.sin(a)*d).toFixed(0)+'px');
+    s.style.animationDelay = (Math.random()*0.35).toFixed(2)+'s';
+    ov.appendChild(s);
+    setTimeout(()=>s.remove(), 2200);
+  }
+}
+function closeAscend(){
+  document.getElementById('ascendOverlay').classList.remove('show');
+}
+
 // ── RANG-FIGUREN (4 Stufen, je maechtiger) ──
 const RANKS = [
   {name:'Initiat', desc:'Du drückst einfach auf Aufnahme',   color:'--text2', img:'initiat'},
@@ -1355,6 +1466,7 @@ function renderChallengeStrip(proj){
 function chalLog(pid, kind){
   const p = data.projects.find(x=>x.id===pid);
   if(!p || !p.challenge) return;
+  const prevIdx = currentRankIdx();
   const key = dayKey();
   const arr = kind === 'record' ? (p.challenge.recordDays ||= []) : (p.challenge.postDays ||= []);
   if(!arr.includes(key)) arr.push(key);
@@ -1362,6 +1474,7 @@ function chalLog(pid, kind){
   data.xp = (data.xp||0) + XP_DONE;
   showXPPop(XP_DONE);
   scheduleSave(); render();
+  checkAscend(prevIdx);
 }
 
 // ── THEME ─────────────────────────────────
