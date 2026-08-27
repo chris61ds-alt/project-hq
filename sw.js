@@ -1,4 +1,4 @@
-const CACHE = "project-hq-v1";
+const CACHE = "project-hq-v2";
 const ASSETS = [
   "./",
   "./index.html",
