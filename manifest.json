@@ -2,7 +2,6 @@
   "name": "Project HQ",
   "short_name": "Project HQ",
   "description": "Zentrales Projektmanagement-Dashboard",
-  "id": "/project-hq/?v=2",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
