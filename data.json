@@ -17,7 +17,9 @@
         "Ich bin nicht gut darin: Durchzuhalten wenn es langweilig wird, zu ignorieren was andere denken, viel zu riskieren"
       ],
       "todos": [
-        "Nimm an drei Tagen hintereinander auf – egal wie"
+        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
+        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
+        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert"
       ],
       "done": [
         "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
@@ -36,44 +38,76 @@
         "postDays": [],
         "quests": [
           {
-            "id": "q_hook",
-            "label": "Hook-Labor",
-            "desc": "3 Videos, 3 verschiedene Einstiege zum selben Thema",
+            "id": "q_3days",
+            "tier": 0,
+            "label": "Drei Tage am Stück",
+            "desc": "An drei Tagen hintereinander aufnehmen",
             "target": 3,
             "count": 0,
-            "active": true
-          },
-          {
-            "id": "q_short",
-            "label": "Kurz halten",
-            "desc": "5 Videos unter 30 Sekunden",
-            "target": 5,
-            "count": 0,
-            "active": true
+            "active": false
           },
           {
             "id": "q_ugly",
+            "tier": 0,
             "label": "Unbequem",
             "desc": "3 Videos über etwas, das dir peinlich ist",
             "target": 3,
             "count": 0,
-            "active": true
+            "active": false
           },
           {
             "id": "q_swipe",
+            "tier": 0,
             "label": "Swipe-File",
             "desc": "10 fremde Hooks gesammelt und notiert",
             "target": 10,
             "count": 0,
-            "active": true
+            "active": false
+          },
+          {
+            "id": "q_post3",
+            "tier": 1,
+            "label": "Drei Posts am Stück",
+            "desc": "An drei Tagen hintereinander posten",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_hook",
+            "tier": 1,
+            "label": "Hook-Labor",
+            "desc": "Ein Thema, drei verschiedene Einstiege",
+            "target": 3,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "q_short",
+            "tier": 2,
+            "label": "Kurz halten",
+            "desc": "5 Videos unter 30 Sekunden",
+            "target": 5,
+            "count": 0,
+            "active": false
           },
           {
             "id": "q_oneidea",
+            "tier": 2,
             "label": "Eine Aussage",
             "desc": "5 Videos mit exakt einer Kernaussage",
             "target": 5,
             "count": 0,
-            "active": true
+            "active": false
+          },
+          {
+            "id": "q_serie",
+            "tier": 3,
+            "label": "Serie bauen",
+            "desc": "3 Videos zum selben Thema, aufeinander aufbauend",
+            "target": 3,
+            "count": 0,
+            "active": false
           }
         ],
         "skillStages": [
@@ -102,19 +136,15 @@
           "1": [
             "Poste dein erstes Video – und schau danach nicht mehr rein",
             "Schreib den Hook auf, bevor du aufnimmst – ein Satz",
-            "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg",
-            "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum",
-            "Poste an drei Tagen hintereinander"
+            "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum"
           ],
           "2": [
             "Kürz ein Video auf unter 20 Sekunden, ohne dass die Aussage fehlt",
             "Nimm ein Video in einem Take auf – kein Schnitt",
-            "Teste ein Thema mit drei Hooks und vergleiche, was hängen bleibt",
             "Schreib 10 Hooks in einer Sitzung – nimm den unbequemsten",
             "Mach ein Video, das nur aus einer Frage besteht"
           ],
           "3": [
-            "Bau eine Serie: drei Videos zum selben Thema, aufeinander aufbauend",
             "Nimm etwas auf, das du vor 60 Tagen nicht gemacht hättest",
             "Schau Video 1 und dein letztes nebeneinander – notier den Unterschied",
             "Schreib auf, was dein wiederkehrendes Thema geworden ist",
