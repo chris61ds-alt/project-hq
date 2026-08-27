@@ -249,6 +249,8 @@ body{
   background:var(--bg);
 }
 .hero-portrait .frame svg{width:100%;height:100%;display:block;}
+.hero-portrait .port-img{width:100%;height:100%;object-fit:cover;display:block;
+  animation:portBreathe 6s ease-in-out infinite;transform-origin:center;}
 .port-breathe{animation:portBreathe 5s ease-in-out infinite;transform-origin:center bottom;}
 @keyframes portBreathe{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-1.5px) scale(1.012);}}
 .port-eye{animation:eyeGlow 3.4s ease-in-out infinite;}
@@ -1103,10 +1105,10 @@ function commitOrder(){
 
 // ── RANG-FIGUREN (4 Stufen, je maechtiger) ──
 const RANKS = [
-  {name:'Initiat', desc:'Du drückst einfach auf Aufnahme',      color:'--text2'},
-  {name:'Adept',   desc:'Es passiert ohne Überwindung',          color:'--blue'},
-  {name:'Artisan', desc:'Du baust Hooks mit Absicht',            color:'--accent'},
-  {name:'Orator',  desc:'Es klingt unverwechselbar nach dir',    color:'--warn'},
+  {name:'Initiat', desc:'Du drückst einfach auf Aufnahme',   color:'--text2', img:'initiat'},
+  {name:'Adept',   desc:'Es passiert ohne Überwindung',       color:'--blue',  img:'adept'},
+  {name:'Artisan', desc:'Du baust Hooks mit Absicht',         color:'--accent',img:'artisan'},
+  {name:'Orator',  desc:'Es klingt unverwechselbar nach dir', color:'--warn',  img:'orator'},
 ];
 
 function rankPortrait(idx, col, uid){
@@ -1234,7 +1236,7 @@ function renderHero(){
         <circle class="rfill" cx="54" cy="54" r="${R}" stroke="${col}"
           stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC - CIRC*st.frac}"/>
       </svg>
-      <div class="frame">${rankPortrait(st.idx, col, uid)}</div>
+      <div class="frame"><img class="port-img" src="ranks/${rank.img}.jpg" alt="${rank.name}" loading="lazy"/></div>
     </div>
   </div>`;
 }
