@@ -16,15 +16,15 @@
         "Many people don't get so much older after 30 - if you only remember one day, do you keep living?"
       ],
       "todos": [
-        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
         "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
         "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
         "Nimm an drei Tagen hintereinander auf – egal wie"
       ],
       "done": [
-        "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst"
+        "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
+        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
       ],
-      "lastTouched": 1787766106958,
+      "lastTouched": 1787825360776,
       "challenge": {
         "startDate": "2026-08-26",
         "switchAfterDays": 7,
@@ -194,9 +194,9 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 20,
+  "xp": 35,
   "streak": 0,
-  "lastActive": "Wed Aug 26 2026",
+  "lastActive": "Thu Aug 27 2026",
   "theme": "light",
   "quotes": [
     "You only have one life!",
@@ -209,7 +209,8 @@
     "Je fester du den Fluss halten willst, desto mehr entgleitet er dir."
   ],
   "log": {
-    "2026-08-26": "full"
+    "2026-08-26": "full",
+    "2026-08-27": "full"
   },
   "plans": {
     "2026-08-26": "I try to put more life into every day"
