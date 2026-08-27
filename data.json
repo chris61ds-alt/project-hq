@@ -79,24 +79,24 @@
         ],
         "skillStages": [
           {
-            "label": "Roh",
+            "label": "Initiat",
             "at": 0,
-            "desc": "Einfach aufnehmen"
+            "desc": "Du drückst einfach auf Aufnahme"
           },
           {
-            "label": "Gewohnheit",
+            "label": "Adept",
             "at": 7,
-            "desc": "Es passiert von selbst"
+            "desc": "Es passiert ohne Überwindung"
           },
           {
-            "label": "Handwerk",
+            "label": "Artisan",
             "at": 21,
-            "desc": "Hooks bewusst bauen"
+            "desc": "Du baust Hooks mit Absicht"
           },
           {
-            "label": "Stimme",
+            "label": "Orator",
             "at": 45,
-            "desc": "Es klingt nach dir"
+            "desc": "Es klingt unverwechselbar nach dir"
           }
         ]
       },
