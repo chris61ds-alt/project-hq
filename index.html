@@ -326,6 +326,27 @@ body{
 .skill-stage{font-size:15px;font-weight:500;}
 .skill-desc{font-size:13px;color:var(--muted);}
 
+
+/* ── HOOK-LISTE ── */
+.hooks-toggle{width:100%;text-align:left;background:var(--surface2);border:none;border-radius:12px;
+  padding:12px 14px;margin-top:14px;cursor:pointer;font-family:inherit;font-size:14px;
+  color:var(--text2);display:flex;align-items:center;justify-content:space-between;gap:10px;
+  transition:background var(--trans),color var(--trans);}
+.hooks-toggle:hover{background:var(--surface3);color:var(--text);}
+.hooks-toggle .chev{transition:transform var(--trans);font-size:12px;}
+.hooks-toggle.open .chev{transform:rotate(90deg);}
+.hooks-body{display:none;margin-top:10px;}
+.hooks-body.open{display:block;animation:bodyIn .3s var(--ease);}
+.hooks-group{margin-bottom:14px;}
+.hooks-group-label{font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);
+  font-weight:600;margin-bottom:7px;}
+.hook-line{padding:9px 12px;border-radius:10px;background:var(--surface2);margin-bottom:6px;
+  font-size:14px;line-height:1.45;color:var(--text);cursor:pointer;transition:background var(--trans);}
+.hook-line:hover{background:var(--surface3);}
+.hook-line.ref{color:var(--text2);font-size:13.5px;}
+.hooks-note{font-size:12.5px;color:var(--text2);line-height:1.45;padding:10px 12px;
+  border-left:2px solid var(--border2);margin-top:4px;}
+
 /* ── QUESTS ── */
 .quest-block{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 .quest-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
@@ -1424,6 +1445,36 @@ function renderSkill(ch){
     </div>`;
 }
 
+
+// ── HOOK-LISTE ────────────────────────────
+let hooksOpen = false;
+function toggleHooks(){
+  hooksOpen = !hooksOpen;
+  document.querySelector('.hooks-toggle')?.classList.toggle('open', hooksOpen);
+  document.querySelector('.hooks-body')?.classList.toggle('open', hooksOpen);
+}
+function copyHook(el){
+  const t = el.textContent;
+  navigator.clipboard?.writeText(t).then(()=>showToast('Kopiert')).catch(()=>{});
+}
+function renderHooks(proj){
+  const h = proj.challenge && proj.challenge.hooks;
+  if(!h) return '';
+  const grp = (label, arr, cls='') => arr && arr.length ? `<div class="hooks-group">
+      <div class="hooks-group-label">${label}</div>
+      ${arr.map(x=>`<div class="hook-line ${cls}" onclick="copyHook(this)">${esc(x)}</div>`).join('')}
+    </div>` : '';
+  return `<button class="hooks-toggle ${hooksOpen?'open':''}" onclick="event.stopPropagation();toggleHooks()">
+      <span>Hook-Vorlagen (${(h.eigene||[]).length + (h.referenz||[]).length})</span>
+      <span class="chev">›</span>
+    </button>
+    <div class="hooks-body ${hooksOpen?'open':''}">
+      ${grp('Deine Position', h.eigene)}
+      ${grp('Referenz — anderes Register', h.referenz, 'ref')}
+      ${h.notiz?`<div class="hooks-note">${esc(h.notiz)}</div>`:''}
+    </div>`;
+}
+
 // ── QUESTS (waehlbar = Autonomie) ─────────
 function renderQuests(proj){
   const qs = (proj.challenge && proj.challenge.quests) || [];
@@ -1498,6 +1549,7 @@ function renderChallengeStrip(proj){
       ${phase==='post' ? `<button class="chal-btn ${postToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','post')">${postToday?'✓ Gepostet':'Video gepostet'}</button>` : ''}
     </div>
     ${renderQuests(proj)}
+    ${renderHooks(proj)}
   </div>`;
 }
 function chalLog(pid, kind){
