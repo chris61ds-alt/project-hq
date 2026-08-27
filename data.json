@@ -17,11 +17,9 @@
       ],
       "todos": [
         "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
-        "Schreib 5 Hooks für dasselbe Thema, nimm den unbequemsten",
-        "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg",
-        "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum",
-        "Kürz dein längstes Video auf unter 30 Sekunden",
-        "Poste dein erstes Video – und schau danach nicht mehr rein"
+        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
+        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
+        "Nimm an drei Tagen hintereinander auf – egal wie"
       ],
       "done": [
         "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst"
@@ -98,6 +96,32 @@
             "at": 45,
             "desc": "Es klingt unverwechselbar nach dir"
           }
+        ],
+        "todoTiers": {
+          "1": [
+            "Poste dein erstes Video – und schau danach nicht mehr rein",
+            "Schreib den Hook auf, bevor du aufnimmst – ein Satz",
+            "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg",
+            "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum",
+            "Poste an drei Tagen hintereinander"
+          ],
+          "2": [
+            "Kürz ein Video auf unter 20 Sekunden, ohne dass die Aussage fehlt",
+            "Nimm ein Video in einem Take auf – kein Schnitt",
+            "Teste ein Thema mit drei Hooks und vergleiche, was hängen bleibt",
+            "Schreib 10 Hooks in einer Sitzung – nimm den unbequemsten",
+            "Mach ein Video, das nur aus einer Frage besteht"
+          ],
+          "3": [
+            "Bau eine Serie: drei Videos zum selben Thema, aufeinander aufbauend",
+            "Nimm etwas auf, das du vor 60 Tagen nicht gemacht hättest",
+            "Schau Video 1 und dein letztes nebeneinander – notier den Unterschied",
+            "Schreib auf, was dein wiederkehrendes Thema geworden ist",
+            "Entscheide: weitermachen oder abschließen – und schreib warum"
+          ]
+        },
+        "unlockedTiers": [
+          0
         ]
       },
       "milestones": [
