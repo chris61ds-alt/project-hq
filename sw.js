@@ -1,10 +1,10 @@
-const CACHE = "project-hq-v2";
+const CACHE = "project-hq-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png",
+  "./icon-gold-192.png",
+  "./icon-gold-512.png",
   "./ranks/initiat.jpg",
   "./ranks/adept.jpg",
   "./ranks/artisan.jpg",
