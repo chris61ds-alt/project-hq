@@ -16,18 +16,17 @@
         "Many people don't get so much older after 30 - if you only remember one day, do you keep living?",
         "Ich bin nicht gut darin: Durchzuhalten wenn es langweilig wird, zu ignorieren was andere denken, viel zu riskieren"
       ],
-      "todos": [
-        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert"
-      ],
+      "todos": [],
       "done": [
         "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
         "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
         "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
         "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
         "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
-        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen"
+        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
+        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert"
       ],
-      "lastTouched": 1787830544766,
+      "lastTouched": 1787830548055,
       "challenge": {
         "startDate": "2026-08-26",
         "switchAfterDays": 7,
@@ -225,7 +224,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 95,
+  "xp": 110,
   "streak": 0,
   "lastActive": "Thu Aug 27 2026",
   "theme": "light",
