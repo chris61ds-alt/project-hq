@@ -602,7 +602,7 @@ body{
   <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☾</button>
   <button class="icon-btn" id="installBtn" onclick="doInstall()" title="App installieren" style="display:none">⤓</button>
   <button class="icon-btn" onclick="openOverview()" title="Projekte">▤</button>
-  <button class="icon-btn" onclick="syncNow()" title="Sync">↻</button>
+  <button class="icon-btn" onclick="syncNow()" oncontextmenu="event.preventDefault();pwaCheck();return false;" title="Sync (lange druecken: PWA-Diagnose)">↻</button>
 </div>
 
 <!-- SYNC BAR -->
@@ -1804,6 +1804,33 @@ window.addEventListener('appinstalled', () => {
   const btn = document.getElementById('installBtn');
   if (btn) btn.style.display = 'none';
 });
+
+
+// ── PWA-DIAGNOSE ──────────────────────────
+async function pwaCheck(){
+  const lines = [];
+  lines.push('HTTPS: ' + (location.protocol === 'https:' ? 'ja' : 'NEIN'));
+  try{
+    const reg = await navigator.serviceWorker.getRegistration();
+    lines.push('SW registriert: ' + (reg ? 'ja' : 'NEIN'));
+    lines.push('SW aktiv: ' + (reg && reg.active ? 'ja' : 'NEIN'));
+    lines.push('SW steuert Seite: ' + (navigator.serviceWorker.controller ? 'ja' : 'NEIN — Seite neu laden'));
+  }catch(e){ lines.push('SW Fehler: ' + e.message); }
+  try{
+    const ml = document.querySelector('link[rel=manifest]').getAttribute('href');
+    const res = await fetch(ml, {cache:'no-store'});
+    lines.push('Manifest: HTTP ' + res.status);
+    const m = await res.json();
+    lines.push('Icons: ' + (m.icons||[]).length);
+    for(const ic of (m.icons||[]).slice(0,2)){
+      const r2 = await fetch(ic.src, {method:'HEAD', cache:'no-store'});
+      lines.push('  ' + ic.src + ': HTTP ' + r2.status);
+    }
+  }catch(e){ lines.push('Manifest Fehler: ' + e.message); }
+  lines.push('Install-Prompt gefeuert: ' + (deferredInstall ? 'ja' : 'nein/noch nicht'));
+  lines.push('Standalone laeuft: ' + (window.matchMedia('(display-mode: standalone)').matches ? 'ja' : 'nein'));
+  alert('PWA-Diagnose\n\n' + lines.join('\n'));
+}
 
 </script>
 </body>
