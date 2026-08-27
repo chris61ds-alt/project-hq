@@ -347,6 +347,16 @@ body{
 .hooks-note{font-size:12.5px;color:var(--text2);line-height:1.45;padding:10px 12px;
   border-left:2px solid var(--border2);margin-top:4px;}
 
+
+/* ── VORRAT ── */
+.buf-row{display:flex;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap;}
+.buf-chip{font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;letter-spacing:.2px;}
+.buf-chip.ahead{background:var(--green-dim);color:var(--green);}
+.buf-chip.even{background:var(--accent-dim);color:var(--accent);}
+.buf-chip.behind{background:var(--warn-dim);color:var(--warn);}
+.buf-today{font-size:12.5px;color:var(--text2);}
+.buf-total{font-size:12.5px;color:var(--text2);margin-left:auto;}
+
 /* ── QUESTS ── */
 .quest-block{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 .quest-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
@@ -1516,6 +1526,29 @@ function bumpQuest(pid, qid){
   scheduleSave(); render();
 }
 
+
+// ── VORRAT (Vorausarbeiten) ───────────────
+function bufferState(ch){
+  const day = chalDayNum(ch);                       // Tag 1..60
+  const recorded = (ch.recordDays||[]).length;
+  const buffer = recorded - day;                    // >0 = Vorsprung
+  const todayCount = (ch.recordDays||[]).filter(d => d === dayKey()).length;
+  return {day, recorded, buffer, todayCount};
+}
+function renderBuffer(ch){
+  const b = bufferState(ch);
+  let cls, txt;
+  if(b.buffer > 0){ cls='ahead'; txt = `${b.buffer} Tage Vorsprung`; }
+  else if(b.buffer === 0){ cls='even'; txt = 'auf Kurs'; }
+  else { cls='behind'; txt = `${Math.abs(b.buffer)} offen`; }
+  const today = b.todayCount > 0 ? `<span class="buf-today">heute ${b.todayCount}×</span>` : '';
+  return `<div class="buf-row">
+    <span class="buf-chip ${cls}">${txt}</span>
+    ${today}
+    <span class="buf-total">${b.recorded} Videos gesamt</span>
+  </div>`;
+}
+
 // ── CHALLENGE-ÜBERSICHT ───────────────────
 function chalDayNum(ch){
   const start = new Date(ch.startDate);
@@ -1544,6 +1577,7 @@ function renderChallengeStrip(proj){
       <span class="chal-phase ${phase}">${phase==='rec'?'Aufnehmen':'Posten'}</span>
     </div>
     <div class="chal-note">${note}</div>
+    ${renderBuffer(ch)}
     <div class="chal-actions">
       <button class="chal-btn ${recToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','record')">${recToday?'✓ Aufgenommen':'Video aufgenommen'}</button>
       ${phase==='post' ? `<button class="chal-btn ${postToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','post')">${postToday?'✓ Gepostet':'Video gepostet'}</button>` : ''}
@@ -1558,7 +1592,7 @@ function chalLog(pid, kind){
   const prevIdx = currentRankIdx();
   const key = dayKey();
   const arr = kind === 'record' ? (p.challenge.recordDays ||= []) : (p.challenge.postDays ||= []);
-  if(!arr.includes(key)) arr.push(key);
+  arr.push(key);   // mehrfach pro Tag moeglich -> Vorrat aufbauen
   markDay('full');
   data.xp = (data.xp||0) + XP_DONE;
   showXPPop(XP_DONE);
