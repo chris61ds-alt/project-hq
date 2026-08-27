@@ -1,7 +1,5 @@
-const CACHE = "project-hq-v3";
+const CACHE = "project-hq-v4";
 const ASSETS = [
-  "./",
-  "./index.html",
   "./manifest.json",
   "./icon-gold-192.png",
   "./icon-gold-512.png",
@@ -12,9 +10,7 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {})
-  );
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {}));
   self.skipWaiting();
 });
 
@@ -28,27 +24,37 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  const url = e.request.url;
+  const req = e.request;
+  const url = req.url;
 
-  // data.json und GitHub-API immer frisch aus dem Netz
-  if (url.includes("data.json") || url.includes("api.github.com")) {
-    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-    return;
-  }
-
-  // Rest: Cache zuerst, im Hintergrund aktualisieren
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const network = fetch(e.request)
+  // HTML/App-Code: IMMER zuerst aus dem Netz, Cache nur als Offline-Fallback
+  const isHTML = req.mode === "navigate" || url.endsWith(".html") || url.endsWith("/");
+  if (isHTML || url.includes("data.json") || url.includes("api.github.com")) {
+    e.respondWith(
+      fetch(req)
         .then((res) => {
-          if (res && res.status === 200 && e.request.method === "GET") {
+          if (isHTML && res && res.status === 200) {
             const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(e.request, copy));
+            caches.open(CACHE).then((c) => c.put(req, copy));
           }
           return res;
         })
-        .catch(() => cached);
-      return cached || network;
-    })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Bilder/Icons: Cache zuerst (aendern sich selten)
+  e.respondWith(
+    caches.match(req).then((cached) =>
+      cached ||
+      fetch(req).then((res) => {
+        if (res && res.status === 200 && req.method === "GET") {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      })
+    )
   );
 });
