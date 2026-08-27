@@ -17,98 +17,12 @@
         "Ich bin nicht gut darin: Durchzuhalten wenn es langweilig wird, zu ignorieren was andere denken, viel zu riskieren"
       ],
       "todos": [],
-      "done": [
-        "Nimm jetzt ein Video auf – erzähl einfach, woran du gerade hängst",
-        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
-        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
-        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert",
-        "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden",
-        "Stell das Handy an eine Stelle mit gutem Licht und lass es dort stehen",
-        "Schreib drei Sachen auf, in denen du nicht gut bist – ungefiltert"
-      ],
+      "done": [],
       "lastTouched": 1787830548055,
       "challenge": {
         "startDate": "2026-08-26",
         "switchAfterDays": 7,
         "totalDays": 60,
-        "recordDays": [
-          "2026-08-26"
-        ],
-        "postDays": [],
-        "quests": [
-          {
-            "id": "q_3days",
-            "tier": 0,
-            "label": "Drei Tage am Stück",
-            "desc": "An drei Tagen hintereinander aufnehmen",
-            "target": 3,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_ugly",
-            "tier": 0,
-            "label": "Unbequem",
-            "desc": "3 Videos über etwas, das dir peinlich ist",
-            "target": 3,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_swipe",
-            "tier": 0,
-            "label": "Swipe-File",
-            "desc": "10 fremde Hooks gesammelt und notiert",
-            "target": 10,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_post3",
-            "tier": 1,
-            "label": "Drei Posts am Stück",
-            "desc": "An drei Tagen hintereinander posten",
-            "target": 3,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_hook",
-            "tier": 1,
-            "label": "Hook-Labor",
-            "desc": "Ein Thema, drei verschiedene Einstiege",
-            "target": 3,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_short",
-            "tier": 2,
-            "label": "Kurz halten",
-            "desc": "5 Videos unter 30 Sekunden",
-            "target": 5,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_oneidea",
-            "tier": 2,
-            "label": "Eine Aussage",
-            "desc": "5 Videos mit exakt einer Kernaussage",
-            "target": 5,
-            "count": 0,
-            "active": false
-          },
-          {
-            "id": "q_serie",
-            "tier": 3,
-            "label": "Serie bauen",
-            "desc": "3 Videos zum selben Thema, aufeinander aufbauend",
-            "target": 3,
-            "count": 0,
-            "active": false
-          }
-        ],
         "skillStages": [
           {
             "label": "Initiat",
@@ -131,28 +45,6 @@
             "desc": "Es klingt unverwechselbar nach dir"
           }
         ],
-        "todoTiers": {
-          "1": [
-            "Poste dein erstes Video – und schau danach nicht mehr rein",
-            "Schreib den Hook auf, bevor du aufnimmst – ein Satz",
-            "Sammle 3 fremde Videos, die dich gestoppt haben – notier warum"
-          ],
-          "2": [
-            "Kürz ein Video auf unter 20 Sekunden, ohne dass die Aussage fehlt",
-            "Nimm ein Video in einem Take auf – kein Schnitt",
-            "Schreib 10 Hooks in einer Sitzung – nimm den unbequemsten",
-            "Mach ein Video, das nur aus einer Frage besteht"
-          ],
-          "3": [
-            "Nimm etwas auf, das du vor 60 Tagen nicht gemacht hättest",
-            "Schau Video 1 und dein letztes nebeneinander – notier den Unterschied",
-            "Schreib auf, was dein wiederkehrendes Thema geworden ist",
-            "Entscheide: weitermachen oder abschließen – und schreib warum"
-          ]
-        },
-        "unlockedTiers": [
-          0
-        ],
         "hooks": {
           "eigene": [
             "Ich bin schlecht in [X]. Hier ist, was ich diese Woche versucht habe.",
@@ -171,7 +63,256 @@
             "The psychology behind [subject]."
           ],
           "notiz": "Referenz = gefundene Vorlagen (Autoritäts-Register, passt nicht zur Prämisse). Eigene = aus der Lernenden-Position. Was trägt, zeigt sich über die Zeit."
-        }
+        },
+        "pool": [
+          {
+            "id": "q00",
+            "tier": 0,
+            "text": "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
+          },
+          {
+            "id": "q01",
+            "tier": 0,
+            "text": "Stell das Handy an eine Stelle mit gutem Licht und nimm dort auf"
+          },
+          {
+            "id": "q02",
+            "tier": 0,
+            "text": "Nimm auf, worin du gerade schlecht bist – ungefiltert"
+          },
+          {
+            "id": "q03",
+            "tier": 0,
+            "text": "Nimm ein Video auf, ohne vorher zu überlegen was du sagst"
+          },
+          {
+            "id": "q04",
+            "tier": 0,
+            "text": "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg"
+          },
+          {
+            "id": "q05",
+            "tier": 0,
+            "text": "Nimm auf, was heute schiefgegangen ist"
+          },
+          {
+            "id": "q06",
+            "tier": 0,
+            "text": "Schau dir ein fremdes Video an, das dich gestoppt hat – nimm auf warum"
+          },
+          {
+            "id": "q07",
+            "tier": 0,
+            "text": "Nimm auf: Was du an deinem Thema immer noch nicht verstehst"
+          },
+          {
+            "id": "q08",
+            "tier": 1,
+            "text": "Poste dein erstes Video – und schau danach nicht mehr rein"
+          },
+          {
+            "id": "q09",
+            "tier": 1,
+            "text": "Schreib den Hook auf, bevor du aufnimmst – dann nimm auf"
+          },
+          {
+            "id": "q10",
+            "tier": 1,
+            "text": "Poste ein Video, das du gestern zu schlecht fandest"
+          },
+          {
+            "id": "q11",
+            "tier": 1,
+            "text": "Nimm auf und poste innerhalb von 10 Minuten"
+          },
+          {
+            "id": "q12",
+            "tier": 1,
+            "text": "Sammle 3 fremde Hooks, bau einen davon nach"
+          },
+          {
+            "id": "q13",
+            "tier": 1,
+            "text": "Poste ein Video über eine Annahme, die falsch war"
+          },
+          {
+            "id": "q14",
+            "tier": 1,
+            "text": "Nimm ein Video ohne Skript in einem Take auf und poste es"
+          },
+          {
+            "id": "q15",
+            "tier": 1,
+            "text": "Poste etwas, das dir leicht peinlich ist"
+          },
+          {
+            "id": "q16",
+            "tier": 1,
+            "text": "Nimm auf: Tag [N] von 60 – was sich verändert hat"
+          },
+          {
+            "id": "q17",
+            "tier": 1,
+            "text": "Poste zwei Videos heute – verschiedene Themen"
+          },
+          {
+            "id": "q18",
+            "tier": 1,
+            "text": "Nimm auf, wovor du beim Posten Angst hattest"
+          },
+          {
+            "id": "q19",
+            "tier": 1,
+            "text": "Frag in einem Video etwas – ohne Antwort zu geben"
+          },
+          {
+            "id": "q20",
+            "tier": 1,
+            "text": "Poste ein Video unter 20 Sekunden"
+          },
+          {
+            "id": "q21",
+            "tier": 1,
+            "text": "Nimm auf, was dir jemand über dein Thema gesagt hat"
+          },
+          {
+            "id": "q22",
+            "tier": 2,
+            "text": "Schreib 10 Hooks in einer Sitzung – nimm den unbequemsten auf"
+          },
+          {
+            "id": "q23",
+            "tier": 2,
+            "text": "Kürz ein Video auf unter 20 Sekunden, ohne dass die Aussage fehlt"
+          },
+          {
+            "id": "q24",
+            "tier": 2,
+            "text": "Nimm ein Video in einem Take auf – kein Schnitt, keine zweite Chance"
+          },
+          {
+            "id": "q25",
+            "tier": 2,
+            "text": "Ein Thema, drei Einstiege – nimm alle drei auf"
+          },
+          {
+            "id": "q26",
+            "tier": 2,
+            "text": "Mach ein Video, das nur aus einer Frage besteht"
+          },
+          {
+            "id": "q27",
+            "tier": 2,
+            "text": "Nimm auf und lass die ersten 3 Sekunden weg – funktioniert es noch?"
+          },
+          {
+            "id": "q28",
+            "tier": 2,
+            "text": "Erklär etwas Kompliziertes in 30 Sekunden"
+          },
+          {
+            "id": "q29",
+            "tier": 2,
+            "text": "Nimm ein Video auf, in dem du dir selbst widersprichst"
+          },
+          {
+            "id": "q30",
+            "tier": 2,
+            "text": "Poste ohne Musik, ohne Text-Overlay – nur du"
+          },
+          {
+            "id": "q31",
+            "tier": 2,
+            "text": "Nimm auf: Was du vor 30 Tagen falsch gemacht hast"
+          },
+          {
+            "id": "q32",
+            "tier": 2,
+            "text": "Bau ein Video aus einer einzigen Beobachtung von heute"
+          },
+          {
+            "id": "q33",
+            "tier": 2,
+            "text": "Sag deinen Punkt zuerst, erklär danach"
+          },
+          {
+            "id": "q34",
+            "tier": 2,
+            "text": "Nimm auf und schau dir das Ergebnis nicht an, bevor du postest"
+          },
+          {
+            "id": "q35",
+            "tier": 2,
+            "text": "Mach ein Video, das mit einer Behauptung startet"
+          },
+          {
+            "id": "q36",
+            "tier": 3,
+            "text": "Bau eine Serie: Teil 1 von 3 zum selben Thema"
+          },
+          {
+            "id": "q37",
+            "tier": 3,
+            "text": "Serie Teil 2 – bau auf gestern auf"
+          },
+          {
+            "id": "q38",
+            "tier": 3,
+            "text": "Serie Teil 3 – zieh den Schluss"
+          },
+          {
+            "id": "q39",
+            "tier": 3,
+            "text": "Nimm etwas auf, das du vor 60 Tagen nicht gemacht hättest"
+          },
+          {
+            "id": "q40",
+            "tier": 3,
+            "text": "Schau Video 1 und dein letztes nebeneinander – nimm den Unterschied auf"
+          },
+          {
+            "id": "q41",
+            "tier": 3,
+            "text": "Nimm auf, was dein wiederkehrendes Thema geworden ist"
+          },
+          {
+            "id": "q42",
+            "tier": 3,
+            "text": "Mach ein Video nur für die Leute, die von Anfang an dabei waren"
+          },
+          {
+            "id": "q43",
+            "tier": 3,
+            "text": "Nimm auf, was du jemandem sagen würdest, der heute Tag 1 hat"
+          },
+          {
+            "id": "q44",
+            "tier": 3,
+            "text": "Poste dein ehrlichstes Video bisher"
+          },
+          {
+            "id": "q45",
+            "tier": 3,
+            "text": "Nimm ein Video ohne Hook auf – trag es allein mit dem Inhalt"
+          },
+          {
+            "id": "q46",
+            "tier": 3,
+            "text": "Mach ein Video über das, was du immer noch vermeidest"
+          },
+          {
+            "id": "q47",
+            "tier": 3,
+            "text": "Nimm auf: Was diese 60 Tage mit dir gemacht haben"
+          },
+          {
+            "id": "q48",
+            "tier": 3,
+            "text": "Entscheide im Video: weitermachen oder abschließen – und warum"
+          }
+        ],
+        "completed": [],
+        "skipped": []
       },
       "milestones": [
         {
