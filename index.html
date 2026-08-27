@@ -1104,33 +1104,6 @@ function commitOrder(){
 
 
 
-// ── APP-ICON FOLGT DEM RANG ───────────────
-function applyRankIcon(){
-  const proj = activeProject();
-  const ch = proj && proj.challenge;
-  const st = ch && ch.skillStages ? skillState(ch) : null;
-  const rank = st ? (RANKS[st.idx] || RANKS[0]) : RANKS[0];
-  const key = rank.img;
-  if(applyRankIcon._last === key) return;
-  applyRankIcon._last = key;
-
-  // Manifest tauschen (bestimmt das Icon beim Installieren / Neu-Hinzufuegen)
-  let man = document.querySelector('link[rel="manifest"]');
-  if(man) man.setAttribute('href', `manifest-${key}.json`);
-
-  // Favicon + Apple-Touch-Icon sofort tauschen
-  document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(l => l.remove());
-  [['icon','ranks/icon-'+key+'-192.png'],['apple-touch-icon','ranks/icon-'+key+'-192.png']].forEach(([rel,href]) => {
-    const l = document.createElement('link');
-    l.rel = rel; l.href = href;
-    document.head.appendChild(l);
-  });
-
-  // Theme-Color passend zum Rang
-  const tc = document.querySelector('meta[name="theme-color"]');
-  if(tc) tc.setAttribute('content', '#101219');
-}
-
 // ── RANG-FIGUREN (4 Stufen, je maechtiger) ──
 const RANKS = [
   {name:'Initiat', desc:'Du drückst einfach auf Aufnahme',   color:'--text2', img:'initiat'},
@@ -1515,7 +1488,6 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function render() {
   // Hero, Meilenstein, Trend, Plan
   renderHero();
-  applyRankIcon();
   renderMilestone();
   renderTrend();
   renderPlan();
