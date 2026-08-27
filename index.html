@@ -707,9 +707,9 @@ body{
     <div class="focus-sub" id="focusSub"></div>
     <div id="planSlot"></div>
     <div class="focus-actions">
-      <button class="focus-btn primary" onclick="markFocusDone()">Abhaken</button>
+      <button class="focus-btn primary" onclick="focusDone()">Erledigt</button>
       <button class="focus-btn" onclick="markLazy()">War dran</button>
-      <button class="focus-btn" onclick="skipFocus()">Andere Aufgabe</button>
+      <button class="focus-btn" onclick="focusSkip()">Andere</button>
     </div>
   </div>
 
@@ -1255,7 +1255,7 @@ function showAscend(idx, unlocked){
   const proj = activeProject();
   const st = skillState(proj.challenge);
   const nextTxt = next
-    ? `Nächster Rang: ${next.name} — bei ${st.stages[idx+1].at} Videos`
+    ? `Nächster Rang: ${next.name} — bei ${st.stages[idx+1].at} Quests`
     : 'Höchster Rang erreicht';
   const unlockTxt = unlocked > 0
     ? `<div class="ascend-unlock">+${unlocked} neue Aufgaben freigeschaltet</div>`
@@ -1406,7 +1406,7 @@ function renderHero(){
       <div class="hero-rank-desc">${rank.desc}</div>
       <div class="hero-meter">
         <div class="hero-meter-row">
-          <span class="hero-count">${done}<span>/${need} Videos</span></span>
+          <span class="hero-count">${done}<span>/${need} Quests</span></span>
           <span class="hero-next">${nextTxt}</span>
         </div>
         <div class="hero-bar"><div class="hero-bar-fill" style="width:${Math.round(st.frac*100)}%;background:${col}"></div></div>
@@ -1425,7 +1425,7 @@ function renderHero(){
 
 // ── SKILL-STUFEN (Fortschritt am Tun, nicht an Reichweite) ──
 function skillState(ch){
-  const total = (ch.recordDays||[]).length;
+  const total = (ch.completed||[]).length;
   const stages = ch.skillStages || [];
   if(!stages.length) return null;
   let idx = 0;
@@ -1553,6 +1553,67 @@ function renderBuffer(ch){
   </div>`;
 }
 
+
+
+// Router: Challenge-Projekt -> Tagesquest, sonst Todo
+function focusDone(){
+  const p = activeProject();
+  if(p && p.challenge && p.challenge.pool) completeQuest(); else markFocusDone();
+}
+function focusSkip(){
+  const p = activeProject();
+  if(p && p.challenge && p.challenge.pool) skipQuest(); else skipFocus();
+}
+
+// ── TAGESQUEST (ein Konzept) ──────────────
+function questStats(ch){
+  const done = ch.completed || [];
+  const day = chalDayNum(ch);
+  const todayCt = done.filter(x => x.date === dayKey()).length;
+  const buffer = done.length - day;         // >0 = Vorsprung
+  return {day, total: done.length, todayCt, buffer, doneToday: todayCt > 0};
+}
+function questRank(ch){
+  // Rang haengt an erledigten Quests
+  const stages = ch.skillStages || [];
+  const total = (ch.completed||[]).length;
+  let idx = 0;
+  stages.forEach((s,i) => { if(total >= s.at) idx = i; });
+  return idx;
+}
+function dailyQuest(ch){
+  const doneIds = new Set((ch.completed||[]).map(x => x.id));
+  const rank = questRank(ch);
+  const skipped = ch.skipped && ch.skipped.date === dayKey() ? (ch.skipped.ids||[]) : [];
+  const avail = (ch.pool||[]).filter(q => q.tier <= rank && !doneIds.has(q.id));
+  if(!avail.length) return null;
+  const fresh = avail.filter(q => !skipped.includes(q.id));
+  return (fresh.length ? fresh : avail)[0];
+}
+function completeQuest(){
+  const p = activeProject();
+  const ch = p && p.challenge; if(!ch) return;
+  const q = dailyQuest(ch); if(!q) return;
+  const prevRank = questRank(ch);
+  const st = questStats(ch);
+  (ch.completed ||= []).push({id: q.id, date: dayKey(), text: q.text});
+  markDay('full');
+  data.xp = (data.xp||0) + XP_DONE;
+  showXPPop(XP_DONE);
+  showToast(st.doneToday ? 'Vorsprung +1' : 'Tag abgehakt');
+  scheduleSave(); render();
+  const newRank = questRank(ch);
+  if(newRank > prevRank) showAscend(newRank, 0);
+}
+function skipQuest(){
+  const p = activeProject();
+  const ch = p && p.challenge; if(!ch) return;
+  const q = dailyQuest(ch); if(!q) return;
+  if(!ch.skipped || ch.skipped.date !== dayKey()) ch.skipped = {date: dayKey(), ids: []};
+  ch.skipped.ids.push(q.id);
+  scheduleSave(); render();
+}
+
 // ── CHALLENGE-ÜBERSICHT ───────────────────
 function chalDayNum(ch){
   const start = new Date(ch.startDate);
@@ -1564,32 +1625,37 @@ function chalPhase(ch){
 }
 function renderChallengeStrip(proj){
   const ch = proj.challenge;
-  if(!ch) return '';
-  const day = chalDayNum(ch);
-  const phase = chalPhase(ch);
-  const recCt = (ch.recordDays||[]).length, postCt = (ch.postDays||[]).length;
-  const todayKey = dayKey();
-  const recToday = (ch.recordDays||[]).includes(todayKey);
-  const postToday = (ch.postDays||[]).includes(todayKey);
-  const pct = Math.round(day/ch.totalDays*100);
+  if(!ch || !ch.pool) return '';
+  const st = questStats(ch);
+  const rank = questRank(ch);
+  const phase = rank >= 1 ? 'post' : 'rec';
+  const poolLeft = (ch.pool||[]).filter(q => q.tier <= rank && !(ch.completed||[]).some(c=>c.id===q.id)).length;
+
+  let bufCls, bufTxt;
+  if(st.buffer > 0){ bufCls='ahead'; bufTxt = `${st.buffer} Tage Vorsprung`; }
+  else if(st.buffer === 0){ bufCls='even'; bufTxt = 'auf Kurs'; }
+  else { bufCls='behind'; bufTxt = `${Math.abs(st.buffer)} offen`; }
+
   const note = phase === 'rec'
-    ? `Aufnahme-Phase · noch ${Math.max(ch.switchAfterDays-recCt,0)} Tage bis zum ersten Post`
-    : `Posting-Phase · ${postCt} von ${ch.totalDays-ch.switchAfterDays} gepostet`;
+    ? `Aufnahme-Phase · Rang Adept schaltet das Posten frei`
+    : `Posting-Phase`;
+
   return `<div class="chal-strip">
     <div class="chal-top">
-      <span class="chal-day">Tag ${day} von ${ch.totalDays}</span>
+      <span class="chal-day">Tag ${st.day} von ${ch.totalDays}</span>
       <span class="chal-phase ${phase}">${phase==='rec'?'Aufnehmen':'Posten'}</span>
     </div>
     <div class="chal-note">${note}</div>
-    ${renderBuffer(ch)}
-    <div class="chal-actions">
-      <button class="chal-btn ${recToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','record')">${recToday?'✓ Aufgenommen':'Video aufgenommen'}</button>
-      ${phase==='post' ? `<button class="chal-btn ${postToday?'done-today':''}" onclick="event.stopPropagation();chalLog('${proj.id}','post')">${postToday?'✓ Gepostet':'Video gepostet'}</button>` : ''}
+    <div class="buf-row">
+      <span class="buf-chip ${bufCls}">${bufTxt}</span>
+      ${st.todayCt>0?`<span class="buf-today">heute ${st.todayCt}×</span>`:''}
+      <span class="buf-total">${st.total} Quests erledigt</span>
     </div>
-    ${renderQuests(proj)}
+    <div class="chal-note" style="margin-top:8px">${poolLeft} weitere auf diesem Rang${rank<3?` · mehr beim Aufstieg`:''}</div>
     ${renderHooks(proj)}
   </div>`;
 }
+
 function chalLog(pid, kind){
   const p = data.projects.find(x=>x.id===pid);
   if(!p || !p.challenge) return;
@@ -1643,23 +1709,40 @@ function buildFocusItems() {
 }
 
 function renderFocus() {
+  const proj = activeProject();
+  const ch = proj && proj.challenge;
+  const ft = document.getElementById('focusText');
+  const fs = document.getElementById('focusSub');
+
+  if (ch && ch.pool) {
+    const q = dailyQuest(ch);
+    const st = questStats(ch);
+    if (!q) {
+      ft.textContent = 'Alle Quests erledigt';
+      fs.textContent = `${st.total} von ${(ch.pool||[]).length} geschafft`;
+      return;
+    }
+    ft.textContent = q.text;
+    fs.textContent = st.doneToday
+      ? `Heute schon ${st.todayCt}× erledigt — das hier gibt Vorsprung`
+      : `Tag ${st.day} · ${proj.name}`;
+    return;
+  }
+
+  // Projekte ohne Challenge: normale Todos
   const items = buildFocusItems();
   if (!items.length) {
     const anyActive = data.projects.some(p => p.status === 'active');
-    document.getElementById('focusText').textContent = anyActive
-      ? 'Keine offenen Todos'
-      : 'Kein Projekt aktiv';
-    document.getElementById('focusSub').textContent = anyActive
-      ? 'Leg unten einen neuen Schritt an.'
-      : 'Setz ein Projekt auf AKTIV, um hier loszulegen.';
+    ft.textContent = anyActive ? 'Keine offenen Todos' : 'Kein Projekt aktiv';
+    fs.textContent = anyActive ? 'Leg unten einen neuen Schritt an.' : 'Setz ein Projekt auf AKTIV, um hier loszulegen.';
     return;
   }
   const item = items[focusIdx % items.length];
-  document.getElementById('focusText').textContent = item.todo;
+  ft.textContent = item.todo;
   let sub = item.proj.name;
   if (item.urgency === 'deadline') sub += `  ·  Deadline in ${item.days} Tagen`;
   if (item.urgency === 'stale') sub += `  ·  Braucht Aufmerksamkeit`;
-  document.getElementById('focusSub').textContent = sub;
+  fs.textContent = sub;
 }
 
 function markFocusDone() {
@@ -1788,6 +1871,24 @@ function render() {
 
 
 function projectBodyHTML(proj, dd){
+  const ch = proj.challenge;
+  if(ch && ch.pool){
+    const done = (ch.completed||[]).slice().reverse();
+    return `
+    <div class="section-label">Ideen (${proj.ideas.length})</div>
+    ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
+    <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
+    <div class="divider"></div>
+    <div class="section-label" style="color:var(--green)">Erledigte Quests (${done.length})</div>
+    ${done.length ? done.slice(0,12).map(x=>`<div class="item done-item"><div class="item-text">${esc(x.text||x.id)}</div><span class="quest-count">${x.date.slice(8)}.${x.date.slice(5,7)}.</span></div>`).join('') : '<div class="hooks-note">Noch nichts erledigt.</div>'}
+    ${done.length>12?`<div class="hooks-note">+${done.length-12} weitere</div>`:''}
+    <div class="card-footer">
+      <select class="status-select" onchange="chStatus('${proj.id}',this.value)">${Object.entries(SM).map(([k,v])=>`<option value="${k}" ${proj.status===k?'selected':''}>${v.l}</option>`).join('')}</select>
+      ${dd!==null?`<span class="badge ${dd<=7?'badge-urgent':'badge-open'}">${dd} Tage</span>`:''}
+      <button class="del-btn" onclick="rmProject('${proj.id}')">löschen</button>
+    </div>`;
+  }
+
   return `
     <div class="section-label">Ideen (${proj.ideas.length})</div>
     ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
