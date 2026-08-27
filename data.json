@@ -311,7 +311,13 @@
             "text": "Entscheide im Video: weitermachen oder abschließen – und warum"
           }
         ],
-        "completed": [],
+        "completed": [
+          {
+            "id": "q00",
+            "date": "2026-08-27",
+            "text": "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
+          }
+        ],
         "skipped": [],
         "side": [
           {
@@ -441,7 +447,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 110,
+  "xp": 125,
   "streak": 0,
   "lastActive": "Thu Aug 27 2026",
   "theme": "light",
