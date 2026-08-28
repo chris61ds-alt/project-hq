@@ -321,6 +321,11 @@
             "id": "q01",
             "date": "2026-08-27",
             "text": "Stell das Handy an eine Stelle mit gutem Licht und nimm dort auf"
+          },
+          {
+            "id": "q02",
+            "date": "2026-08-28",
+            "text": "Nimm auf, worin du gerade schlecht bist – ungefiltert"
           }
         ],
         "skipped": [],
@@ -452,9 +457,9 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 140,
+  "xp": 155,
   "streak": 0,
-  "lastActive": "Thu Aug 27 2026",
+  "lastActive": "Fri Aug 28 2026",
   "theme": "light",
   "quotes": [
     "You only have one life!",
@@ -468,7 +473,8 @@
   ],
   "log": {
     "2026-08-26": "full",
-    "2026-08-27": "full"
+    "2026-08-27": "full",
+    "2026-08-28": "full"
   },
   "plans": {
     "2026-08-26": "I try to put more life into every day"
