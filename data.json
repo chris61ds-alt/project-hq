@@ -113,7 +113,7 @@
           {
             "id": "q09",
             "tier": 1,
-            "text": "Schreib den Hook auf, bevor du aufnimmst – dann nimm auf"
+            "text": "Schreib den Hook auf, bevor du aufnimmst – dann poste"
           },
           {
             "id": "q10",
@@ -128,7 +128,7 @@
           {
             "id": "q12",
             "tier": 1,
-            "text": "Sammle 3 fremde Hooks, bau einen davon nach"
+            "text": "Sammle 3 fremde Hooks, bau einen davon nach – und poste ihn"
           },
           {
             "id": "q13",
@@ -148,7 +148,7 @@
           {
             "id": "q16",
             "tier": 1,
-            "text": "Nimm auf: Tag [N] von 60 – was sich verändert hat"
+            "text": "Poste: Tag [N] von 60 – was sich verändert hat"
           },
           {
             "id": "q17",
@@ -158,12 +158,12 @@
           {
             "id": "q18",
             "tier": 1,
-            "text": "Nimm auf, wovor du beim Posten Angst hattest"
+            "text": "Poste, wovor du beim Posten Angst hattest"
           },
           {
             "id": "q19",
             "tier": 1,
-            "text": "Frag in einem Video etwas – ohne Antwort zu geben"
+            "text": "Poste ein Video, das nur eine Frage stellt – ohne Antwort"
           },
           {
             "id": "q20",
@@ -173,7 +173,7 @@
           {
             "id": "q21",
             "tier": 1,
-            "text": "Nimm auf, was dir jemand über dein Thema gesagt hat"
+            "text": "Poste, was dir jemand über dein Thema gesagt hat"
           },
           {
             "id": "q22",
@@ -213,7 +213,7 @@
           {
             "id": "q29",
             "tier": 2,
-            "text": "Nimm ein Video auf, in dem du dir selbst widersprichst"
+            "text": "Poste ein Video, in dem du dir selbst widersprichst"
           },
           {
             "id": "q30",
@@ -223,7 +223,7 @@
           {
             "id": "q31",
             "tier": 2,
-            "text": "Nimm auf: Was du vor 30 Tagen falsch gemacht hast"
+            "text": "Poste: Was du vor 30 Tagen falsch gemacht hast"
           },
           {
             "id": "q32",
@@ -238,7 +238,7 @@
           {
             "id": "q34",
             "tier": 2,
-            "text": "Nimm auf und schau dir das Ergebnis nicht an, bevor du postest"
+            "text": "Nimm auf und poste, ohne es dir vorher anzuschauen"
           },
           {
             "id": "q35",
@@ -263,17 +263,17 @@
           {
             "id": "q39",
             "tier": 3,
-            "text": "Nimm etwas auf, das du vor 60 Tagen nicht gemacht hättest"
+            "text": "Poste etwas, das du vor 60 Tagen nicht gemacht hättest"
           },
           {
             "id": "q40",
             "tier": 3,
-            "text": "Schau Video 1 und dein letztes nebeneinander – nimm den Unterschied auf"
+            "text": "Schau Video 1 und dein letztes nebeneinander – poste den Unterschied"
           },
           {
             "id": "q41",
             "tier": 3,
-            "text": "Nimm auf, was dein wiederkehrendes Thema geworden ist"
+            "text": "Poste, was dein wiederkehrendes Thema geworden ist"
           },
           {
             "id": "q42",
@@ -283,7 +283,7 @@
           {
             "id": "q43",
             "tier": 3,
-            "text": "Nimm auf, was du jemandem sagen würdest, der heute Tag 1 hat"
+            "text": "Poste, was du jemandem sagen würdest, der heute Tag 1 hat"
           },
           {
             "id": "q44",
@@ -293,7 +293,7 @@
           {
             "id": "q45",
             "tier": 3,
-            "text": "Nimm ein Video ohne Hook auf – trag es allein mit dem Inhalt"
+            "text": "Poste ein Video ohne Hook – trag es allein mit dem Inhalt"
           },
           {
             "id": "q46",
@@ -303,7 +303,7 @@
           {
             "id": "q47",
             "tier": 3,
-            "text": "Nimm auf: Was diese 60 Tage mit dir gemacht haben"
+            "text": "Poste: Was diese 60 Tage mit dir gemacht haben"
           },
           {
             "id": "q48",
