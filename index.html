@@ -360,6 +360,10 @@ body{
 
 .credit-chip{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;
   background:var(--xp-dim);color:var(--xp);letter-spacing:.2px;}
+
+.trend-cell.ahead{background:var(--green);opacity:.42;}
+.trend-cell.future{border:1px dashed var(--border2);}
+.trend-cell.future.ahead{border-style:solid;border-color:transparent;}
 .trend-cell.covered{background:var(--xp);opacity:.55;}
 
 /* ── QUESTS ── */
@@ -900,14 +904,23 @@ function markDay(state){
 
 function last14(){
   const ch = activeProject()?.challenge;
-  const covered = new Set((ch && ch.coveredDays) || []);
+  const covered = coveredPast(ch);
+  const doneDays = new Set(((ch&&ch.completed)||[]).map(x=>x.date));
+  const reserve = Math.max(0, reserveOf(ch));
   const out = [];
-  for (let i = 13; i >= 0; i--){
+  for (let i = 10; i >= 1; i--){
     const d = new Date(); d.setDate(d.getDate() - i);
     const k = dayKey(d);
     let state = (ensureLog())[k] || null;
     if(!state && covered.has(k)) state = 'covered';
-    out.push({key: k, state, isToday: i === 0});
+    out.push({key:k, state, isToday:false, future:false});
+  }
+  const tk = dayKey();
+  let ts = (ensureLog())[tk] || null;
+  out.push({key:tk, state:ts, isToday:true, future:false});
+  for (let i = 1; i <= 3; i++){
+    const d = new Date(); d.setDate(d.getDate() + i);
+    out.push({key:dayKey(d), state: i <= reserve ? 'ahead' : null, isToday:false, future:true});
   }
   return out;
 }
@@ -941,16 +954,17 @@ function renderTrend(){
   else note = 'Ziel: 80 % – nicht 100 %';
   el.innerHTML = `
     <div class="trend-head">
-      <span class="trend-label">Letzte 14 Tage · ${pct}%</span>
+      <span class="trend-label">Verlauf · ${pct}%</span>
       <span class="trend-val">${note}</span>
     </div>
     <div class="trend-grid">
-      ${days.map(d=>`<div class="trend-cell ${d.state==='full'?'full':d.state==='lazy'?'lazy':d.state==='covered'?'covered':''} ${d.isToday?'today':''}" title="${d.key}"></div>`).join('')}
+      ${days.map(d=>`<div class="trend-cell ${d.state==='full'?'full':d.state==='lazy'?'lazy':d.state==='covered'?'covered':d.state==='ahead'?'ahead':''} ${d.isToday?'today':''} ${d.future?'future':''}" title="${d.key}"></div>`).join('')}
     </div>
     <div class="trend-foot">
       <span class="trend-key"><span class="trend-swatch" style="background:var(--green)"></span>Erledigt</span>
       <span class="trend-key"><span class="trend-swatch" style="background:var(--warn);opacity:.75"></span>Drangewesen</span>
       <span class="trend-key"><span class="trend-swatch" style="background:var(--xp);opacity:.55"></span>Gedeckt</span>
+      <span class="trend-key"><span class="trend-swatch" style="background:var(--green);opacity:.42"></span>Vorsprung</span>
       <span class="trend-key"><span class="trend-swatch" style="background:var(--surface3)"></span>Pause</span>
     </div>`;
 }
@@ -1577,6 +1591,32 @@ function focusSkip(){
 }
 
 
+
+// ── RESERVE (Vorsprung + Guthaben) ────────
+function reserveOf(ch){
+  if(!ch || !ch.startDate) return 0;
+  const day = chalDayNum(ch);
+  const done = (ch.completed||[]).length;
+  return done + (ch.credits||0) - day;   // >0 = gedeckte Tage im Voraus
+}
+// Vergangene Tage ohne Quest: durch Reserve gedeckt (chronologisch)
+function coveredPast(ch){
+  const out = new Set();
+  if(!ch || !ch.startDate) return out;
+  const byDay = {};
+  (ch.completed||[]).forEach(x => { byDay[x.date] = (byDay[x.date]||0) + 1; });
+  const start = new Date(ch.startDate); start.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  let bank = ch.credits || 0;
+  for(let d = new Date(start); d < today; d.setDate(d.getDate()+1)){
+    const k = dayKey(d);
+    const n = byDay[k] || 0;
+    if(n > 0){ bank += n - 1; }          // Extra-Quests wandern in die Bank
+    else if(bank > 0){ bank--; out.add(k); }
+  }
+  return out;
+}
+
 // ── NEBENQUESTS + TAGESGUTHABEN ───────────
 function sideQuests(ch){
   const rank = questRank(ch);
@@ -1713,10 +1753,11 @@ function renderChallengeStrip(proj){
   const phase = rank >= 1 ? 'post' : 'rec';
   const poolLeft = (ch.pool||[]).filter(q => q.tier <= rank && !(ch.completed||[]).some(c=>c.id===q.id)).length;
 
+  const res = reserveOf(ch);
   let bufCls, bufTxt;
-  if(st.buffer > 0){ bufCls='ahead'; bufTxt = `${st.buffer} Tage Vorsprung`; }
-  else if(st.buffer === 0){ bufCls='even'; bufTxt = 'auf Kurs'; }
-  else { bufCls='behind'; bufTxt = `${Math.abs(st.buffer)} offen`; }
+  if(res > 0){ bufCls='ahead'; bufTxt = `${res} ${res===1?'Tag':'Tage'} Vorsprung`; }
+  else if(res === 0){ bufCls='even'; bufTxt = 'auf Kurs'; }
+  else { bufCls='behind'; bufTxt = `${Math.abs(res)} offen`; }
 
   const note = phase === 'rec'
     ? `Aufnahme-Phase · Rang Adept schaltet das Posten frei`
