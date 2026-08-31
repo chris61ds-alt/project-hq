@@ -331,6 +331,11 @@
             "id": "q03",
             "date": "2026-08-29",
             "text": "Nimm ein Video auf, ohne vorher zu überlegen was du sagst"
+          },
+          {
+            "id": "q04",
+            "date": "2026-08-31",
+            "text": "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg"
           }
         ],
         "skipped": [],
@@ -462,9 +467,9 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 170,
+  "xp": 185,
   "streak": 0,
-  "lastActive": "Sat Aug 29 2026",
+  "lastActive": "Mon Aug 31 2026",
   "theme": "light",
   "quotes": [
     "You only have one life!",
@@ -480,7 +485,8 @@
     "2026-08-26": "full",
     "2026-08-27": "full",
     "2026-08-28": "full",
-    "2026-08-29": "full"
+    "2026-08-29": "full",
+    "2026-08-31": "full"
   },
   "plans": {
     "2026-08-26": "I try to put more life into every day"
