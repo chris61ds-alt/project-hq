@@ -255,6 +255,16 @@ body{
   .ascend-kicker,.ascend-rank,.ascend-desc,.ascend-sub,.ascend-btn,.ascend-portrait{animation:none;opacity:1;}
 }
 
+
+.topic-nudge{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;
+  background:var(--surface2);border-radius:12px;}
+.topic-nudge-body{flex:1;min-width:0;font-size:13.5px;color:var(--text);line-height:1.4;}
+.topic-nudge-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);
+  display:block;margin-bottom:3px;}
+.topic-nudge-shuffle{background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;
+  padding:2px 4px;flex-shrink:0;}
+.topic-nudge-shuffle:hover{color:var(--accent);}
+
 /* ── RANG-HERO (kompakt, Portrait rechts) ── */
 .hero-card{
   position:relative;margin-bottom:20px;padding:18px 20px;
@@ -715,6 +725,7 @@ body{
     <div class="focus-text" id="focusText">Lädt...</div>
     <div class="focus-sub" id="focusSub"></div>
     <div id="planSlot"></div>
+    <div id="topicSlot"></div>
     <div class="focus-actions">
       <button class="focus-btn primary" onclick="focusDone()">Erledigt</button>
       <button class="focus-btn" onclick="markLazy()">War dran</button>
@@ -1250,6 +1261,29 @@ function lockedTierCount(){
   if(!ch || !ch.todoTiers) return 0;
   const un = ch.unlockedTiers || [0];
   return Object.keys(ch.todoTiers).filter(k => !un.includes(Number(k))).length;
+}
+
+
+// ── THEMEN-IMPULS AUS DER IDEENLISTE ──────
+let topicIdx = null;
+function renderTopicNudge(proj){
+  if(!proj.challenge || !proj.challenge.pool) return '';
+  const ideas = proj.ideas || [];
+  if(!ideas.length) return '';
+  if(topicIdx === null || topicIdx >= ideas.length) topicIdx = Math.floor(Math.random()*ideas.length);
+  return `<div class="topic-nudge">
+    <div class="topic-nudge-body"><span class="topic-nudge-label">Themen-Impuls</span>${esc(ideas[topicIdx])}</div>
+    <button class="topic-nudge-shuffle" onclick="event.stopPropagation();shuffleTopic()" title="Anderer Impuls">⟳</button>
+  </div>`;
+}
+function shuffleTopic(){
+  const proj = activeProject();
+  const n = (proj.ideas||[]).length;
+  if(n <= 1) return;
+  let next;
+  do { next = Math.floor(Math.random()*n); } while(next === topicIdx);
+  topicIdx = next;
+  render();
 }
 
 // ── RANG-AUFSTIEG ─────────────────────────
@@ -1946,6 +1980,8 @@ function render() {
   restartQuoteTimer();
   // Focus
   renderFocus();
+  const _ap = activeProject();
+  document.getElementById('topicSlot').innerHTML = _ap ? renderTopicNudge(_ap) : '';
   renderActiveProjectPanel();
   // Grid
   const grid = document.getElementById('projectGrid');
