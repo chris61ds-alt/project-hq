@@ -336,6 +336,11 @@
             "id": "q04",
             "date": "2026-08-31",
             "text": "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg"
+          },
+          {
+            "id": "q05",
+            "date": "2026-08-31",
+            "text": "Nimm auf, was heute schiefgegangen ist"
           }
         ],
         "skipped": [],
@@ -467,7 +472,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 185,
+  "xp": 200,
   "streak": 0,
   "lastActive": "Mon Aug 31 2026",
   "theme": "light",
