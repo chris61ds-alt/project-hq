@@ -355,6 +355,15 @@
             "active": false
           },
           {
+            "id": "s_noplan",
+            "tier": 0,
+            "label": "Ohne Skript",
+            "desc": "5 Videos, ohne vorher zu überlegen was du sagst",
+            "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
             "id": "s_swipe",
             "tier": 0,
             "label": "Swipe-File",
@@ -362,15 +371,6 @@
             "target": 10,
             "count": 0,
             "active": false
-          },
-          {
-            "id": "s_3days",
-            "tier": 0,
-            "label": "Drei am Stück",
-            "desc": "An drei Tagen hintereinander etwas machen",
-            "target": 3,
-            "count": 0,
-            "active": true
           },
           {
             "id": "s_hook",
@@ -382,10 +382,10 @@
             "active": false
           },
           {
-            "id": "s_post3",
+            "id": "s_fail",
             "tier": 1,
-            "label": "Drei Posts",
-            "desc": "An drei Tagen hintereinander posten",
+            "label": "Zeig den Fehler",
+            "desc": "3 Videos über etwas, das schiefgegangen ist",
             "target": 3,
             "count": 0,
             "active": false
@@ -400,11 +400,29 @@
             "active": false
           },
           {
+            "id": "s_onetake",
+            "tier": 2,
+            "label": "Ein Take",
+            "desc": "5 Videos ohne Schnitt, erste Aufnahme zählt",
+            "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
             "id": "s_one",
             "tier": 2,
             "label": "Eine Aussage",
             "desc": "5 Videos mit exakt einer Kernaussage",
             "target": 5,
+            "count": 0,
+            "active": false
+          },
+          {
+            "id": "s_ask",
+            "tier": 3,
+            "label": "Nachgefragt",
+            "desc": "3× jemanden fragen, was hängen geblieben ist",
+            "target": 3,
             "count": 0,
             "active": false
           },
