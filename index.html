@@ -265,6 +265,22 @@ body{
   padding:2px 4px;flex-shrink:0;}
 .topic-nudge-shuffle:hover{color:var(--accent);}
 
+
+.thought-box{margin-bottom:14px;}
+.thought-input{
+  width:100%;background:var(--surface2);border:1px solid transparent;border-radius:14px;color:var(--text);
+  font-family:inherit;font-size:14px;padding:11px 13px;outline:none;resize:vertical;min-height:64px;
+  transition:border-color var(--trans);
+}
+.thought-input:focus{border-color:var(--accent-border);}
+.thought-input::placeholder{color:var(--muted);}
+.thought-actions{display:flex;justify-content:flex-end;margin-top:7px;}
+.thought-btn{
+  font-family:inherit;font-size:13px;font-weight:600;padding:8px 16px;border-radius:999px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);cursor:pointer;
+}
+.thought-btn:hover{filter:brightness(1.1);}
+
 /* ── RANG-HERO (kompakt, Portrait rechts) ── */
 .hero-card{
   position:relative;margin-bottom:20px;padding:18px 20px;
@@ -1264,6 +1280,37 @@ function lockedTierCount(){
 }
 
 
+
+// ── GEDANKE -> IDEEN (mechanisches Aufteilen) ─
+function splitThought(pid){
+  const p = data.projects.find(x=>x.id===pid); if(!p) return;
+  const ta = document.getElementById('thought-'+pid); if(!ta) return;
+  const raw = ta.value.trim();
+  if(!raw) return;
+
+  // 1) nach Zeilen trennen, 2) lange Zeilen zusaetzlich an Satzenden trennen
+  let frags = [];
+  raw.split(/\n+/).forEach(line => {
+    line = line.trim();
+    if(!line) return;
+    if(line.length > 70){
+      line.split(/(?<=[.!?])\s+/).forEach(s => { if(s.trim()) frags.push(s.trim()); });
+    } else {
+      frags.push(line);
+    }
+  });
+  // Aufzaehlungszeichen am Anfang entfernen
+  frags = frags.map(f => f.replace(/^[-*•]\s*/, '').trim()).filter(f => f.length > 2);
+
+  const existing = new Set(p.ideas);
+  let added = 0;
+  frags.forEach(f => { if(!existing.has(f)){ p.ideas.push(f); existing.add(f); added++; } });
+
+  ta.value = '';
+  scheduleSave(); render();
+  showToast(added > 0 ? `${added} ${added===1?'Idee':'Ideen'} hinzugefügt` : 'Nichts Neues gefunden');
+}
+
 // ── THEMEN-IMPULS AUS DER IDEENLISTE ──────
 let topicIdx = null;
 function renderTopicNudge(proj){
@@ -2036,6 +2083,10 @@ function projectBodyHTML(proj, dd){
   if(ch && ch.pool){
     const done = (ch.completed||[]).slice().reverse();
     return `
+    <div class="thought-box">
+      <textarea class="thought-input" id="thought-${proj.id}" placeholder="Schreib frei runter, was dir durch den Kopf geht..."></textarea>
+      <div class="thought-actions"><button class="thought-btn" onclick="splitThought('${proj.id}')">In Ideen aufteilen</button></div>
+    </div>
     <div class="section-label">Ideen (${proj.ideas.length})</div>
     ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
     <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
@@ -2051,6 +2102,10 @@ function projectBodyHTML(proj, dd){
   }
 
   return `
+    <div class="thought-box">
+      <textarea class="thought-input" id="thought-${proj.id}" placeholder="Schreib frei runter, was dir durch den Kopf geht..."></textarea>
+      <div class="thought-actions"><button class="thought-btn" onclick="splitThought('${proj.id}')">In Ideen aufteilen</button></div>
+    </div>
     <div class="section-label">Ideen (${proj.ideas.length})</div>
     ${proj.ideas.map((x,i)=>`<div class="item"><div class="item-dot"></div><div class="item-text">${esc(x)}</div><button class="item-del" onclick="rmItem('${proj.id}','ideas',${i})">×</button></div>`).join('')}
     <div class="add-row"><input class="add-input" id="ii-${proj.id}" placeholder="Idee..." onkeydown="if(event.key==='Enter')addItem('${proj.id}','ideas')"/><button class="add-btn" onclick="addItem('${proj.id}','ideas')">+</button></div>
