@@ -370,7 +370,7 @@
             "desc": "An drei Tagen hintereinander etwas machen",
             "target": 3,
             "count": 0,
-            "active": false
+            "active": true
           },
           {
             "id": "s_hook",
