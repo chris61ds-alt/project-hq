@@ -341,6 +341,11 @@
             "id": "q05",
             "date": "2026-08-31",
             "text": "Nimm auf, was heute schiefgegangen ist"
+          },
+          {
+            "id": "q06",
+            "date": "2026-08-31",
+            "text": "Schau dir ein fremdes Video an, das dich gestoppt hat – nimm auf warum"
           }
         ],
         "skipped": [],
@@ -490,7 +495,7 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 200,
+  "xp": 215,
   "streak": 0,
   "lastActive": "Mon Aug 31 2026",
   "theme": "light",
