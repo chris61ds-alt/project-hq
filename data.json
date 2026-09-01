@@ -346,6 +346,11 @@
             "id": "q06",
             "date": "2026-08-31",
             "text": "Schau dir ein fremdes Video an, das dich gestoppt hat – nimm auf warum"
+          },
+          {
+            "id": "q07",
+            "date": "2026-09-01",
+            "text": "Nimm auf: Was du an deinem Thema immer noch nicht verstehst"
           }
         ],
         "skipped": [],
@@ -495,9 +500,9 @@
       "lastTouched": 1787775238009
     }
   ],
-  "xp": 215,
+  "xp": 230,
   "streak": 0,
-  "lastActive": "Mon Aug 31 2026",
+  "lastActive": "Tue Sep 01 2026",
   "theme": "light",
   "quotes": [
     "You only have one life!",
@@ -514,7 +519,8 @@
     "2026-08-27": "full",
     "2026-08-28": "full",
     "2026-08-29": "full",
-    "2026-08-31": "full"
+    "2026-08-31": "full",
+    "2026-09-01": "full"
   },
   "plans": {
     "2026-08-26": "I try to put more life into every day"
