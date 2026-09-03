@@ -20,7 +20,7 @@
       "done": [],
       "lastTouched": 1787830548055,
       "challenge": {
-        "startDate": "2026-08-26",
+        "startDate": "2026-09-14",
         "switchAfterDays": 7,
         "totalDays": 60,
         "skillStages": [
@@ -311,54 +311,8 @@
             "text": "Entscheide im Video: weitermachen oder abschließen – und warum"
           }
         ],
-        "completed": [
-          {
-            "id": "q00",
-            "date": "2026-08-27",
-            "text": "Nimm ein Video auf – sag den Punkt in den ersten 3 Sekunden"
-          },
-          {
-            "id": "q01",
-            "date": "2026-08-27",
-            "text": "Stell das Handy an eine Stelle mit gutem Licht und nimm dort auf"
-          },
-          {
-            "id": "q02",
-            "date": "2026-08-28",
-            "text": "Nimm auf, worin du gerade schlecht bist – ungefiltert"
-          },
-          {
-            "id": "q03",
-            "date": "2026-08-29",
-            "text": "Nimm ein Video auf, ohne vorher zu überlegen was du sagst"
-          },
-          {
-            "id": "q04",
-            "date": "2026-08-31",
-            "text": "Nimm dasselbe Thema zweimal auf, mit verschiedenem Einstieg"
-          },
-          {
-            "id": "q05",
-            "date": "2026-08-31",
-            "text": "Nimm auf, was heute schiefgegangen ist"
-          },
-          {
-            "id": "q06",
-            "date": "2026-08-31",
-            "text": "Schau dir ein fremdes Video an, das dich gestoppt hat – nimm auf warum"
-          },
-          {
-            "id": "q07",
-            "date": "2026-09-01",
-            "text": "Nimm auf: Was du an deinem Thema immer noch nicht verstehst"
-          },
-          {
-            "id": "q08",
-            "date": "2026-09-03",
-            "text": "Poste dein erstes Video – und schau danach nicht mehr rein"
-          }
-        ],
-        "skipped": [],
+        "completed": [],
+        "skipped": {},
         "side": [
           {
             "id": "s_ugly",
@@ -457,15 +411,15 @@
       "milestones": [
         {
           "label": "Erster Post (Ende Aufnahme-Phase)",
-          "date": "2026-09-02"
+          "date": "2026-09-21"
         },
         {
           "label": "Halbzeit",
-          "date": "2026-09-25"
+          "date": "2026-10-14"
         },
         {
           "label": "Challenge-Ende",
-          "date": "2026-10-25"
+          "date": "2026-11-13"
         }
       ]
     },
